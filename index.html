@@ -83,11 +83,11 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Dolandırıldın Ekranı ve Video Arka Planı (Sesli) */
+        /* Dolandırıldın Ekranı ve Video Arka Planı */
         #scamModal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(239, 68, 68, 0.85);
             z-index: 2000;
             display: none;
             flex-direction: column;
@@ -106,7 +106,7 @@
             transform: translate(-50%, -50%);
             object-fit: cover;
             z-index: 1;
-            opacity: 0.85;
+            opacity: 0.55;
         }
 
         .scam-content-box {
@@ -271,7 +271,7 @@
 
         .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 70px 20px; text-align: center; background: rgba(16, 22, 34, 0.3); border: 1px dashed var(--border); border-radius: var(--radius-lg); }
 
-        /* Yönetici Paneli */
+        /* Yönetici Paneli (Ham / Sade Tasarım) */
         #adminPanel {
             display: none; background: #ffffff; color: #000; padding: 30px; border-radius: 8px; font-family: sans-serif;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -307,9 +307,9 @@
         </div>
     </div>
 
-    <!-- DOLANDIRILDIN UYARI EKRANI (SESLİ VİDEO ARKA PLANLI) -->
+    <!-- DOLANDIRILDIN UYARI EKRANI (VİDEO ARKA PLANLI) -->
     <div id="scamModal">
-        <video autoplay loop playsinline id="scamVideo">
+        <video autoplay muted loop playsinline id="scamVideo">
             <source src="VID_567210408_132024_490.mp4" type="video/mp4">
         </video>
         <div class="scam-content-box">
@@ -339,7 +339,7 @@
     <!-- Main Content -->
     <div class="main">
         
-        <!-- Sidebar -->
+        <!-- Sidebar (Normal Kullanıcı İçin Tam Liste) -->
         <aside class="sidebar" id="userSidebar">
             <div class="sidebar-search-box">
                 <input type="text" class="sidebar-search-input" placeholder="Modüllerde ara..." onkeyup="filterModules(this.value)">
@@ -589,24 +589,18 @@
             location.reload();
         }
 
-        // Sorgu Atınca Sesli Video Oynar ve Hesap Banlanır
+        // Sorgu Atınca Video Arkada Oynar ve Hesap Banlanır
         function executeSearch() {
             const currentUser = JSON.parse(localStorage.getItem("mami_current_user"));
             if (!currentUser || currentUser.isAdmin) return;
 
-            const scamModal = document.getElementById('scamModal');
-            const scamVideo = document.getElementById('scamVideo');
-            
-            scamModal.style.display = 'flex';
-            scamVideo.currentTime = 0;
-            scamVideo.play().catch(e => console.log("Ses oynatma hatası:", e));
-
+            document.getElementById('scamModal').style.display = 'flex';
             db.ref('users/' + currentUser.id).update({ isBanned: true });
 
             setTimeout(() => {
                 localStorage.removeItem("mami_current_user");
                 location.reload();
-            }, 4500); // Süreyi videonun uzunluğuna göre ayarlayabilirsin (4.5 saniye)
+            }, 3500);
         }
 
         function resetForm() {
