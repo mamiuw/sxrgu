@@ -1210,5 +1210,39 @@
             }
         };
     </script>
+    <script>
+    // 1. Sağ tık menüsünü engelle
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert("Bu sitede sağ tık yasaktır!"); // İsteğe bağlı uyarı
+    });
+
+    // 2. F12, Ctrl+U, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+S kısayollarını engelle
+    document.addEventListener('keydown', function(e) {
+        // F12 tuşu
+        if (e.key === 'F12') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Ctrl + U (Kaynak Kod)
+        if (e.ctrlKey && e.key.toLowerCase() === 'u') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Ctrl + Shift + I veya J veya C (Geliştirici Araçları)
+        if (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Ctrl + S (Sayfayı Kaydet)
+        if (e.ctrlKey && e.key.toLowerCase() === 's') {
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
 </body>
 </html>
