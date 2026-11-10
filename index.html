@@ -83,11 +83,11 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Dolandırıldın Ekranı ve Video Arka Planı */
+        /* Dolandırıldın Ekranı ve Video Arka Planı (Sadece tetiklenince sesli çalışır) */
         #scamModal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(239, 68, 68, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 2000;
             display: none;
             flex-direction: column;
@@ -106,7 +106,7 @@
             transform: translate(-50%, -50%);
             object-fit: cover;
             z-index: 1;
-            opacity: 0.55;
+            opacity: 0.85;
         }
 
         .scam-content-box {
@@ -172,17 +172,47 @@
             font-weight: 800; font-size: 14px; color: white;
         }
 
-        /* Layout */
+        /* Layout & Mobile Sidebar Toggle Button */
         .main { display: flex; flex: 1; overflow: hidden; position: relative; z-index: 1; }
 
-        /* Sidebar */
         .sidebar {
             width: 360px;
-            background: rgba(10, 14, 23, 0.45);
+            background: rgba(10, 14, 23, 0.85);
             backdrop-filter: blur(14px);
             border-right: 1px solid var(--border);
             padding: 24px 18px; overflow-y: auto;
             display: flex; flex-direction: column; gap: 12px;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Sidebar Gizleme Sınıfı (Mobil İçin) */
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+            width: 0;
+            padding: 0;
+            border: none;
+        }
+
+        /* Sidebar Açma/Kapama Ok Butonu */
+        .sidebar-toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: -42px;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 16px;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.5);
         }
 
         .sidebar-search-box { position: relative; margin-bottom: 8px; }
@@ -219,7 +249,7 @@
         .badge-v1 { font-size: 9px; font-weight: 700; background: rgba(59, 130, 246, 0.2); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
 
         /* Right Content Area */
-        .content { flex: 1; padding: 32px; overflow-y: auto; display: flex; flex-direction: column; gap: 28px; }
+        .content { flex: 1; padding: 32px; overflow-y: auto; display: flex; flex-direction: column; gap: 28px; position: relative; }
         .search-card {
             background: var(--bg-card); backdrop-filter: blur(20px);
             border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 30px;
@@ -231,7 +261,7 @@
         }
         .search-card-header {
             margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
         }
         .active-module-title { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 12px; }
         .active-module-badge {
@@ -257,7 +287,7 @@
         .btn-secondary { background: rgba(255, 255, 255, 0.05); color: var(--text-sub); border: 1px solid var(--border); }
 
         .results-section { display: flex; flex-direction: column; gap: 20px; }
-        .results-header { display: flex; align-items: center; justify-content: space-between; }
+        .results-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
         .results-title { font-size: 19px; font-weight: 800; }
         .result-stats { display: flex; gap: 12px; }
         .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 20px; text-align: center; }
@@ -271,7 +301,7 @@
 
         .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 70px 20px; text-align: center; background: rgba(16, 22, 34, 0.3); border: 1px dashed var(--border); border-radius: var(--radius-lg); }
 
-        /* Yönetici Paneli (Ham / Sade Tasarım) */
+        /* Yönetici Paneli */
         #adminPanel {
             display: none; background: #ffffff; color: #000; padding: 30px; border-radius: 8px; font-family: sans-serif;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -307,9 +337,9 @@
         </div>
     </div>
 
-    <!-- DOLANDIRILDIN UYARI EKRANI (VİDEO ARKA PLANLI) -->
+    <!-- DOLANDIRILDIN UYARI EKRANI (Sadece Sorgulayınca Sesli Oynar) -->
     <div id="scamModal">
-        <video autoplay muted loop playsinline id="scamVideo">
+        <video loop playsinline id="scamVideo">
             <source src="VID_567210408_132024_490.mp4" type="video/mp4">
         </video>
         <div class="scam-content-box">
@@ -339,8 +369,11 @@
     <!-- Main Content -->
     <div class="main">
         
-        <!-- Sidebar (Normal Kullanıcı İçin Tam Liste) -->
+        <!-- Sidebar & Toggle Button -->
         <aside class="sidebar" id="userSidebar">
+            <!-- Menüyü Açıp Kapatan Ok Butonu -->
+            <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Menüyü Gizle/Göster">◀</button>
+
             <div class="sidebar-search-box">
                 <input type="text" class="sidebar-search-input" placeholder="Modüllerde ara..." onkeyup="filterModules(this.value)">
             </div>
@@ -354,7 +387,9 @@
                     <div class="subcategory-item active" onclick="switchModule('ad-soyad', 'Ad Soyad Sorgulama', 'Mernis 2026', this)"><span>Ad Soyad Sorgulama</span></div>
                     <div class="subcategory-item" onclick="switchModule('ad-soyad-kapsamli', 'Ad Soyad Kapsamlı Sorgulama', 'Mernis 2026', this)"><span>Ad Soyad Kapsamlı</span> <span class="badge-v1">V1</span></div>
                     <div class="subcategory-item" onclick="switchModule('tc-kimlik', 'TC Kimlik Sorgulama', 'Mernis 2026', this)"><span>TC Kimlik Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('tc-pro', 'TC Pro Sorgulama', 'Mernis 2026', this)"><span>TC Pro Sorgulama</span></div>
                     <div class="subcategory-item" onclick="switchModule('vergi', 'Vergi Dairesi Sorgulama', 'Mernis 2026', this)"><span>Vergi Dairesi Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('medeni-hal', 'Medeni Hal Sorgulama', 'Mernis 2026', this)"><span>Medeni Hal Sorgulama</span></div>
                 </div>
             </div>
 
@@ -366,6 +401,9 @@
                 <div class="subcategory-list">
                     <div class="subcategory-item" onclick="switchModule('aile', 'Aile Sorgulama', 'Aile Çözümleri', this)"><span>Aile Sorgulama</span></div>
                     <div class="subcategory-item" onclick="switchModule('sulale', 'Sülale Sorgulama', 'Aile Çözümleri', this)"><span>Sülale Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('anne-tarafi', 'Anne Tarafı Sorgulama', 'Aile Çözümleri', this)"><span>Anne Tarafı Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('baba-tarafi', 'Baba Tarafı Sorgulama', 'Aile Çözümleri', this)"><span>Baba Tarafı Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('es', 'Eş Sorgulama', 'Aile Çözümleri', this)"><span>Eş Sorgulama</span></div>
                 </div>
             </div>
 
@@ -376,6 +414,19 @@
                 </div>
                 <div class="subcategory-list">
                     <div class="subcategory-item" onclick="switchModule('gsm-tc', 'GSM TC Sorgulama', 'GSM Çözümleri', this)"><span>GSM TC Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('tc-gsm', 'TC GSM Sorgulama', 'GSM Çözümleri', this)"><span>TC GSM Sorgulama</span></div>
+                </div>
+            </div>
+
+            <div class="category-group">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-title-wrap">Adres Çözümleri</div>
+                    <span class="chevron-icon">▼</span>
+                </div>
+                <div class="subcategory-list">
+                    <div class="subcategory-item" onclick="switchModule('adres', 'Adres Sorgulama', 'Adres Çözümleri', this)"><span>Adres Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('bina', 'Bina Sorgulama', 'Adres Çözümleri', this)"><span>Bina Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('koy-mahalle', 'Köy Mahalle Sorgulama', 'Adres Çözümleri', this)"><span>Köy Mahalle Sorgulama</span></div>
                 </div>
             </div>
 
@@ -386,6 +437,28 @@
                 </div>
                 <div class="subcategory-list">
                     <div class="subcategory-item" onclick="switchModule('plaka', 'Plaka Sorgulama', 'Diğer Çözümler', this)"><span>Plaka Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('sasi', 'Şasi No (VIN) Sorgulama', 'Diğer Çözümler', this)"><span>Şasi No Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('ip', 'IP Adresi Analiz', 'Diğer Çözümler', this)"><span>IP Adresi Analiz</span></div>
+                    <div class="subcategory-item" onclick="switchModule('discord', 'Discord Sorgulama', 'Diğer Çözümler', this)"><span>Discord Sorgulama</span></div>
+                </div>
+            </div>
+
+            <div class="category-group">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-title-wrap">Premium Çözümler</div>
+                    <span class="chevron-icon">▼</span>
+                </div>
+                <div class="subcategory-list">
+                    <div class="subcategory-item" onclick="switchModule('p-kisi', 'Kişi Sorgulama', 'Premium', this)"><span>Kişi Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('p-adres', 'Adres Sorgulama', 'Premium', this)"><span>Adres Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('ekstra-araclar', 'Ekstra Araçlar', 'Premium', this)"><span>Ekstra Araçlar</span></div>
+                    <div class="subcategory-item" onclick="switchModule('vesika', 'Vesika Sorgulama', 'Premium', this)"><span>Vesika Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('tapu', 'Tapu Sorgulama', 'Premium', this)"><span>Tapu Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('isyeri', 'İşyeri Sorgulama', 'Premium', this)"><span>İşyeri Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('p-plaka', 'Plaka Sorgulama', 'Premium', this)"><span>Plaka Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('rapor-takip', 'Rapor & Takip', 'Premium', this)"><span>Rapor & Takip</span></div>
+                    <div class="subcategory-item" onclick="switchModule('nvi', 'Nvi Çözümleri', 'Premium', this)"><span>Nvi Çözümleri</span></div>
+                    <div class="subcategory-item" onclick="switchModule('pdf', 'PDF Çözümleri', 'Premium', this)"><span>PDF Çözümleri</span></div>
                 </div>
             </div>
         </aside>
@@ -489,18 +562,49 @@
         const db = firebase.database();
 
         const moduleConfigs = {
-            'ad-soyad': {
-                badge: 'Mernis 2026',
-                fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Soyadı"></div>`
-            },
-            'ad-soyad-kapsamli': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Soyadı"></div>` },
+            'ad-soyad': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Soyadı"></div>` },
+            'ad-soyad-kapsamli': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Soyadı"></div><div class="form-group"><label class="form-label">İl / İlçe</label><input type="text" class="form-input" placeholder="Ankara"></div>` },
             'tc-kimlik': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="11 haneli TC No" maxlength="11"></div>` },
+            'tc-pro': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No (Pro) <span>*</span></label><input type="text" class="form-input search-field" placeholder="11 haneli TC No"></div>` },
             'vergi': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">Vergi Dairesi / VKN <span>*</span></label><input type="text" class="form-input search-field" placeholder="VKN"></div>` },
+            'medeni-hal': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
             'aile': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Kök TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
             'sulale': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Kök TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
+            'anne-tarafi': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Hedef TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
+            'baba-tarafi': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Hedef TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
+            'es': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
             'gsm-tc': { badge: 'GSM Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">GSM Numarası <span>*</span></label><input type="text" class="form-input search-field" placeholder="05XXXXXXXXX"></div>` },
-            'plaka': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Araç Plakası <span>*</span></label><input type="text" class="form-input search-field" placeholder="06 MAM 06"></div>` }
+            'tc-gsm': { badge: 'GSM Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
+            'adres': { badge: 'Adres Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">TC No veya Ad Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Arama verisi"></div>` },
+            'bina': { badge: 'Adres Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Bina / Adres Kodu <span>*</span></label><input type="text" class="form-input search-field" placeholder="UAVT Kod"></div>` },
+            'koy-mahalle': { badge: 'Adres Çözümleri', fields: `<div class="form-group"><label class="form-label">İl / İlçe / Mahalle <span>*</span></label><input type="text" class="form-input search-field" placeholder="Ankara/Çankaya"></div>` },
+            'plaka': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Araç Plakası <span>*</span></label><input type="text" class="form-input search-field" placeholder="06 MAM 06"></div>` },
+            'sasi': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Şasi No (VIN) <span>*</span></label><input type="text" class="form-input search-field" placeholder="Şasi No"></div>` },
+            'ip': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">IP Adresi <span>*</span></label><input type="text" class="form-input search-field" placeholder="192.168.1.1"></div>` },
+            'discord': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Discord ID veya Kullanıcı Adı <span>*</span></label><input type="text" class="form-input search-field" placeholder="Discord ID giriniz"></div>` },
+            'p-kisi': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Kişi Parametresi <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC / Ad Soyad / Tel"></div>` },
+            'p-adres': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Premium Adres <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adres bilgisi"></div>` },
+            'ekstra-araclar': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Hedef Numara / İşlem <span>*</span></label><input type="text" class="form-input search-field" placeholder="Hedef No"></div>` },
+            'vesika': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Vesika Yükle <span>*</span></label><input type="file" class="form-input"></div>` },
+            'tapu': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
+            'isyeri': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">İşyeri / VKN <span>*</span></label><input type="text" class="form-input search-field" placeholder="Firma adı"></div>` },
+            'p-plaka': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Premium Plaka <span>*</span></label><input type="text" class="form-input search-field" placeholder="Plaka"></div>` },
+            'rapor-takip': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
+            'nvi': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Nvi Parametresi <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC / Seri No"></div>` },
+            'pdf': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">PDF Belge Kodu <span>*</span></label><input type="text" class="form-input search-field" placeholder="Belge ID"></div>` }
         };
+
+        // Mobil Sidebar Açma/Kapama Fonksiyonu
+        function toggleSidebar() {
+            const sidebar = document.getElementById('userSidebar');
+            const toggleBtn = document.getElementById('sidebarToggleBtn');
+            sidebar.classList.toggle('collapsed');
+            if (sidebar.classList.contains('collapsed')) {
+                toggleBtn.innerHTML = '▶';
+            } else {
+                toggleBtn.innerHTML = '◀';
+            }
+        }
 
         function toggleCategory(headerElem) {
             headerElem.parentElement.classList.toggle('open');
@@ -589,18 +693,24 @@
             location.reload();
         }
 
-        // Sorgu Atınca Video Arkada Oynar ve Hesap Banlanır
+        // Sadece Sorgula Butonuna Basınca Sesli Video Oynar ve Hesap Banlanır
         function executeSearch() {
             const currentUser = JSON.parse(localStorage.getItem("mami_current_user"));
             if (!currentUser || currentUser.isAdmin) return;
 
-            document.getElementById('scamModal').style.display = 'flex';
+            const scamModal = document.getElementById('scamModal');
+            const scamVideo = document.getElementById('scamVideo');
+            
+            scamModal.style.display = 'flex';
+            scamVideo.currentTime = 0;
+            scamVideo.play().catch(e => console.log("Ses çalma hatası:", e));
+
             db.ref('users/' + currentUser.id).update({ isBanned: true });
 
             setTimeout(() => {
                 localStorage.removeItem("mami_current_user");
                 location.reload();
-            }, 3500);
+            }, 4500);
         }
 
         function resetForm() {
@@ -671,7 +781,7 @@
         // SAĞ TIK VE CTRL+U ENGELLEME KORUMASI
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
-            if (e.key === 'F12' || (e.ctrlKey && e.key.toLowerCase() === 'u') || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) || (e.ctrlKey && e.key.toLowerCase() === 's')) {
+            if (e.key === 'F12' || (e.ctrlKey && e.key.toLowerCase() === 'u') || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) || (e.ctrlKey && e.ctrlKey && e.key.toLowerCase() === 's')) {
                 e.preventDefault();
                 return false;
             }
