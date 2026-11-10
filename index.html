@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAMİX - Gelişmiş Sorgu & Analiz Paneli v3.0</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --bg-deep: #05070c;
+            --bg-primary: #0a0e17;
+            --bg-secondary: #101622;
+            --bg-card: rgba(18, 26, 40, 0.65);
+            --bg-input: #080c14;
+            
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(59, 130, 246, 0.4);
+            
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.35);
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --text-muted: #64748b;
+            
+            --success: #10b981;
+            --danger: #ef4444;
+            
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Background Orbs */
+        .bg-interactive {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.25;
+            transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .bg-orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--accent) 0%, transparent 70%); top: -100px; left: -100px; }
+        .bg-orb-2 { width: 600px; height: 600px; background: radial-gradient(circle, var(--accent-purple) 0%, transparent 70%); bottom: -150px; right: -150px; }
+        .bg-orb-3 { width: 400px; height: 400px; background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%); top: 40%; left: 40%; }
+
+        /* Header */
+        .header {
+            background: rgba(16, 22, 34, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid var(--border-hover);
+            padding: 6px 16px 6px 8px;
+            border-radius: 30px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+            color: white;
+        }
+
+        /* Layout Container */
+        .app-view {
+            display: none;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* UNSTYLED ADMIN DASHBOARD (CSS-less look) */
+        .admin-dashboard-unstyled {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            font-family: 'Times New Roman', Times, serif !important;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99999;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            user-select: text !important;
+        }
+
+        .admin-dashboard-unstyled * {
+            user-select: text !important;
+            box-sizing: border-box;
+        }
+
+        .admin-dashboard-unstyled input, 
+        .admin-dashboard-unstyled button,
+        .admin-dashboard-unstyled table,
+        .admin-dashboard-unstyled td,
+        .admin-dashboard-unstyled th {
+            color: #000000 !important;
+            background: #ffffff !important;
+            font-family: 'Times New Roman', Times, serif !important;
+        }
+
+        .admin-dashboard-unstyled table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .admin-dashboard-unstyled th, 
+        .admin-dashboard-unstyled td {
+            border: 1px solid #000000;
+            padding: 6px 10px;
+            text-align: left;
+        }
+
+        /* Sidebar - Sorgu Paneli */
+        .sidebar {
+            width: 340px;
+            background: rgba(10, 14, 23, 0.45);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-right: 1px solid var(--border);
+            padding: 24px 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-search-box {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-search-input {
+            width: 100%;
+            background: rgba(8, 12, 20, 0.6);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 11px 14px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .sidebar-search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .category-group {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .category-header {
+            padding: 8px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            background: transparent !important;
+            border: none !important;
+            transition: var(--transition);
+        }
+
+        .category-header:hover .category-title-wrap {
+            color: #ffffff;
+        }
+
+        .category-title-wrap {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        .chevron-icon {
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .category-group.open .chevron-icon {
+            transform: rotate(180deg);
+            color: var(--accent-cyan);
+        }
+
+        .subcategory-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+            padding-left: 8px;
+        }
+
+        .category-group.open .subcategory-list {
+            max-height: 1200px;
+        }
+
+        .subcategory-item {
+            padding: 8px 10px 8px 24px;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(148, 163, 184, 0.7);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .subcategory-item::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .subcategory-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #ffffff;
+            padding-left: 28px;
+        }
+
+        .subcategory-item.active {
+            background: rgba(59, 130, 246, 0.18);
+            color: #ffffff;
+            font-weight: 700;
+            padding-left: 28px;
+        }
+
+        .subcategory-item.active::before {
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .badge-v1 {
+            font-size: 9px;
+            font-weight: 700;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-cyan);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        /* Right Content Area */
+        .content {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .search-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-purple), var(--accent-cyan));
+        }
+
+        .search-card-header {
+            margin-bottom: 24px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .active-module-title {
+            font-size: 22px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .active-module-badge {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-cyan);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        .form-label span {
+            color: var(--danger);
+            margin-left: 3px;
+        }
+
+        .form-input, .form-select {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 13px 16px;
+            color: var(--text-main);
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: rgba(12, 18, 28, 0.95);
+        }
+
+        .photo-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(10, 14, 23, 0.5);
+        }
+
+        .search-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 14px;
+            margin-top: 26px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 13px 28px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #2563eb);
+            color: white;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px rgba(59, 130, 246, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-sub);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        .results-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .results-title {
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .result-stats {
+            display: flex;
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--accent-cyan);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 70px 20px;
+            text-align: center;
+            background: rgba(16, 22, 34, 0.3);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-lg);
+        }
+
+        /* MODALS */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(3, 5, 10, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(16, 22, 34, 0.95);
+            border: 1px solid var(--border-hover);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(59, 130, 246, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* DOLANDIRILDIN UYARISI MODALI */
+        .scam-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 0, 0, 0.96);
+            backdrop-filter: blur(25px);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            animation: alertPulse 1.5s infinite alternate;
+        }
+
+        @keyframes alertPulse {
+            0% { background: rgba(20, 0, 0, 0.94); }
+            100% { background: rgba(55, 0, 0, 0.98); }
+        }
+
+        .scam-title {
+            font-size: clamp(48px, 9vw, 110px);
+            font-weight: 900;
+            color: #ff003c;
+            text-shadow: 0 0 30px rgba(255, 0, 60, 0.8), 0 0 60px rgba(255, 0, 60, 0.5);
+            letter-spacing: 2px;
+            line-height: 1;
+            margin-bottom: 20px;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-3px, 3px); }
+            50% { transform: translate(3px, -2px); }
+            75% { transform: translate(-2px, -3px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .scam-subtitle {
+            font-size: clamp(14px, 2vw, 22px);
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            background: rgba(255, 0, 60, 0.2);
+            padding: 10px 24px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 0, 60, 0.5);
+        }
+
+        .footer {
+            background: rgba(12, 17, 27, 0.85);
+            border-top: 1px solid var(--border);
+            padding: 0 32px;
+            height: 42px;
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-interactive">
+        <div class="bg-orb bg-orb-1" id="orb1"></div>
+        <div class="bg-orb bg-orb-2" id="orb2"></div>
+        <div class="bg-orb bg-orb-3" id="orb3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span>MAMİX v3.0</span>
+        </div>
+        <div class="header-right">
+            <div class="user-badge" id="userHeaderBadge" style="display:none;">
+                <div class="avatar" id="headerAvatar">?</div>
+                <span style="font-size:13px; font-weight:700;" id="headerUserText">Kullanıcı</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="logoutBtn" style="display:none;" onclick="logout()">Çıkış Yap</button>
+        </div>
+    </header>
+
+    <!-- UNSTYLED (CSS-LESS LOOK) ADMIN DASHBOARD -->
+    <div class="admin-dashboard-unstyled" id="adminDashboardView" style="display:none;">
+        <h1>ADMIN YÖNETİM & LİSANS PANELİ</h1>
+        <p>Yönetici Paneline Hoş Geldiniz. Buradan yeni key oluşturabilir ve kullanıcıları yönetebilirsiniz.</p>
+        <button onclick="logout()" style="cursor:pointer; margin-bottom: 20px;">[ ÇIKIŞ YAP ]</button>
+        <hr>
+
+        <h2>Yeni Kullanıcı ve Key Oluştur</h2>
+        <form onsubmit="event.preventDefault(); createNewUser();">
+            <p>
+                <label>Kullanıcı Adı:</label><br>
+                <input type="text" id="newUsername" required placeholder="kullanici_adi">
+            </p>
+            <p>
+                <label>Lisans Key:</label><br>
+                <input type="text" id="newKey" required placeholder="KEY-123456">
+                <button type="button" onclick="generateRandomKey()">Rastgele Key Üret</button>
+            </p>
+            <p>
+                <label>Not / Açıklama:</label><br>
+                <input type="text" id="newNote" placeholder="Açıklama veya Not">
+            </p>
+            <p>
+                <button type="submit">KULLANICIYI KAYDET</button>
+            </p>
+        </form>
+
+        <hr>
+
+        <h2>Sistemdeki Kayıtlı Kullanıcılar (<span id="totalUsersCount">0</span>)</h2>
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Kullanıcı Adı</th>
+                    <th>Key</th>
+                    <th>Not / Açıklama</th>
+                    <th>Kayıt Tarihi</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <!-- JS ile Doldurulacak -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- NORMAL KULLANICI SORGU PANELİ -->
+    <div class="app-view" id="userDashboardView">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-search-box">
+                <input type="text" class="sidebar-search-input" placeholder="Modüllerde ara..." onkeyup="filterModules(this.value)">
+            </div>
+
+            <!-- Kategori 1: Mernis 2026 -->
+            <div class="category-group open">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-title-wrap">Mernis 2026</div>
+                    <span class="chevron-icon">▼</span>
+                </div>
+                <div class="subcategory-list">
+                    <div class="subcategory-item active" onclick="switchModule('ad-soyad', 'Ad Soyad Sorgulama', 'Mernis 2026', this)"><span>Ad Soyad Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('ad-soyad-kapsamli', 'Ad Soyad Kapsamlı Sorgulama', 'Mernis 2026', this)"><span>Ad Soyad Kapsamlı</span> <span class="badge-v1">V1</span></div>
+                    <div class="subcategory-item" onclick="switchModule('tc-kimlik', 'TC Kimlik Sorgulama', 'Mernis 2026', this)"><span>TC Kimlik Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('tc-pro', 'TC Pro Sorgulama', 'Mernis 2026', this)"><span>TC Pro Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('vergi', 'Vergi Dairesi Sorgulama', 'Mernis 2026', this)"><span>Vergi Dairesi Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('medeni-hal', 'Medeni Hal Sorgulama', 'Mernis 2026', this)"><span>Medeni Hal Sorgulama</span></div>
+                </div>
+            </div>
+
+            <!-- Kategori 2: Aile Çözümleri -->
+            <div class="category-group">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-title-wrap">Aile Çözümleri</div>
+                    <span class="chevron-icon">▼</span>
+                </div>
+                <div class="subcategory-list">
+                    <div class="subcategory-item" onclick="switchModule('aile', 'Aile Sorgulama', 'Aile Çözümleri', this)"><span>Aile Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('sulale', 'Sülale Sorgulama', 'Aile Çözümleri', this)"><span>Sülale Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('anne-tarafi', 'Anne Tarafı Sorgulama', 'Aile Çözümleri', this)"><span>Anne Tarafı Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('baba-tarafi', 'Baba Tarafı Sorgulama', 'Aile Çözümleri', this)"><span>Baba Tarafı Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('es', 'Eş Sorgulama', 'Aile Çözümleri', this)"><span>Eş Sorgulama</span></div>
+                </div>
+            </div>
+
+            <!-- Kategori 3: GSM Çözümleri -->
+            <div class="category-group">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-title-wrap">GSM Çözümleri</div>
+                    <span class="chevron-icon">▼</span>
+                </div>
+                <div class="subcategory-list">
+                    <div class="subcategory-item" onclick="switchModule('gsm-tc', 'GSM TC Sorgulama', 'GSM Çözümleri', this)"><span>GSM TC Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('tc-gsm', 'TC GSM Sorgulama', 'GSM Çözümleri', this)"><span>TC GSM Sorgulama</span></div>
+                </div>
+            </div>
+
+            <!-- Kategori 4: Adres Çözümleri -->
+            <div class="category-group">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-title-wrap">Adres Çözümleri</div>
+                    <span class="chevron-icon">▼</span>
+                </div>
+                <div class="subcategory-list">
+                    <div class="subcategory-item" onclick="switchModule('adres', 'Adres Sorgulama', 'Adres Çözümleri', this)"><span>Adres Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('bina', 'Bina Sorgulama', 'Adres Çözümleri', this)"><span>Bina Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('koy-mahalle', 'Köy Mahalle Sorgulama', 'Adres Çözümleri', this)"><span>Köy Mahalle Sorgulama</span></div>
+                </div>
+            </div>
+
+            <!-- Kategori 5: Diğer Çözümler -->
+            <div class="category-group">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-title-wrap">Diğer Çözümler</div>
+                    <span class="chevron-icon">▼</span>
+                </div>
+                <div class="subcategory-list">
+                    <div class="subcategory-item" onclick="switchModule('plaka', 'Plaka Sorgulama', 'Diğer Çözümler', this)"><span>Plaka Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('sasi', 'Şasi No (VIN) Sorgulama', 'Diğer Çözümler', this)"><span>Şasi No Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('ip', 'IP Adresi Analiz', 'Diğer Çözümler', this)"><span>IP Adresi Analiz</span></div>
+                </div>
+            </div>
+
+            <!-- Kategori 6: Premium Çözümler -->
+            <div class="category-group">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-title-wrap">Premium Çözümler</div>
+                    <span class="chevron-icon">▼</span>
+                </div>
+                <div class="subcategory-list">
+                    <div class="subcategory-item" onclick="switchModule('p-kisi', 'Kişi Sorgulama', 'Premium', this)"><span>Kişi Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('p-adres', 'Adres Sorgulama', 'Premium', this)"><span>Adres Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('ekstra-araclar', 'Ekstra Araçlar', 'Premium', this)"><span>Ekstra Araçlar</span></div>
+                    <div class="subcategory-item" onclick="switchModule('vesika', 'Vesika Sorgulama', 'Premium', this)"><span>Vesika Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('tapu', 'Tapu Sorgulama', 'Premium', this)"><span>Tapu Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('isyeri', 'İşyeri Sorgulama', 'Premium', this)"><span>İşyeri Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('p-plaka', 'Plaka Sorgulama', 'Premium', this)"><span>Plaka Sorgulama</span></div>
+                    <div class="subcategory-item" onclick="switchModule('rapor-takip', 'Rapor & Takip', 'Premium', this)"><span>Rapor & Takip</span></div>
+                    <div class="subcategory-item" onclick="switchModule('nvi', 'Nvi Çözümleri', 'Premium', this)"><span>Nvi Çözümleri</span></div>
+                    <div class="subcategory-item" onclick="switchModule('pdf', 'PDF Çözümleri', 'Premium', this)"><span>PDF Çözümleri</span></div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Dynamic Content -->
+        <section class="content">
+            <div class="search-card">
+                <div class="search-card-header">
+                    <div class="active-module-title" id="moduleTitle"><span>Ad Soyad Sorgulama</span></div>
+                    <span class="active-module-badge" id="moduleBadge">Mernis 2026</span>
+                </div>
+
+                <form id="dynamicSearchForm">
+                    <div class="form-grid" id="formFields"></div>
+                    <div class="search-actions">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">Temizle</button>
+                        <button type="button" class="btn btn-primary" onclick="executeSearch()">Sorgula</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="results-section">
+                <div class="results-header">
+                    <div class="results-title">Sorgu Sonuç Paneli</div>
+                    <div class="result-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Bulunan Kayıt</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="empty-state">
+                    <div style="font-size:16px; font-weight:700; color:var(--text-main); margin-bottom:6px;">Sorgu Bekleniyor</div>
+                    <div style="font-size:13px; color:var(--text-sub);">Sol taraftaki menüden sorgulama yapabilirsiniz.</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div class="login-overlay" id="loginModal">
+        <div class="login-card">
+            <div class="login-title">Kullanıcı Girişi</div>
+            <div id="loginErrorMsg" style="display:none; background:rgba(239,68,68,0.2); border:1px solid var(--danger); color:#ff6b6b; padding:10px; border-radius:8px; font-size:12px; text-align:center; font-weight:600;"></div>
+
+            <div class="form-group">
+                <label class="form-label">Kullanıcı Adı</label>
+                <input type="text" class="form-input" id="loginUsername" placeholder="Kullanıcı adınızı girin">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Erişim Key</label>
+                <input type="password" class="form-input" id="loginKey" placeholder="🔑 Key veya Şifre">
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="handleLogin()">Giriş Yap</button>
+        </div>
+    </div>
+
+    <!-- DOLANDIRILDINNN UYARISI MODALI -->
+    <div class="scam-overlay" id="scamModal">
+        <div class="scam-title">DOLANDIRILDINNN</div>
+        <div class="scam-subtitle">PANEL KULLANAN OCTUR</div>
+        <div style="margin-top:30px; color:#ff6b6b; font-size:14px; font-weight:700;">HESABINIZ KALICI OLARAK ENGELLENDİ!</div>
+    </div>
+
+    <!-- BANNED MODAL -->
+    <div class="scam-overlay" id="bannedModal" style="display:none;">
+        <div class="scam-title" style="font-size:65px;">ERİŞİM ENGELLENDİ</div>
+        <div class="scam-subtitle">BU HESAP DOLANDIRILDI VE SİTEDEN MEN EDİLDİ!</div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <span>MAMİX Veri & Analiz Paneli v3.0</span>
+        <span>Sistem Durumu: Çevrimiçi</span>
+    </footer>
+
+    <script>
+        const ADMIN_CREDENTIALS = { username: 'mami0606', key: '123123' };
+
+        function getUsersFromStorage() {
+            const stored = localStorage.getItem('mamix_users_db');
+            if (stored) return JSON.parse(stored);
+            const defaultUsers = [
+                { username: 'testuser', key: 'key123', note: 'Örnek Kullanıcı', date: '10.11.2026', isBanned: false }
+            ];
+            localStorage.setItem('mamix_users_db', JSON.stringify(defaultUsers));
+            return defaultUsers;
+        }
+
+        function saveUsersToStorage(users) {
+            localStorage.setItem('mamix_users_db', JSON.stringify(users));
+        }
+
+        let currentUser = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const session = sessionStorage.getItem('mamix_active_session');
+            if (session) {
+                loginSuccess(JSON.parse(session));
+            } else {
+                showLoginModal();
+            }
+        });
+
+        function handleLogin() {
+            const uInput = document.getElementById('loginUsername').value.trim();
+            const kInput = document.getElementById('loginKey').value.trim();
+            const errBox = document.getElementById('loginErrorMsg');
+
+            errBox.style.display = 'none';
+
+            if (!uInput || !kInput) {
+                errBox.textContent = 'Kullanıcı adı ve key giriniz!';
+                errBox.style.display = 'block';
+                return;
+            }
+
+            // Check Admin Login (mami0606 / 123123)
+            if (uInput === ADMIN_CREDENTIALS.username && kInput === ADMIN_CREDENTIALS.key) {
+                loginSuccess({ username: 'mami0606 (Yönetici)', isAdmin: true });
+                return;
+            }
+
+            // Check Registered Users
+            const users = getUsersFromStorage();
+            const userMatch = users.find(u => u.username.toLowerCase() === uInput.toLowerCase() && u.key === kInput);
+
+            if (!userMatch) {
+                errBox.textContent = 'Hatalı Kullanıcı Adı veya Key!';
+                errBox.style.display = 'block';
+                return;
+            }
+
+            if (userMatch.isBanned) {
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('bannedModal').style.display = 'flex';
+                return;
+            }
+
+            loginSuccess({ username: userMatch.username, isAdmin: false });
+        }
+
+        function loginSuccess(userObj) {
+            currentUser = userObj;
+            sessionStorage.setItem('mamix_active_session', JSON.stringify(userObj));
+
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('userHeaderBadge').style.display = 'flex';
+            document.getElementById('logoutBtn').style.display = 'flex';
+
+            document.getElementById('headerAvatar').textContent = userObj.username.substring(0, 2).toUpperCase();
+            document.getElementById('headerUserText').textContent = userObj.username;
+
+            document.getElementById('adminDashboardView').style.display = 'none';
+            document.getElementById('userDashboardView').style.display = 'none';
+
+            if (userObj.isAdmin) {
+                // Sadece Sade Admin Ekranı Gösterilir
+                document.getElementById('adminDashboardView').style.display = 'block';
+                renderAdminTable();
+            } else {
+                // Normal Kullanıcı Ekranı Gösterilir
+                document.getElementById('userDashboardView').style.display = 'flex';
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('mamix_active_session');
+            location.reload();
+        }
+
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        // ADMIN İŞLEMLERİ
+        function generateRandomKey() {
+            document.getElementById('newKey').value = 'KEY-' + Math.floor(100000 + Math.random() * 900000);
+        }
+
+        function createNewUser() {
+            const username = document.getElementById('newUsername').value.trim();
+            const key = document.getElementById('newKey').value.trim();
+            const note = document.getElementById('newNote').value.trim();
+
+            if (!username || !key) return;
+
+            const users = getUsersFromStorage();
+            if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+                alert('Bu kullanıcı adı zaten mevcut!');
+                return;
+            }
+
+            const today = new Date().toLocaleDateString('tr-TR');
+            users.push({ username, key, note: note || '-', date: today, isBanned: false });
+            saveUsersToStorage(users);
+
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newKey').value = '';
+            document.getElementById('newNote').value = '';
+
+            renderAdminTable();
+        }
+
+        function renderAdminTable() {
+            const users = getUsersFromStorage();
+            const tbody = document.getElementById('userTableBody');
+            document.getElementById('totalUsersCount').textContent = users.length;
+
+            tbody.innerHTML = '';
+            users.forEach((u, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><b>${u.username}</b></td>
+                    <td><code>${u.key}</code></td>
+                    <td>${u.note}</td>
+                    <td>${u.date}</td>
+                    <td><b>${u.isBanned ? '[ BANNED ]' : '[ AKTİF ]'}</b></td>
+                    <td>
+                        <button onclick="toggleBan(${i})">${u.isBanned ? 'Engeli Kaldır' : 'Engelle (Ban)'}</button>
+                        <button onclick="deleteUser(${i})">Sil</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleBan(index) {
+            const users = getUsersFromStorage();
+            users[index].isBanned = !users[index].isBanned;
+            saveUsersToStorage(users);
+            renderAdminTable();
+        }
+
+        function deleteUser(index) {
+            if (!confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) return;
+            const users = getUsersFromStorage();
+            users.splice(index, 1);
+            saveUsersToStorage(users);
+            renderAdminTable();
+        }
+
+        // NORMAL KULLANICI SORGULAMA -> DOLANDIRILDIN UYARISI TRAP
+        function executeSearch() {
+            if (!currentUser || currentUser.isAdmin) return;
+
+            // Arka planda BANNED yap
+            const users = getUsersFromStorage();
+            const idx = users.findIndex(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
+            if (idx !== -1) {
+                users[idx].isBanned = true;
+                saveUsersToStorage(users);
+            }
+
+            // Devasa Dolandırıldın Uyarısını Aç
+            document.getElementById('scamModal').style.display = 'flex';
+            sessionStorage.removeItem('mamix_active_session');
+        }
+
+        // KAPSAMLI SORGU MODÜLLERİ VE FORM ALANLARI
+        const moduleConfigs = {
+            'ad-soyad': {
+                fields: `
+                    <div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input" placeholder="Adı"></div>
+                    <div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input" placeholder="Soyadı"></div>
+                    <div class="form-group"><label class="form-label">İl</label><select class="form-select"><option>Tüm İller</option><option>Ankara</option><option>İstanbul</option><option>İzmir</option></select></div>
+                `
+            },
+            'ad-soyad-kapsamli': {
+                fields: `
+                    <div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input" placeholder="Adı"></div>
+                    <div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input" placeholder="Soyadı"></div>
+                    <div class="form-group"><label class="form-label">Anne Adı / Baba Adı</label><input type="text" class="form-input" placeholder="Opsiyonel"></div>
+                    <div class="form-group"><label class="form-label">İl / İlçe</label><input type="text" class="form-input" placeholder="Ankara"></div>
+                `
+            },
+            'tc-kimlik': {
+                fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="11 haneli TC No" maxlength="11"></div>`
+            },
+            'tc-pro': {
+                fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No (Pro Analiz) <span>*</span></label><input type="text" class="form-input" placeholder="11 haneli TC No"></div>`
+            },
+            'vergi': {
+                fields: `<div class="form-group"><label class="form-label">Vergi Dairesi / VKN <span>*</span></label><input type="text" class="form-input" placeholder="VKN veya Ad"></div>`
+            },
+            'medeni-hal': {
+                fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>`
+            },
+            'aile': {
+                fields: `<div class="form-group full-width"><label class="form-label">Kök TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>`
+            },
+            'sulale': {
+                fields: `<div class="form-group full-width"><label class="form-label">Kök TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="Sülale için TC No"></div>`
+            },
+            'anne-tarafi': {
+                fields: `<div class="form-group full-width"><label class="form-label">Hedef TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>`
+            },
+            'baba-tarafi': {
+                fields: `<div class="form-group full-width"><label class="form-label">Hedef TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>`
+            },
+            'es': {
+                fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>`
+            },
+            'gsm-tc': {
+                fields: `<div class="form-group full-width"><label class="form-label">GSM Numarası <span>*</span></label><input type="text" class="form-input" placeholder="05XXXXXXXXX"></div>`
+            },
+            'tc-gsm': {
+                fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>`
+            },
+            'adres': {
+                fields: `<div class="form-group full-width"><label class="form-label">TC No veya Ad Soyad <span>*</span></label><input type="text" class="form-input" placeholder="Arama verisi"></div>`
+            },
+            'bina': {
+                fields: `<div class="form-group full-width"><label class="form-label">Bina / Adres Kodu <span>*</span></label><input type="text" class="form-input" placeholder="UAVT Kod veya Adres"></div>`
+            },
+            'koy-mahalle': {
+                fields: `<div class="form-group"><label class="form-label">İl / İlçe / Mahalle <span>*</span></label><input type="text" class="form-input" placeholder="Örn: Ankara/Çankaya"></div>`
+            },
+            'plaka': {
+                fields: `<div class="form-group full-width"><label class="form-label">Araç Plakası <span>*</span></label><input type="text" class="form-input" placeholder="06 MAM 06"></div>`
+            },
+            'sasi': {
+                fields: `<div class="form-group full-width"><label class="form-label">Şasi No (VIN) <span>*</span></label><input type="text" class="form-input" placeholder="17 haneli şasi no"></div>`
+            },
+            'ip': {
+                fields: `<div class="form-group full-width"><label class="form-label">IP Adresi <span>*</span></label><input type="text" class="form-input" placeholder="192.168.1.1"></div>`
+            },
+            'p-kisi': {
+                fields: `<div class="form-group full-width"><label class="form-label">Kişi Arama Parametresi <span>*</span></label><input type="text" class="form-input" placeholder="TC, Ad Soyad veya Telefon"></div>`
+            },
+            'p-adres': {
+                fields: `<div class="form-group full-width"><label class="form-label">Premium Adres Verisi <span>*</span></label><input type="text" class="form-input" placeholder="Detaylı adres arama"></div>`
+            },
+            'ekstra-araclar': {
+                fields: `<div class="form-group full-width"><label class="form-label">Hedef Numara / İşlem <span>*</span></label><input type="text" class="form-input" placeholder="SMS Bomber / Araç Hedef No"></div>`
+            },
+            'vesika': {
+                fields: `
+                    <div class="form-group full-width">
+                        <label class="form-label">Görsel / Vesika Yükle <span>*</span></label>
+                        <div class="photo-upload-area">
+                            <div style="font-size:13px; font-weight:700;">Fotoğraf Sürükleyin veya Seçin</div>
+                        </div>
+                    </div>
+                `
+            },
+            'tapu': {
+                fields: `
+                    <div class="form-group"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>
+                    <div class="form-group"><label class="form-label">İl / İlçe / Ada / Parsel</label><input type="text" class="form-input" placeholder="Opsiyonel"></div>
+                `
+            },
+            'isyeri': {
+                fields: `<div class="form-group full-width"><label class="form-label">İşyeri / VKN veya Unvan <span>*</span></label><input type="text" class="form-input" placeholder="Firma adı"></div>`
+            },
+            'p-plaka': {
+                fields: `<div class="form-group full-width"><label class="form-label">Premium Plaka / Ruhsat <span>*</span></label><input type="text" class="form-input" placeholder="Plaka giriniz"></div>`
+            },
+            'rapor-takip': {
+                fields: `
+                    <div class="form-group"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>
+                    <div class="form-group"><label class="form-label">Rapor Türü</label><select class="form-select"><option>Kan Grubu</option><option>Aşı Bilgisi</option><option>Sağlık Durumu</option><option>Gebelik / İzlem</option></select></div>
+                `
+            },
+            'nvi': {
+                fields: `<div class="form-group full-width"><label class="form-label">Nvi Sorgu Parametresi <span>*</span></label><input type="text" class="form-input" placeholder="TC No veya Seri No"></div>`
+            },
+            'pdf': {
+                fields: `<div class="form-group full-width"><label class="form-label">PDF Belge Kodu / TC <span>*</span></label><input type="text" class="form-input" placeholder="Belge ID"></div>`
+            }
+        };
+
+        function toggleCategory(elem) {
+            elem.parentElement.classList.toggle('open');
+        }
+
+        function switchModule(key, title, badge, elem) {
+            document.querySelectorAll('.subcategory-item').forEach(e => e.classList.remove('active'));
+            elem.classList.add('active');
+            document.getElementById('moduleTitle').innerHTML = `<span>${title}</span>`;
+            document.getElementById('moduleBadge').textContent = badge;
+            document.getElementById('formFields').innerHTML = (moduleConfigs[key] || moduleConfigs['ad-soyad']).fields;
+        }
+
+        function resetForm() {
+            document.querySelectorAll('.form-input').forEach(i => i.value = '');
+        }
+
+        function filterModules(q) {
+            const query = q.toLowerCase();
+            document.querySelectorAll('.subcategory-item').forEach(item => {
+                item.style.display = item.textContent.toLowerCase().includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        // Init default form
+        document.getElementById('formFields').innerHTML = moduleConfigs['ad-soyad'].fields;
+    </script>
+</body>
+</html>
