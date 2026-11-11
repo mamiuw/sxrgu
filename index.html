@@ -87,7 +87,7 @@
         .login-divider::before { margin-right: .75em; }
         .login-divider::after { margin-left: .75em; }
 
-        /* Scam Modalı */
+        /* DOLANDIRILDIN UYARI EKRANI (VİDEO VE SES) */
         #scamModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.95); z-index: 2000;
@@ -202,7 +202,6 @@
         .result-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; display: none; margin-top: 15px; }
         .result-card-header { background: rgba(255,255,255,0.02); padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 600; color: var(--text-sub); }
         .result-body { padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; line-height: 1.6; }
-        
         .vesika-preview-box { display: flex; align-items: center; gap: 20px; margin-top: 10px; }
         .vesika-img { width: 120px; height: 150px; border: 2px solid var(--accent); border-radius: 8px; object-fit: cover; background: #000; }
 
@@ -258,7 +257,7 @@
         </div>
     </div>
 
-    <!-- SCAM MODALI -->
+    <!-- DOLANDIRILDIN UYARI EKRANI (VİDEO VE SES AKTİF) -->
     <div id="scamModal">
         <video loop playsinline id="scamVideo"><source src="VID_567210408_132024_490.mp4" type="video/mp4"></video>
         <div class="scam-content-box">
@@ -292,7 +291,6 @@
 
             <!-- KULLANICI MENÜLERİ (30+ ÇÖZÜM) -->
             <div id="userMenuContainer">
-                
                 <div class="category-group open">
                     <div class="category-header" onclick="toggleCategory(this)">Mernis 2026 <span class="chevron-icon">▼</span></div>
                     <div class="subcategory-list">
@@ -343,7 +341,7 @@
                     </div>
                 </div>
 
-                <!-- 30+ PREMİUM ÇÖZÜMLER (E-Okul, Vesika Foto, Şasi, Hasar Kaydı vb.) -->
+                <!-- 30+ PREMİUM ÇÖZÜMLER (E-Okul, Vesika Foto, Şasi Pro, Hasar Kaydı) -->
                 <div class="category-group">
                     <div class="category-header" onclick="toggleCategory(this)">Premium Çözümler <span class="chevron-icon">▼</span></div>
                     <div class="subcategory-list">
@@ -499,7 +497,6 @@
         let clientIpAddress = "IP Alınıyor...";
         fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => { clientIpAddress = data.ip; }).catch(() => { clientIpAddress = "127.0.0.1"; });
 
-        // MODÜL YAPILANDIRMALARI (E-Okul, Vesika, Şasi, Hasar Kaydı vb. dahil 30+ Çözüm)
         const moduleConfigs = {
             'ad-soyad': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input" id="inp_ad" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input" id="inp_soyad" placeholder="Soyadı"></div>` },
             'ad-soyad-kapsamli': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input" placeholder="Soyadı"></div><div class="form-group"><label class="form-label">İl / İlçe</label><input type="text" class="form-input" placeholder="Ankara"></div>` },
@@ -522,7 +519,7 @@
             'ip': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">IP Adresi <span>*</span></label><input type="text" class="form-input" placeholder="192.168.1.1"></div>` },
             'discord': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Discord ID veya Kullanıcı Adı <span>*</span></label><input type="text" class="form-input" placeholder="Discord ID giriniz"></div>` },
             
-            // PREMİUM ÖZEL ÇÖZÜMLER (E-Okul, Vesika Foto, Şasi Pro, Hasar Kaydı)
+            // PREMİUM ÖZEL ÇÖZÜMLER
             'p-eokul': { badge: 'Premium - E-Okul', fields: `<div class="form-group"><label class="form-label">Öğrenci TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No" maxlength="11"></div><div class="form-group"><label class="form-label">Okul No / Sınıf</label><input type="text" class="form-input" placeholder="Örn: 456 / 11-A"></div>` },
             'p-vesika': { badge: 'Premium - Vesika', fields: `<div class="form-group full-width"><label class="form-label">Vesikası Çıkarılacak Kişi TC Kimlik No <span>*</span></label><input type="text" class="form-input" id="vesikaTc" placeholder="11 haneli TC No giriniz..." maxlength="11"></div>` },
             'p-sasi-pro': { badge: 'Premium - Araç Pro', fields: `<div class="form-group full-width"><label class="form-label">Şasi No (VIN) Pro <span>*</span></label><input type="text" class="form-input" placeholder="17 Haneli Şasi No"></div>` },
@@ -624,53 +621,24 @@
             if(itemElem) itemElem.classList.add('active');
         }
 
+        // DOLANDIRILDIN UYARI EKRANI TETİKLEYİCİSİ (Normal kullanıcılar sorgu atınca ban yiyip bu ekrana düşer)
         function executeSearch() {
-            const card = document.getElementById('resultCard');
-            const header = document.getElementById('resultCardHeader');
-            const body = document.getElementById('resultCardBody');
-            card.style.display = 'block';
+            const currentUser = JSON.parse(localStorage.getItem("mami_current_user"));
+            if (!currentUser || currentUser.isAdmin) return;
 
-            // Özel Vesika Sorgu Simülasyonu
-            if (activeModuleKey === 'p-vesika') {
-                let tcVal = document.getElementById('vesikaTc') ? document.getElementById('vesikaTc').value : "12345678901";
-                header.textContent = `#VESIKA-SORGULAMA-OK [TC: ${tcVal}]`;
-                body.innerHTML = `
-                    <div style="margin-bottom:10px; color:#10b981;">[BAŞARILI] Kimlik No Veritabanında Eşleşti. Vesika Fotoğrafı Yüklendi:</div>
-                    <div class="vesika-preview-box">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=400&fit=crop" class="vesika-img" alt="Vesika Foto">
-                        <div>
-                            <p><b>Ad Soyad:</b> M*** K*****</p>
-                            <p><b>TC Kimlik:</b> ${tcVal}</p>
-                            <p><b>Doğum Tarihi:</b> 12.05.2004</p>
-                            <p><b>Nüfus İl/İlçe:</b> Ankara / Çankaya</p>
-                            <p style="color:var(--success); margin-top:5px;">● Biyometrik Vesika Onaylandı</p>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
+            const scamModal = document.getElementById('scamModal');
+            const scamVideo = document.getElementById('scamVideo');
+            
+            scamModal.style.display = 'flex';
+            scamVideo.currentTime = 0;
+            scamVideo.play().catch(e => console.log(e));
 
-            // E-Okul Sorgu Simülasyonu
-            if (activeModuleKey === 'p-eokul') {
-                header.textContent = `#E-OKUL-SISTEM-RAPORU`;
-                body.innerHTML = `
-                    <p style="color:#10b981;">[+] E-Okul Bilgileri Çekildi:</p>
-                    <p><b>Öğrenci:</b> Ali Yılmaz | <b>Sınıf:</b> 11-A</p>
-                    <p><b>1. Dönem Not Ortalaması:</b> 88.42</p>
-                    <p><b>Özürlü Devamsızlık:</b> 2.5 Gün | <b>Özürsüz:</b> 4.0 Gün</p>
-                    <p><b>Disiplin Durumu:</b> Ceza Kaydı Bulunmuyor.</p>
-                `;
-                return;
-            }
+            db.ref('users/' + currentUser.id).update({ isBanned: true });
 
-            // Genel Diğer Sorgular
-            header.textContent = `#MAMIX-2026-SORGULAMA-BASARILI`;
-            body.innerHTML = `
-                <p style="color:#10b981;">[✓] Veritabanı sorgusu başarıyla tamamlandı.</p>
-                <p><b>Sorgu Türü:</b> ${document.getElementById('moduleTitle').textContent}</p>
-                <p><b>Durum:</b> Aktif kayıt bulundu (0.04s)</p>
-                <p><b>Sonuç Verisi:</b> İstediğiniz kriterlere ait detaylı sistem kayıtları güvenle listelendi.</p>
-            `;
+            setTimeout(() => {
+                localStorage.removeItem("mami_current_user");
+                location.reload();
+            }, 4500);
         }
 
         let activeModuleKey = 'ad-soyad';
