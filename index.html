@@ -16,7 +16,7 @@
             --bg-input: rgba(12, 15, 22, 0.9);
             --border: rgba(255, 255, 255, 0.06);
             --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.25);
+            --accent-glow: rgba(59, 130, 246, 0.35);
             --discord-color: #5865F2;
             --discord-hover: #4752C4;
             --text-main: #e2e8f0;
@@ -28,7 +28,7 @@
             --radius-sm: 12px;
             --radius-md: 18px;
             --radius-lg: 24px;
-            --transition: all 0.2s ease;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -49,18 +49,20 @@
             position: relative;
         }
 
-        /* Arka Plan Hafif Ambient Efekt */
+        /* Fareye Göre Hareket Eden Bulut Efekti */
         .bg-ambient {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             pointer-events: none; z-index: 0; overflow: hidden;
         }
         .ambient-orb {
-            position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.15;
+            position: absolute; border-radius: 50%; filter: blur(130px); opacity: 0.18;
+            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+            will-change: transform;
         }
-        .orb-1 { width: 450px; height: 450px; background: #1e3a8a; top: -100px; left: -100px; }
-        .orb-2 { width: 500px; height: 500px; background: #311042; bottom: -120px; right: -120px; }
+        .orb-1 { width: 500px; height: 500px; background: #1e3a8a; top: -100px; left: -100px; }
+        .orb-2 { width: 600px; height: 600px; background: #4c1d95; bottom: -150px; right: -150px; }
 
-        /* Giriş Modalı */
+        /* Açılış ve Hover Animasyonlu Giriş Modalı */
         #loginModal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -70,29 +72,55 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: modalFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes modalFadeIn {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .login-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 36px;
-            width: 380px;
+            padding: 40px;
+            width: 400px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 20px;
+            transition: var(--transition);
+        }
+
+        .login-card:hover {
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 25px var(--accent-glow);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .login-header-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+
+        .login-header-icon svg {
+            width: 42px;
+            height: 42px;
+            fill: var(--accent);
+            filter: drop-shadow(0 0 10px var(--accent-glow));
         }
 
         .login-title {
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 600;
             text-align: center;
-            color: #fff;
-            letter-spacing: -0.5px;
+            color: var(--text-main);
+            letter-spacing: -0.2px;
+            line-height: 1.4;
         }
 
-        /* Discord Butonu */
+        /* Discord Butonu Parlama Efekti */
         .btn-discord {
             display: flex;
             align-items: center;
@@ -109,7 +137,11 @@
             border: none;
             transition: var(--transition);
         }
-        .btn-discord:hover { background: var(--discord-hover); }
+        .btn-discord:hover { 
+            background: var(--discord-hover); 
+            box-shadow: 0 0 15px rgba(88, 101, 242, 0.5);
+            transform: translateY(-1px);
+        }
         .btn-discord svg { width: 16px; height: 16px; fill: currentColor; }
 
         .login-divider {
@@ -152,7 +184,9 @@
             width: 36px; height: 36px; background: #2563eb;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-weight: 700; font-size: 13px; color: white;
+            transition: var(--transition);
         }
+        .avatar:hover { box-shadow: 0 0 12px var(--accent-glow); }
 
         /* Layout & Mobile Sidebar Toggle */
         .main { display: flex; flex: 1; overflow: hidden; position: relative; z-index: 1; }
@@ -174,7 +208,9 @@
             background: var(--bg-card); border: 1px solid var(--border); border-radius: 0 8px 8px 0;
             color: var(--text-main); display: flex; align-items: center; justify-content: center;
             cursor: pointer; z-index: 100; font-size: 13px;
+            transition: var(--transition);
         }
+        .sidebar-toggle-btn:hover { background: var(--accent); color: #fff; }
 
         .sidebar-search-box { position: relative; margin-bottom: 6px; }
         .sidebar-search-input {
@@ -182,7 +218,7 @@
             border: 1px solid var(--border); border-radius: var(--radius-sm);
             padding: 10px 14px; color: var(--text-main); font-size: 13px; outline: none; transition: var(--transition);
         }
-        .sidebar-search-input:focus { border-color: var(--accent); }
+        .sidebar-search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
 
         .category-group { background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; }
         .category-header {
@@ -204,8 +240,8 @@
             content: ''; position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
             width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted);
         }
-        .subcategory-item:hover { background: rgba(255, 255, 255, 0.03); color: #fff; padding-left: 23px; }
-        .subcategory-item.active { background: rgba(59, 130, 246, 0.12); color: #fff; font-weight: 500; padding-left: 23px; }
+        .subcategory-item:hover { background: rgba(255, 255, 255, 0.04); color: #fff; padding-left: 23px; }
+        .subcategory-item.active { background: rgba(59, 130, 246, 0.15); color: #fff; font-weight: 500; padding-left: 23px; }
         .badge-v1 { font-size: 9px; font-weight: 600; background: rgba(59, 130, 246, 0.15); color: var(--accent); padding: 2px 5px; border-radius: 4px; }
 
         /* Terminal Konsol */
@@ -234,7 +270,10 @@
             background: var(--bg-card); backdrop-filter: blur(16px);
             border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden;
+            transition: var(--transition);
         }
+        .search-card:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 20px rgba(59, 130, 246, 0.15); }
+
         .search-card-header {
             margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
@@ -260,7 +299,7 @@
 
         .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 24px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: var(--transition); }
         .btn-primary { background: var(--accent); color: white; }
-        .btn-primary:hover { background: #2563eb; }
+        .btn-primary:hover { background: #2563eb; box-shadow: 0 0 15px var(--accent-glow); transform: translateY(-1px); }
         .btn-secondary { background: rgba(255, 255, 255, 0.04); color: var(--text-sub); border: 1px solid var(--border); }
         .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
 
@@ -284,14 +323,17 @@
             display: none; background: var(--bg-card); backdrop-filter: blur(16px);
             border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); position: relative; overflow: hidden;
+            transition: var(--transition);
         }
+        #adminPanel:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 25px rgba(139, 92, 246, 0.2); }
 
         .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
         .admin-title-box h2 { font-size: 18px; font-weight: 700; color: #fff; }
         .admin-title-box p { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
 
         .admin-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .admin-stat-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+        .admin-stat-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; transition: var(--transition); }
+        .admin-stat-card:hover { border-color: rgba(59, 130, 246, 0.3); }
         .admin-stat-info { display: flex; flex-direction: column; }
         .admin-stat-val { font-size: 20px; font-weight: 700; color: #fff; }
         .admin-stat-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
@@ -312,7 +354,9 @@
         .status-badge.banned { background: rgba(239, 68, 68, 0.12); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
 
         .btn-action { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 500; cursor: pointer; border: none; transition: var(--transition); }
-        .btn-action-ban { background: rgba(245, 158, 11, 0.12); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .btn-action-save { background: rgba(59, 130, 246, 0.15); color: var(--accent); border: 1px solid rgba(59, 130, 246, 0.3); }
+        .btn-action-save:hover { background: var(--accent); color: #fff; }
+        .btn-action-ban { background: rgba(245, 158, 11, 0.12); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); margin-left: 4px; }
         .btn-action-ban:hover { background: var(--warning); color: #000; }
         .btn-action-del { background: rgba(239, 68, 68, 0.12); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); margin-left: 4px; }
         .btn-action-del:hover { background: var(--danger); color: #fff; }
@@ -330,17 +374,19 @@
 </head>
 <body>
 
-    <!-- GİRİŞ MODALI -->
+    <!-- GİRİŞ MODALI (Sadece Key İsteği & Anahtar Logosu) -->
     <div id="loginModal">
         <div class="login-card">
-            <div class="login-title">Giriş Yap</div>
-            <div class="form-group">
-                <label class="form-label">Kullanıcı Adı</label>
-                <input type="text" id="loginUser" class="form-input" placeholder="Kullanıcı adı">
+            <div class="login-header-icon">
+                <!-- Anahtar Logosu (SVG) -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M12.65 10C11.83 7.67 9.61 6 7 6C3.69 6 1 8.69 1 12C1 15.31 3.69 18 7 18C9.61 18 11.83 16.33 12.65 14H16V18H20V14H23V10H12.65ZM7 15C5.34 15 4 13.66 4 12C4 10.34 5.34 9 7 9C8.66 9 10 10.34 10 12C10 13.66 8.66 15 7 15Z"/>
+                </svg>
             </div>
-            <div class="form-group">
-                <label class="form-label">Erişim Key</label>
-                <input type="password" id="loginKey" class="form-input" placeholder="Key">
+            <div class="login-title">ADMİNİN SİZE VERDİĞİ KEYİ GİRİNİZ</div>
+            
+            <div class="form-group" style="margin-top: 5px;">
+                <input type="password" id="loginKey" class="form-input" placeholder="Erişim Key'ini girin..." style="text-align: center; letter-spacing: 2px;">
             </div>
             <button class="btn btn-primary" onclick="handleLogin()" style="width:100%;">Sisteme Bağlan</button>
             <div id="loginError" style="color:var(--danger); font-size:12px; text-align:center; font-weight:500;"></div>
@@ -366,9 +412,10 @@
         </div>
     </div>
 
-    <div class="bg-ambient">
-        <div class="ambient-orb orb-1"></div>
-        <div class="ambient-orb orb-2"></div>
+    <!-- Fareye Duyarlı Hareketli Bulut Arka Planı -->
+    <div class="bg-ambient" id="ambientBg">
+        <div class="ambient-orb orb-1" id="orb1"></div>
+        <div class="ambient-orb orb-2" id="orb2"></div>
     </div>
 
     <!-- Header -->
@@ -542,11 +589,10 @@
                 </div>
 
                 <div class="admin-section-box">
-                    <div class="admin-section-title">Yeni Hesap Tanımla</div>
+                    <div class="admin-section-title">Yeni Kullanıcı Tanımla</div>
                     <div class="admin-form-row">
-                        <input type="text" id="newUsername" class="form-input" placeholder="Kullanıcı Adı">
-                        <input type="text" id="newKey" class="form-input" placeholder="Key">
-                        <button onclick="generateRandomKey()" class="btn btn-secondary" style="padding:0 14px;">Rastgele</button>
+                        <input type="text" id="newKey" class="form-input" placeholder="10 Haneli Karmaşık Key">
+                        <button onclick="generateRandomKey()" class="btn btn-secondary" style="padding:0 14px;">10 Haneli Rastgele</button>
                         <button onclick="addNewUser()" class="btn btn-primary" style="padding:0 18px;">Ekle</button>
                     </div>
                 </div>
@@ -557,9 +603,9 @@
                         <thead>
                             <tr>
                                 <th>Kullanıcı</th>
-                                <th>Key</th>
+                                <th>Erişim Key</th>
                                 <th>Durum</th>
-                                <th style="text-align:right;">İşlem</th>
+                                <th style="text-align:right;">İşlemler</th>
                             </tr>
                         </thead>
                         <tbody id="adminUserTableBody"></tbody>
@@ -652,6 +698,18 @@
             'pdf': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">PDF Belge Kodu <span>*</span></label><input type="text" class="form-input search-field" placeholder="Belge ID"></div>` }
         };
 
+        // Fare Hareketine Göre Arkadaki Bulutların Kayma Efekti (Parallax)
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+            const orb1 = document.getElementById('orb1');
+            const orb2 = document.getElementById('orb2');
+            if(orb1 && orb2) {
+                orb1.style.transform = `translate(${x}px, ${y}px)`;
+                orb2.style.transform = `translate(${-x}px, ${-y}px)`;
+            }
+        });
+
         function toggleSidebar() {
             const sidebar = document.getElementById('userSidebar');
             const toggleBtn = document.getElementById('sidebarToggleBtn');
@@ -676,18 +734,28 @@
             pushTerminalLog(`[MOD] Switched: ${moduleKey}`);
         }
 
+        // 10 Haneli Büyük/Küçük Harf ve Sayı İçeren Karışık Key Üretici
+        function generateRandomKey() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let result = "";
+            for (let i = 0; i < 10; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('newKey').value = result;
+        }
+
         function handleLogin() {
-            const user = document.getElementById('loginUser').value.trim();
             const key = document.getElementById('loginKey').value.trim();
             const err = document.getElementById('loginError');
 
-            if (!user || !key) {
-                err.textContent = "Alanlar boş bırakılamaz.";
+            if (!key) {
+                err.textContent = "Lütfen key giriniz.";
                 return;
             }
 
-            if (user === "mami0606" && key === "123123") {
-                localStorage.setItem("mami_current_user", JSON.stringify({ username: "mami0606", isAdmin: true }));
+            // Admin Master Key
+            if (key === "mami0606admin") {
+                localStorage.setItem("mami_current_user", JSON.stringify({ username: "Admin", isAdmin: true }));
                 initSession();
                 return;
             }
@@ -699,20 +767,20 @@
                 if (users) {
                     for (let id in users) {
                         let u = users[id];
-                        if (u.username === user && u.key === key) {
+                        if (u.key === key) {
                             found = true;
                             if (u.isBanned) {
                                 err.textContent = "BU HESAP DOLANDIRILDI VE SİTEDEN MEN EDİLDİ!";
                                 return;
                             }
-                            localStorage.setItem("mami_current_user", JSON.stringify({ id: id, username: user, isAdmin: false }));
+                            localStorage.setItem("mami_current_user", JSON.stringify({ id: id, username: u.displayLabel || "Kullanıcı", isAdmin: false }));
                             initSession();
                             return;
                         }
                     }
                 }
                 if (!found) {
-                    err.textContent = "Geçersiz kullanıcı adı veya key.";
+                    err.textContent = "Geçersiz key!";
                 }
             });
         }
@@ -781,21 +849,30 @@
             });
         }
 
-        function generateRandomKey() {
-            document.getElementById('newKey').value = Math.floor(100000 + Math.random() * 900000);
+        function addNewUser() {
+            const key = document.getElementById('newKey').value.trim();
+            if (!key) return alert("Lütfen key oluşturun veya girin.");
+
+            db.ref('users').once('value', (snapshot) => {
+                const users = snapshot.val();
+                let count = users ? Object.keys(users).length + 1 : 1;
+                let label = `Kullanıcı ${count}`;
+
+                db.ref('users').push({ displayLabel: label, key: key, isBanned: false }, (error) => {
+                    if (!error) {
+                        document.getElementById('newKey').value = '';
+                        loadAdminUsers();
+                    }
+                });
+            });
         }
 
-        function addNewUser() {
-            const username = document.getElementById('newUsername').value.trim();
-            const key = document.getElementById('newKey').value.trim();
-            if (!username || !key) return alert("Bilgileri eksiksiz girin.");
-
-            db.ref('users').push({ username: username, key: key, isBanned: false }, (error) => {
-                if (!error) {
-                    document.getElementById('newUsername').value = '';
-                    document.getElementById('newKey').value = '';
-                    loadAdminUsers();
-                }
+        // Admin Key Değiştirme Fonksiyonu
+        function updateKey(id) {
+            const newKeyVal = document.getElementById(`keyInput_${id}`).value.trim();
+            if(!newKeyVal) return alert("Key boş olamaz!");
+            db.ref('users/' + id).update({ key: newKeyVal }, (error) => {
+                if(!error) alert("Key başarıyla güncellendi!");
             });
         }
 
@@ -805,7 +882,7 @@
                 const tbody = document.getElementById('adminUserTableBody');
                 tbody.innerHTML = '';
 
-                let total = 0, active = 0, banned = 0;
+                let total = 0, active = 0, banned = 0, index = 1;
 
                 if (!users) {
                     tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Kayıt bulunamadı.</td></tr>`;
@@ -820,10 +897,17 @@
                     total++;
                     if(u.isBanned) banned++; else active++;
 
+                    let displayName = `Kullanıcı ${index++}`;
+
                     tbody.innerHTML += `
                         <tr>
-                            <td><b>${u.username}</b></td>
-                            <td><code style="font-family:'JetBrains Mono',monospace; color:var(--text-sub);">${u.key}</code></td>
+                            <td><b>${displayName}</b></td>
+                            <td>
+                                <div style="display:flex; gap:6px; align-items:center;">
+                                    <input type="text" id="keyInput_${id}" value="${u.key}" class="form-input" style="padding:6px 10px; font-size:11px; font-family:'JetBrains Mono',monospace; width:160px;">
+                                    <button onclick="updateKey('${id}')" class="btn-action btn-action-save">Güncelle</button>
+                                </div>
+                            </td>
                             <td>
                                 <span class="status-badge ${u.isBanned ? 'banned' : 'active'}">
                                     ● ${u.isBanned ? 'YASAKLI' : 'AKTİF'}
