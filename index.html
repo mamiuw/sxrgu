@@ -3,37 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAMİX - Gelişmiş Sorgu & Analiz Paneli v3.0</title>
+    <title>MAMİX - Kurumsal Veri & Analiz Paneli v3.0</title>
     <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@700;900&family=Roboto+Mono:wght@400;500&display=swap');
 
         :root {
-            --bg-deep: #030508;
-            --bg-primary: #0a0e17;
-            --bg-secondary: #101622;
-            --bg-card: rgba(16, 23, 38, 0.7);
-            --bg-input: rgba(8, 12, 20, 0.8);
-            --border: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(59, 130, 246, 0.3);
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.4);
-            --accent-purple: #8b5cf6;
-            --accent-cyan: #06b6d4;
+            --bg-deep: #0b0e14;
+            --bg-primary: #11151e;
+            --bg-secondary: #161b26;
+            --bg-card: #161b26;
+            --bg-input: #0d1017;
+            --border: #262d3d;
+            --border-light: #333c52;
+            --accent: #c59b27;        /* Klasik Altın / Kehribar Vurgu */
+            --accent-hover: #d8ad36;
+            --accent-subtle: rgba(197, 155, 39, 0.12);
             --discord-color: #5865F2;
             --discord-hover: #4752C4;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --text-muted: #64748b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --text-main: #e6edf3;
+            --text-sub: #9ea7b3;
+            --text-muted: #6e7681;
+            --success: #2ea043;
+            --danger: #da3633;
+            --warning: #d29922;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --transition: all 0.2s ease;
         }
 
         * {
@@ -44,7 +43,7 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-deep);
             color: var(--text-main);
             height: 100vh;
@@ -54,22 +53,11 @@
             position: relative;
         }
 
-        /* Matrix Canvas Arka Planı */
-        #matrixCanvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.12;
-        }
-
         /* Giriş Modalı */
         #loginModal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(3, 5, 8, 0.92);
-            backdrop-filter: blur(24px);
+            background: rgba(8, 10, 15, 0.96);
             z-index: 1000;
             display: flex;
             align-items: center;
@@ -79,32 +67,30 @@
         .login-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
+            border-top: 3px solid var(--accent);
             border-radius: var(--radius-lg);
             padding: 40px;
             width: 400px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
             display: flex;
             flex-direction: column;
             gap: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
         }
 
         .login-title {
-            font-size: 26px;
-            font-weight: 800;
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 24px;
+            font-weight: 700;
             text-align: center;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #fff, var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+            color: var(--text-main);
+        }
+
+        .login-subtitle {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: -12px;
         }
 
         /* Discord Butonu Stili */
@@ -113,29 +99,25 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 12px 20px;
+            padding: 11px 20px;
             background: var(--discord-color);
             color: white;
             border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
             text-decoration: none;
             cursor: pointer;
             border: none;
             transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
-            margin-top: 5px;
         }
 
         .btn-discord:hover {
             background: var(--discord-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.6);
         }
 
         .btn-discord svg {
-            width: 18px;
-            height: 18px;
+            width: 17px;
+            height: 17px;
             fill: currentColor;
         }
 
@@ -147,7 +129,6 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin: 5px 0;
         }
 
         .login-divider::before, .login-divider::after {
@@ -163,7 +144,7 @@
         #scamModal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
+            background: #000;
             z-index: 2000;
             display: none;
             flex-direction: column;
@@ -191,81 +172,82 @@
         }
 
         .scam-title {
-            font-size: 72px;
+            font-family: 'Merriweather', serif;
+            font-size: 64px;
             font-weight: 900;
             color: #fff;
-            text-shadow: 0 0 40px #ef4444;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
             margin-bottom: 12px;
             letter-spacing: 2px;
-            animation: pulse 1s infinite alternate;
         }
 
         .scam-sub {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            color: #fee2e2;
+            color: #f8d7da;
             text-transform: uppercase;
             letter-spacing: 4px;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.05); }
-        }
-
-        /* Dynamic Background Orbs */
-        .bg-interactive {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none; z-index: 0; overflow: hidden;
-        }
-
-        .bg-orb {
-            position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.2;
-            transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
-        }
-
-        .bg-orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--accent) 0%, transparent 70%); top: -100px; left: -100px; }
-        .bg-orb-2 { width: 600px; height: 600px; background: radial-gradient(circle, var(--accent-purple) 0%, transparent 70%); bottom: -150px; right: -150px; }
-        .bg-orb-3 { width: 400px; height: 400px; background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%); top: 40%; left: 40%; }
-
         /* Header */
         .header {
-            background: rgba(10, 14, 23, 0.8);
-            backdrop-filter: blur(20px);
+            background: var(--bg-primary);
             border-bottom: 1px solid var(--border);
-            padding: 0 32px; height: 72px;
-            display: flex; align-items: center; justify-content: space-between;
-            position: relative; z-index: 10;
+            padding: 0 28px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 10;
         }
 
         .logo {
-            display: flex; align-items: center; gap: 14px;
-            font-weight: 800; font-size: 22px; letter-spacing: 0.5px;
-            background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Merriweather', Georgia, serif;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 0.5px;
+            color: var(--text-main);
         }
 
-        .header-right { display: flex; align-items: center; gap: 20px; }
-        .user-info { display: flex; align-items: center; gap: 12px; }
+        .logo-tag {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--accent-subtle);
+            color: var(--accent);
+            border: 1px solid rgba(197, 155, 39, 0.3);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .header-right { display: flex; align-items: center; gap: 18px; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
         .avatar {
-            width: 40px; height: 40px;
-            background: linear-gradient(135deg, #3b82f6, #06b6d4);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 14px; color: white;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            width: 34px; height: 34px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 13px; color: var(--accent);
         }
 
         /* Layout & Mobile Sidebar Toggle Button */
         .main { display: flex; flex: 1; overflow: hidden; position: relative; z-index: 1; }
 
         .sidebar {
-            width: 360px;
-            background: rgba(10, 14, 23, 0.85);
-            backdrop-filter: blur(14px);
+            width: 320px;
+            background: var(--bg-primary);
             border-right: 1px solid var(--border);
-            padding: 24px 18px; overflow-y: auto;
-            display: flex; flex-direction: column; gap: 12px;
-            transition: transform 0.3s ease;
+            padding: 20px 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.25s ease;
             position: relative;
             z-index: 5;
         }
@@ -279,150 +261,279 @@
 
         .sidebar-toggle-btn {
             position: absolute;
-            top: 20px;
-            right: -42px;
-            width: 36px;
-            height: 36px;
+            top: 16px;
+            right: -36px;
+            width: 32px;
+            height: 32px;
             background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 0 8px 8px 0;
-            color: var(--text-main);
+            border-left: none;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            color: var(--text-sub);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 100;
-            font-size: 16px;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.5);
+            font-size: 13px;
         }
 
-        .sidebar-search-box { position: relative; margin-bottom: 8px; }
+        .sidebar-toggle-btn:hover {
+            color: var(--text-main);
+            background: #1f2636;
+        }
+
+        .sidebar-search-box { position: relative; margin-bottom: 6px; }
         .sidebar-search-input {
-            width: 100%; background: rgba(8, 12, 20, 0.6);
-            border: 1px solid var(--border); border-radius: var(--radius-sm);
-            padding: 11px 14px; color: var(--text-main); font-size: 13px; outline: none;
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 12px;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
             transition: var(--transition);
         }
-        .sidebar-search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .sidebar-search-input:focus { border-color: var(--accent); }
 
-        .category-group { background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+        .category-group { border-bottom: 1px solid rgba(255, 255, 255, 0.04); padding-bottom: 6px; }
         .category-header {
-            padding: 8px 6px; display: flex; align-items: center; justify-content: space-between;
-            cursor: pointer; background: transparent !important; border: none !important;
+            padding: 8px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
         }
-        .category-title-wrap { font-weight: 700; font-size: 14px; color: var(--text-main); }
-        .chevron-icon { font-size: 10px; color: var(--text-muted); transition: transform 0.3s ease; }
-        .category-group.open .chevron-icon { transform: rotate(180deg); color: var(--accent-cyan); }
+        .category-title-wrap {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-main);
+            letter-spacing: 0.2px;
+        }
+        .chevron-icon { font-size: 10px; color: var(--text-muted); transition: transform 0.25s ease; }
+        .category-group.open .chevron-icon { transform: rotate(180deg); color: var(--accent); }
 
-        .subcategory-list { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; padding-left: 8px; }
+        .subcategory-list { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; padding-left: 4px; }
         .category-group.open .subcategory-list { max-height: 1200px; }
         .subcategory-item {
-            padding: 8px 10px 8px 24px; font-size: 12px; font-weight: 500;
-            color: rgba(148, 163, 184, 0.7); cursor: pointer; display: flex; align-items: center;
-            justify-content: space-between; position: relative; border-radius: 6px; transition: var(--transition);
+            padding: 7px 10px 7px 20px;
+            font-size: 12.5px;
+            font-weight: 400;
+            color: var(--text-sub);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            margin-bottom: 2px;
         }
         .subcategory-item::before {
-            content: ''; position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-            width: 4px; height: 4px; border-radius: 50%; background: var(--text-muted);
+            content: '—';
+            position: absolute;
+            left: 6px;
+            font-size: 10px;
+            color: var(--text-muted);
         }
-        .subcategory-item:hover { background: rgba(59, 130, 246, 0.1); color: #fff; padding-left: 28px; }
-        .subcategory-item.active { background: rgba(59, 130, 246, 0.18); color: #fff; font-weight: 700; padding-left: 28px; }
-        .badge-v1 { font-size: 9px; font-weight: 700; background: rgba(59, 130, 246, 0.2); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
+        .subcategory-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-main);
+        }
+        .subcategory-item.active {
+            background: var(--accent-subtle);
+            color: var(--accent);
+            font-weight: 600;
+            border-left: 2px solid var(--accent);
+        }
+        .badge-v1 {
+            font-size: 9px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-sub);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
 
-        /* Cyber Terminal Log Box */
+        /* Klasik Sistem Kayıt Kutusu */
         .terminal-box {
             margin-top: auto;
-            background: rgba(5, 8, 15, 0.9);
-            border: 1px solid rgba(6, 182, 212, 0.2);
+            background: var(--bg-input);
+            border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            padding: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: #38bdf8;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+            padding: 10px 12px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 10.5px;
+            color: var(--text-sub);
         }
         .terminal-header {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; margin-bottom: 6px;
-            color: var(--text-muted); font-size: 9px; text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 9.5px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
-        .terminal-content { height: 60px; overflow-y: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; }
-        .terminal-line { opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .terminal-line span { color: var(--success); }
+        .terminal-content { height: 56px; overflow-y: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 3px; }
+        .terminal-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .terminal-line span { color: var(--accent); }
 
         /* Right Content Area */
-        .content { flex: 1; padding: 32px; overflow-y: auto; display: flex; flex-direction: column; gap: 28px; position: relative; }
-        .search-card {
-            background: var(--bg-card); backdrop-filter: blur(20px);
-            border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 30px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); position: relative; overflow: hidden;
+        .content {
+            flex: 1;
+            padding: 28px 32px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
         }
-        .search-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-purple), var(--accent-cyan));
+        .search-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
         .search-card-header {
-            margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        .active-module-title { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+        .active-module-title {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
         .active-module-badge {
-            font-size: 11px; font-weight: 700; text-transform: uppercase;
-            background: rgba(59, 130, 246, 0.15); color: var(--accent-cyan);
-            padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(6, 182, 212, 0.3);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--accent-subtle);
+            color: var(--accent);
+            padding: 5px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(197, 155, 39, 0.3);
         }
 
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; }
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-group.full-width { grid-column: 1 / -1; }
-        .form-label { font-size: 13px; font-weight: 600; color: var(--text-sub); }
-        .form-label span { color: var(--danger); margin-left: 3px; }
+        .form-label { font-size: 12.5px; font-weight: 600; color: var(--text-sub); }
+        .form-label span { color: var(--danger); margin-left: 2px; }
         .form-input, .form-select {
-            background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm);
-            padding: 13px 16px; color: var(--text-main); font-size: 14px; outline: none; transition: var(--transition);
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 11px 14px;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 13.5px;
+            outline: none;
+            transition: var(--transition);
         }
-        .form-input:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-        .search-actions { display: flex; justify-content: flex-end; gap: 14px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent);
+            background: #0a0d12;
+        }
+        .search-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
 
-        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px 28px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: var(--transition); }
-        .btn-primary { background: linear-gradient(135deg, var(--accent), #2563eb); color: white; box-shadow: 0 4px 20px var(--accent-glow); }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px var(--accent-glow); }
-        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: var(--text-sub); border: 1px solid var(--border); }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #0b0e14;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border-color: var(--border-light);
+        }
 
-        .results-section { display: flex; flex-direction: column; gap: 20px; }
+        .results-section { display: flex; flex-direction: column; gap: 16px; }
         .results-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-        .results-title { font-size: 19px; font-weight: 800; }
-        .result-stats { display: flex; gap: 12px; }
-        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 20px; text-align: center; }
-        .stat-value { font-size: 17px; font-weight: 800; color: var(--accent-cyan); }
-        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .results-title {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 17px;
+            font-weight: 700;
+        }
+        .result-stats { display: flex; gap: 10px; }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            text-align: center;
+        }
+        .stat-value { font-size: 15px; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
 
         .result-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; display: none; }
-        .result-card-header { background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), transparent); padding: 18px 26px; border-bottom: 1px solid var(--border); }
-        .result-id { font-size: 13px; font-weight: 800; color: var(--accent-cyan); background: rgba(6, 182, 212, 0.15); padding: 6px 14px; border-radius: 8px; }
-        .result-body { padding: 28px; }
+        .result-card-header { background: var(--bg-primary); padding: 14px 22px; border-bottom: 1px solid var(--border); }
+        .result-id { font-family: 'Roboto Mono', monospace; font-size: 12px; font-weight: 600; color: var(--accent); }
+        .result-body { padding: 24px; }
 
-        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 70px 20px; text-align: center; background: rgba(16, 22, 34, 0.3); border: 1px dashed var(--border); border-radius: var(--radius-lg); }
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
 
-        /* Yönetici Paneli */
+        /* KLASİK KURUMSAL YÖNETİCİ PANELİ */
         #adminPanel {
             display: none;
             background: var(--bg-card);
-            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
+            border-top: 3px solid var(--accent);
             border-radius: var(--radius-lg);
-            padding: 30px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-            position: relative;
-            overflow: hidden;
-        }
-
-        #adminPanel::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            padding: 28px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
         }
 
         .admin-header {
@@ -430,67 +541,58 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
-            padding-bottom: 18px;
-            margin-bottom: 24px;
+            padding-bottom: 16px;
+            margin-bottom: 22px;
         }
 
         .admin-title-box h2 {
+            font-family: 'Merriweather', Georgia, serif;
             font-size: 20px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .admin-title-box p {
-            font-size: 12px;
+            font-size: 12.5px;
             color: var(--text-sub);
             margin-top: 4px;
         }
 
         .admin-stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 22px;
         }
 
         .admin-stat-card {
-            background: rgba(8, 12, 20, 0.6);
+            background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
-        .admin-stat-info { display: flex; flex-direction: column; }
-        .admin-stat-val { font-size: 22px; font-weight: 800; color: #fff; }
-        .admin-stat-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+        .admin-stat-val { font-size: 22px; font-weight: 700; color: var(--text-main); }
+        .admin-stat-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 4px; }
 
         .admin-section-box {
-            background: rgba(8, 12, 20, 0.5);
+            background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 24px;
+            padding: 20px;
             margin-bottom: 24px;
         }
 
         .admin-section-title {
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 600;
             color: var(--text-main);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-bottom: 14px;
         }
 
         .admin-form-row {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
@@ -503,7 +605,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             overflow: hidden;
-            background: rgba(8, 12, 20, 0.4);
+            background: var(--bg-primary);
         }
 
         .admin-table {
@@ -514,20 +616,24 @@
         }
 
         .admin-table th {
-            background: rgba(16, 22, 34, 0.9);
+            background: #0d1017;
             color: var(--text-sub);
-            font-weight: 700;
-            padding: 14px 18px;
+            font-weight: 600;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--border);
             text-transform: uppercase;
             font-size: 11px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
         }
 
         .admin-table td {
-            padding: 14px 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
             color: var(--text-main);
+        }
+
+        .admin-table tr:last-child td {
+            border-bottom: none;
         }
 
         .admin-table tr:hover td {
@@ -537,65 +643,71 @@
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 20px;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: var(--radius-sm);
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
         }
 
-        .status-badge.active { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .status-badge.banned { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .status-badge.active { background: rgba(46, 160, 67, 0.15); color: #3fb950; border: 1px solid rgba(46, 160, 67, 0.3); }
+        .status-badge.banned { background: rgba(218, 54, 51, 0.15); color: #f85149; border: 1px solid rgba(218, 54, 51, 0.3); }
 
         .btn-action {
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 5px 11px;
+            border-radius: var(--radius-sm);
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            border: none;
+            border: 1px solid transparent;
             transition: var(--transition);
         }
 
-        .btn-action-ban { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
-        .btn-action-ban:hover { background: var(--warning); color: #000; }
+        .btn-action-ban { background: rgba(210, 153, 34, 0.15); color: #e3b341; border-color: rgba(210, 153, 34, 0.3); }
+        .btn-action-ban:hover { background: var(--warning); color: #0b0e14; }
         
-        .btn-action-del { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); margin-left: 6px; }
+        .btn-action-del { background: rgba(218, 54, 51, 0.15); color: #f85149; border-color: rgba(218, 54, 51, 0.3); margin-left: 6px; }
         .btn-action-del:hover { background: var(--danger); color: #fff; }
 
         .footer {
-            background: rgba(10, 14, 23, 0.85); border-top: 1px solid var(--border);
-            padding: 0 32px; height: 42px; font-size: 12px; color: var(--text-muted);
-            display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border);
+            padding: 0 28px;
+            height: 38px;
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
         }
 
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
     </style>
 </head>
 <body>
 
-    <!-- Matrix Rain Canvas Background -->
-    <canvas id="matrixCanvas"></canvas>
-
     <!-- GİRİŞ MODALI -->
     <div id="loginModal">
         <div class="login-card">
-            <div class="login-title">MAMİX GİRİŞ</div>
+            <div class="login-title">MAMİX SİSTEM GİRİŞİ</div>
+            <div class="login-subtitle">Yetkili personel ve lisanslı kullanıcı erişimi</div>
             <div class="form-group">
                 <label class="form-label">Kullanıcı Adı</label>
                 <input type="text" id="loginUser" class="form-input" placeholder="Kullanıcı adınızı girin">
             </div>
             <div class="form-group">
-                <label class="form-label">Key (Anahtar)</label>
-                <input type="password" id="loginKey" class="form-input" placeholder="Key girin">
+                <label class="form-label">Erişim Anahtarı (Key)</label>
+                <input type="password" id="loginKey" class="form-input" placeholder="Anahtarınızı girin">
             </div>
-            <button class="btn btn-primary" onclick="handleLogin()" style="width:100%;">Sistem Girişi Yap</button>
-            <div id="loginError" style="color:var(--danger); font-size:13px; text-align:center; font-weight:600;"></div>
+            <button class="btn btn-primary" onclick="handleLogin()" style="width:100%;">Giriş Yap</button>
+            <div id="loginError" style="color:#f85149; font-size:12.5px; text-align:center; font-weight:600;"></div>
 
-            <!-- DİSCORD YÖNLENDİRME BUTONU EKLENDİ -->
-            <div class="login-divider">veya</div>
+            <!-- DİSCORD YÖNLENDİRME BUTONU -->
+            <div class="login-divider">Destek & Topluluk</div>
             <a href="https://discord.gg/ZShjCuR7" target="_blank" class="btn-discord">
                 <svg viewBox="0 0 127.14 96.36">
                     <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.15c2.63-27.29-4.53-51.05-19.45-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5.18-12.72,11.45-12.72S53.9,46,53.88,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.72,11.44-12.72S96.15,46,96.13,53,91,65.69,84.69,65.69Z"/>
@@ -616,19 +728,16 @@
         </div>
     </div>
 
-    <div class="bg-interactive">
-        <div class="bg-orb bg-orb-1" id="orb1"></div>
-        <div class="bg-orb bg-orb-2" id="orb2"></div>
-        <div class="bg-orb bg-orb-3" id="orb3"></div>
-    </div>
-
     <!-- Header -->
     <header class="header">
-        <div class="logo"><span>MAMİX v3.0</span></div>
+        <div class="logo">
+            <span>MAMİX</span>
+            <span class="logo-tag">KURUMSAL v3.0</span>
+        </div>
         <div class="header-right">
             <div class="user-info">
                 <div class="avatar" id="avatarText">MX</div>
-                <span id="currentUserLabel" style="font-size:14px; font-weight:700;">Yönetici</span>
+                <span id="currentUserLabel" style="font-size:13.5px; font-weight:600;">Yönetici</span>
             </div>
             <button class="btn btn-secondary" style="padding:6px 14px; font-size:12px;" onclick="logout()">Çıkış Yap</button>
         </div>
@@ -639,7 +748,6 @@
         
         <!-- Sidebar & Toggle Button -->
         <aside class="sidebar" id="userSidebar">
-            <!-- Menüyü Açıp Kapatan Ok Butonu -->
             <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Menüyü Gizle/Göster">◀</button>
 
             <div class="sidebar-search-box">
@@ -730,21 +838,21 @@
                 </div>
             </div>
 
-            <!-- Canlı Siber Terminal Log Konsolu -->
+            <!-- Sistem Kayıt Konsolu -->
             <div class="terminal-box">
                 <div class="terminal-header">
-                    <span>SYSTEM AUDIT LOG</span>
-                    <span style="color:var(--success);">● LIVE</span>
+                    <span>SİSTEM KAYITLARI</span>
+                    <span style="color:#3fb950;">● AKTİF</span>
                 </div>
                 <div class="terminal-content" id="terminalLog">
-                    <div class="terminal-line">[SYS] Core initialize sequence OK.</div>
-                    <div class="terminal-line">[NET] Encrypted node tunnel connected.</div>
-                    <div class="terminal-line">[DB] RTDB connection active.</div>
+                    <div class="terminal-line">[SYS] Çekirdek başlatıldı.</div>
+                    <div class="terminal-line">[NET] Güvenli bağlantı kuruldu.</div>
+                    <div class="terminal-line">[DB] Veritabanı senkronize.</div>
                 </div>
             </div>
         </aside>
 
-        <!-- Right Content Area -->
+        <!-- Right Panel -->
         <section class="content">
             
             <!-- Normal Sorgu Paneli -->
@@ -763,56 +871,50 @@
                 </form>
             </div>
 
-            <!-- Yenilenmiş Modern Yönetici Paneli -->
+            <!-- Klasik Kurumsal Yönetici Paneli -->
             <div id="adminPanel">
                 <div class="admin-header">
                     <div class="admin-title-box">
-                        <h2>Yönetici Paneli</h2>
-                        <p>Kullanıcı yetkilendirmeleri ve Key erişim yönetim merkezi</p>
+                        <h2>Yönetici Kontrol Paneli</h2>
+                        <p>Kullanıcı yetkilendirmeleri ve lisans anahtarı yönetim merkezi</p>
                     </div>
-                    <span class="active-module-badge">ADMIN CONTROL</span>
+                    <span class="active-module-badge">YÖNETİM YETKİSİ</span>
                 </div>
 
                 <div class="admin-stats-grid">
                     <div class="admin-stat-card">
-                        <div class="admin-stat-info">
-                            <div class="admin-stat-val" id="totalUsersCount">0</div>
-                            <div class="admin-stat-lbl">Toplam Kullanıcı</div>
-                        </div>
+                        <div class="admin-stat-val" id="totalUsersCount">0</div>
+                        <div class="admin-stat-lbl">Toplam Kullanıcı</div>
                     </div>
                     <div class="admin-stat-card">
-                        <div class="admin-stat-info">
-                            <div class="admin-stat-val" style="color:var(--success);" id="activeUsersCount">0</div>
-                            <div class="admin-stat-lbl">Aktif İzinli</div>
-                        </div>
+                        <div class="admin-stat-val" style="color:#3fb950;" id="activeUsersCount">0</div>
+                        <div class="admin-stat-lbl">Aktif Hesap</div>
                     </div>
                     <div class="admin-stat-card">
-                        <div class="admin-stat-info">
-                            <div class="admin-stat-val" style="color:var(--danger);" id="bannedUsersCount">0</div>
-                            <div class="admin-stat-lbl">Yasaklanan</div>
-                        </div>
+                        <div class="admin-stat-val" style="color:#f85149;" id="bannedUsersCount">0</div>
+                        <div class="admin-stat-lbl">Yasaklı Hesap</div>
                     </div>
                 </div>
 
                 <div class="admin-section-box">
-                    <div class="admin-section-title">Yeni Kullanıcı & Key Tanımla</div>
+                    <div class="admin-section-title">Yeni Kullanıcı & Lisans Anahtarı Tanımla</div>
                     <div class="admin-form-row">
                         <input type="text" id="newUsername" class="form-input" placeholder="Kullanıcı Adı">
-                        <input type="text" id="newKey" class="form-input" placeholder="Key (Örn: 123456)">
-                        <button onclick="generateRandomKey()" class="btn btn-secondary" style="padding:0 18px;">Rastgele Key</button>
-                        <button onclick="addNewUser()" class="btn btn-primary" style="padding:0 24px;">Kullanıcı Oluştur</button>
+                        <input type="text" id="newKey" class="form-input" placeholder="Erişim Anahtarı (Örn: 123456)">
+                        <button onclick="generateRandomKey()" class="btn btn-secondary">Rastgele Anahtar</button>
+                        <button onclick="addNewUser()" class="btn btn-primary">Kullanıcı Ekle</button>
                     </div>
                 </div>
 
-                <div class="admin-section-title">Kayıtlı Hesap Lisansları</div>
+                <div class="admin-section-title">Kayıtlı Kullanıcı Listesi</div>
                 <div class="admin-table-container">
                     <table class="admin-table">
                         <thead>
                             <tr>
                                 <th>Kullanıcı Adı</th>
-                                <th>Erişim Key</th>
-                                <th>Erişim Durumu</th>
-                                <th style="text-align:right;">Yönetim İşlemleri</th>
+                                <th>Erişim Anahtarı</th>
+                                <th>Hesap Durumu</th>
+                                <th style="text-align:right;">İşlemler</th>
                             </tr>
                         </thead>
                         <tbody id="adminUserTableBody"></tbody>
@@ -823,22 +925,22 @@
             <!-- Results Section -->
             <div class="results-section" id="resultsSectionPanel">
                 <div class="results-header">
-                    <div class="results-title">Sorgu Sonuç Paneli</div>
+                    <div class="results-title">Sorgu Sonuçları</div>
                     <div class="result-stats">
                         <div class="stat-card">
                             <div class="stat-value" id="statCount">0</div>
-                            <div class="stat-label">Bulunan Kayıt</div>
+                            <div class="stat-label">Kayıt Sayısı</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-value" id="statTime">—</div>
-                            <div class="stat-label">Yanıt Süresi</div>
+                            <div class="stat-label">İşlem Süresi</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="empty-state" id="emptyState">
-                    <div style="font-size:16px; font-weight:700; color:var(--text-main); margin-bottom:6px;">Sorgu Bekleniyor</div>
-                    <div style="font-size:13px; color:var(--text-sub); max-width:420px; line-height:1.5;">Sol taraftaki menüden istediğin alt başlığı seçip arama yapabilirsin.</div>
+                    <div style="font-size:15px; font-weight:600; color:var(--text-main); margin-bottom:6px;">Sorgu Bekleniyor</div>
+                    <div style="font-size:13px; color:var(--text-sub); max-width:420px; line-height:1.5;">Sol taraftaki menüden ilgili sorgu modülünü seçerek arama işlemini başlatabilirsiniz.</div>
                 </div>
 
                 <div class="result-card" id="resultCard">
@@ -852,8 +954,8 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <span>MAMİX Veri & Analiz Paneli v3.0</span>
-        <span style="color:var(--success);">● Sistem Çevrimiçi</span>
+        <span>MAMİX Kurumsal Veri & Analiz Sistemi v3.0</span>
+        <span style="color:#3fb950;">● Sistem Çevrimiçi</span>
     </footer>
 
     <script>
@@ -931,7 +1033,7 @@
             const config = moduleConfigs[moduleKey] || moduleConfigs['ad-soyad'];
             document.getElementById('formFields').innerHTML = config.fields;
             resetForm();
-            pushTerminalLog(`[MOD] Switched to module: ${moduleKey}`);
+            pushTerminalLog(`[MOD] Modül seçildi: ${moduleKey}`);
         }
 
         function handleLogin() {
@@ -983,7 +1085,7 @@
             document.getElementById('currentUserLabel').textContent = data.username + (data.isAdmin ? " (Yönetici)" : "");
             document.getElementById('avatarText').textContent = data.username.substring(0, 2).toUpperCase();
 
-            pushTerminalLog(`[AUTH] User session start: ${data.username}`);
+            pushTerminalLog(`[AUTH] Oturum açıldı: ${data.username}`);
 
             if (data.isAdmin) {
                 document.getElementById('userSidebar').style.display = 'none';
@@ -1084,10 +1186,10 @@
                     tbody.innerHTML += `
                         <tr>
                             <td><b>${u.username}</b></td>
-                            <td><code style="background:rgba(255,255,255,0.06); padding:4px 8px; border-radius:4px; font-family:'JetBrains Mono',monospace;">${u.key}</code></td>
+                            <td><code style="background:var(--bg-input); border:1px solid var(--border); padding:3px 8px; border-radius:4px; font-family:'Roboto Mono',monospace;">${u.key}</code></td>
                             <td>
                                 <span class="status-badge ${u.isBanned ? 'banned' : 'active'}">
-                                    ● ${u.isBanned ? 'BANNED' : 'Aktif'}
+                                    ● ${u.isBanned ? 'YASAKLI' : 'Aktif'}
                                 </span>
                             </td>
                             <td style="text-align:right;">
@@ -1117,44 +1219,7 @@
             if (container.children.length > 5) container.removeChild(container.firstChild);
         }
 
-        // MATRIX DIGIT RAIN ANIMATION
-        function initMatrixEffect() {
-            const canvas = document.getElementById('matrixCanvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const chars = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
-            const fontSize = 14;
-            const columns = Math.floor(canvas.width / fontSize);
-            const drops = Array(columns).fill(1);
-
-            function draw() {
-                ctx.fillStyle = 'rgba(3, 5, 8, 0.08)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#06b6d4';
-                ctx.font = fontSize + 'px monospace';
-
-                for (let i = 0; i < drops.length; i++) {
-                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
-                }
-            }
-
-            setInterval(draw, 33);
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            });
-        }
-
         window.onload = function() {
-            initMatrixEffect();
             document.getElementById('formFields').innerHTML = moduleConfigs['ad-soyad'].fields;
             if (localStorage.getItem("mami_current_user")) initSession();
         };
