@@ -8,24 +8,28 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
 
         :root {
-            --bg-deep: #05070c;
+            --bg-deep: #030508;
             --bg-primary: #0a0e17;
             --bg-secondary: #101622;
-            --bg-card: rgba(18, 26, 40, 0.65);
-            --bg-input: #080c14;
+            --bg-card: rgba(16, 23, 38, 0.7);
+            --bg-input: rgba(8, 12, 20, 0.8);
             --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(59, 130, 246, 0.3);
             --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.35);
+            --accent-glow: rgba(59, 130, 246, 0.4);
             --accent-purple: #8b5cf6;
             --accent-cyan: #06b6d4;
+            --discord-color: #5865F2;
+            --discord-hover: #4752C4;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --text-muted: #64748b;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
             --radius-sm: 8px;
             --radius-md: 14px;
             --radius-lg: 20px;
@@ -50,12 +54,22 @@
             position: relative;
         }
 
+        /* Matrix Canvas Arka Planı */
+        #matrixCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.12;
+        }
+
         /* Giriş Modalı */
         #loginModal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(5, 7, 12, 0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(3, 5, 8, 0.92);
+            backdrop-filter: blur(24px);
             z-index: 1000;
             display: flex;
             align-items: center;
@@ -68,26 +82,88 @@
             border-radius: var(--radius-lg);
             padding: 40px;
             width: 400px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(59, 130, 246, 0.15);
             display: flex;
             flex-direction: column;
             gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
         }
 
         .login-title {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
             text-align: center;
+            letter-spacing: 1px;
             background: linear-gradient(135deg, #fff, var(--accent-cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Dolandırıldın Ekranı ve Video Arka Planı (Sadece tetiklenince sesli çalışır) */
+        /* Discord Butonu Stili */
+        .btn-discord {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: var(--discord-color);
+            color: white;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+            margin-top: 5px;
+        }
+
+        .btn-discord:hover {
+            background: var(--discord-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.6);
+        }
+
+        .btn-discord svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px 0;
+        }
+
+        .login-divider::before, .login-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .login-divider::before { margin-right: .75em; }
+        .login-divider::after { margin-left: .75em; }
+
+        /* Dolandırıldın Ekranı ve Video Arka Planı */
         #scamModal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 2000;
             display: none;
             flex-direction: column;
@@ -118,9 +194,10 @@
             font-size: 72px;
             font-weight: 900;
             color: #fff;
-            text-shadow: 0 0 40px #000;
+            text-shadow: 0 0 40px #ef4444;
             margin-bottom: 12px;
             letter-spacing: 2px;
+            animation: pulse 1s infinite alternate;
         }
 
         .scam-sub {
@@ -131,6 +208,11 @@
             letter-spacing: 4px;
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
         /* Dynamic Background Orbs */
         .bg-interactive {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -138,7 +220,7 @@
         }
 
         .bg-orb {
-            position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.25;
+            position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.2;
             transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
@@ -148,7 +230,7 @@
 
         /* Header */
         .header {
-            background: rgba(16, 22, 34, 0.7);
+            background: rgba(10, 14, 23, 0.8);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             padding: 0 32px; height: 72px;
@@ -170,6 +252,7 @@
             background: linear-gradient(135deg, #3b82f6, #06b6d4);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-weight: 800; font-size: 14px; color: white;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
         }
 
         /* Layout & Mobile Sidebar Toggle Button */
@@ -187,7 +270,6 @@
             z-index: 5;
         }
 
-        /* Sidebar Gizleme Sınıfı (Mobil İçin) */
         .sidebar.collapsed {
             transform: translateX(-100%);
             width: 0;
@@ -195,7 +277,6 @@
             border: none;
         }
 
-        /* Sidebar Açma/Kapama Ok Butonu */
         .sidebar-toggle-btn {
             position: absolute;
             top: 20px;
@@ -248,6 +329,27 @@
         .subcategory-item.active { background: rgba(59, 130, 246, 0.18); color: #fff; font-weight: 700; padding-left: 28px; }
         .badge-v1 { font-size: 9px; font-weight: 700; background: rgba(59, 130, 246, 0.2); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
 
+        /* Cyber Terminal Log Box */
+        .terminal-box {
+            margin-top: auto;
+            background: rgba(5, 8, 15, 0.9);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #38bdf8;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+        .terminal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; margin-bottom: 6px;
+            color: var(--text-muted); font-size: 9px; text-transform: uppercase;
+        }
+        .terminal-content { height: 60px; overflow-y: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; }
+        .terminal-line { opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .terminal-line span { color: var(--success); }
+
         /* Right Content Area */
         .content { flex: 1; padding: 32px; overflow-y: auto; display: flex; flex-direction: column; gap: 28px; position: relative; }
         .search-card {
@@ -284,7 +386,9 @@
 
         .btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px 28px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: var(--transition); }
         .btn-primary { background: linear-gradient(135deg, var(--accent), #2563eb); color: white; box-shadow: 0 4px 20px var(--accent-glow); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px var(--accent-glow); }
         .btn-secondary { background: rgba(255, 255, 255, 0.05); color: var(--text-sub); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
 
         .results-section { display: flex; flex-direction: column; gap: 20px; }
         .results-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
@@ -303,12 +407,164 @@
 
         /* Yönetici Paneli */
         #adminPanel {
-            display: none; background: #ffffff; color: #000; padding: 30px; border-radius: 8px; font-family: sans-serif;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
         }
 
+        #adminPanel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 18px;
+            margin-bottom: 24px;
+        }
+
+        .admin-title-box h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-title-box p {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: 4px;
+        }
+
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .admin-stat-card {
+            background: rgba(8, 12, 20, 0.6);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .admin-stat-info { display: flex; flex-direction: column; }
+        .admin-stat-val { font-size: 22px; font-weight: 800; color: #fff; }
+        .admin-stat-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+
+        .admin-section-box {
+            background: rgba(8, 12, 20, 0.5);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .admin-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .admin-form-row input {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .admin-table-container {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: rgba(8, 12, 20, 0.4);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .admin-table th {
+            background: rgba(16, 22, 34, 0.9);
+            color: var(--text-sub);
+            font-weight: 700;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-main);
+        }
+
+        .admin-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-badge.active { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-badge.banned { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .btn-action-ban { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .btn-action-ban:hover { background: var(--warning); color: #000; }
+        
+        .btn-action-del { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); margin-left: 6px; }
+        .btn-action-del:hover { background: var(--danger); color: #fff; }
+
         .footer {
-            background: rgba(12, 17, 27, 0.85); border-top: 1px solid var(--border);
+            background: rgba(10, 14, 23, 0.85); border-top: 1px solid var(--border);
             padding: 0 32px; height: 42px; font-size: 12px; color: var(--text-muted);
             display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10;
         }
@@ -319,6 +575,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Matrix Rain Canvas Background -->
+    <canvas id="matrixCanvas"></canvas>
 
     <!-- GİRİŞ MODALI -->
     <div id="loginModal">
@@ -334,6 +593,15 @@
             </div>
             <button class="btn btn-primary" onclick="handleLogin()" style="width:100%;">Sistem Girişi Yap</button>
             <div id="loginError" style="color:var(--danger); font-size:13px; text-align:center; font-weight:600;"></div>
+
+            <!-- DİSCORD YÖNLENDİRME BUTONU EKLENDİ -->
+            <div class="login-divider">veya</div>
+            <a href="https://discord.gg/ZShjCuR7" target="_blank" class="btn-discord">
+                <svg viewBox="0 0 127.14 96.36">
+                    <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.15c2.63-27.29-4.53-51.05-19.45-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5.18-12.72,11.45-12.72S53.9,46,53.88,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.72,11.44-12.72S96.15,46,96.13,53,91,65.69,84.69,65.69Z"/>
+                </svg>
+                Discord Sunucumuza Katıl
+            </a>
         </div>
     </div>
 
@@ -461,9 +729,22 @@
                     <div class="subcategory-item" onclick="switchModule('pdf', 'PDF Çözümleri', 'Premium', this)"><span>PDF Çözümleri</span></div>
                 </div>
             </div>
+
+            <!-- Canlı Siber Terminal Log Konsolu -->
+            <div class="terminal-box">
+                <div class="terminal-header">
+                    <span>SYSTEM AUDIT LOG</span>
+                    <span style="color:var(--success);">● LIVE</span>
+                </div>
+                <div class="terminal-content" id="terminalLog">
+                    <div class="terminal-line">[SYS] Core initialize sequence OK.</div>
+                    <div class="terminal-line">[NET] Encrypted node tunnel connected.</div>
+                    <div class="terminal-line">[DB] RTDB connection active.</div>
+                </div>
+            </div>
         </aside>
 
-        <!-- Right Panel -->
+        <!-- Right Content Area -->
         <section class="content">
             
             <!-- Normal Sorgu Paneli -->
@@ -482,31 +763,61 @@
                 </form>
             </div>
 
-            <!-- Yönetici Paneli -->
+            <!-- Yenilenmiş Modern Yönetici Paneli -->
             <div id="adminPanel">
-                <h2 style="margin-bottom:15px; border-bottom:2px solid #ccc; padding-bottom:5px;">YÖNETİCİ PANELİ - KULLANICI & KEY YÖNETİMİ</h2>
-                <div style="background:#f9f9f9; padding:20px; border:1px solid #ddd; margin-bottom:20px;">
-                    <h3>Yeni Kullanıcı ve Key Oluştur</h3>
-                    <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-                        <input type="text" id="newUsername" placeholder="Kullanıcı Adı" style="padding:8px; width:200px; border:1px solid #ccc;">
-                        <input type="text" id="newKey" placeholder="Key (Örn: 123456)" style="padding:8px; width:200px; border:1px solid #ccc;">
-                        <button onclick="generateRandomKey()" style="padding:8px 12px; cursor:pointer; background:#eee; border:1px solid #ccc;">Rastgele Key Üret</button>
-                        <button onclick="addNewUser()" style="padding:8px 16px; background:#000; color:#fff; border:none; cursor:pointer; font-weight:bold;">Kullanıcı Ekle</button>
+                <div class="admin-header">
+                    <div class="admin-title-box">
+                        <h2>Yönetici Paneli</h2>
+                        <p>Kullanıcı yetkilendirmeleri ve Key erişim yönetim merkezi</p>
+                    </div>
+                    <span class="active-module-badge">ADMIN CONTROL</span>
+                </div>
+
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-info">
+                            <div class="admin-stat-val" id="totalUsersCount">0</div>
+                            <div class="admin-stat-lbl">Toplam Kullanıcı</div>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-info">
+                            <div class="admin-stat-val" style="color:var(--success);" id="activeUsersCount">0</div>
+                            <div class="admin-stat-lbl">Aktif İzinli</div>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-info">
+                            <div class="admin-stat-val" style="color:var(--danger);" id="bannedUsersCount">0</div>
+                            <div class="admin-stat-lbl">Yasaklanan</div>
+                        </div>
                     </div>
                 </div>
 
-                <h3>Kayıtlı Kullanıcılar ve Keyler</h3>
-                <table border="1" cellpadding="10" cellspacing="0" style="width:100%; margin-top:10px; border-collapse:collapse; background:#fff;">
-                    <thead>
-                        <tr style="background:#eee;">
-                            <th>Kullanıcı Adı</th>
-                            <th>Key</th>
-                            <th>Durum</th>
-                            <th>İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminUserTableBody"></tbody>
-                </table>
+                <div class="admin-section-box">
+                    <div class="admin-section-title">Yeni Kullanıcı & Key Tanımla</div>
+                    <div class="admin-form-row">
+                        <input type="text" id="newUsername" class="form-input" placeholder="Kullanıcı Adı">
+                        <input type="text" id="newKey" class="form-input" placeholder="Key (Örn: 123456)">
+                        <button onclick="generateRandomKey()" class="btn btn-secondary" style="padding:0 18px;">Rastgele Key</button>
+                        <button onclick="addNewUser()" class="btn btn-primary" style="padding:0 24px;">Kullanıcı Oluştur</button>
+                    </div>
+                </div>
+
+                <div class="admin-section-title">Kayıtlı Hesap Lisansları</div>
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Kullanıcı Adı</th>
+                                <th>Erişim Key</th>
+                                <th>Erişim Durumu</th>
+                                <th style="text-align:right;">Yönetim İşlemleri</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUserTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Results Section -->
@@ -542,7 +853,7 @@
     <!-- Footer -->
     <footer class="footer">
         <span>MAMİX Veri & Analiz Paneli v3.0</span>
-        <span>Sistem Çevrimiçi</span>
+        <span style="color:var(--success);">● Sistem Çevrimiçi</span>
     </footer>
 
     <script>
@@ -620,6 +931,7 @@
             const config = moduleConfigs[moduleKey] || moduleConfigs['ad-soyad'];
             document.getElementById('formFields').innerHTML = config.fields;
             resetForm();
+            pushTerminalLog(`[MOD] Switched to module: ${moduleKey}`);
         }
 
         function handleLogin() {
@@ -670,6 +982,8 @@
             document.getElementById('loginModal').style.display = 'none';
             document.getElementById('currentUserLabel').textContent = data.username + (data.isAdmin ? " (Yönetici)" : "");
             document.getElementById('avatarText').textContent = data.username.substring(0, 2).toUpperCase();
+
+            pushTerminalLog(`[AUTH] User session start: ${data.username}`);
 
             if (data.isAdmin) {
                 document.getElementById('userSidebar').style.display = 'none';
@@ -749,31 +1063,98 @@
                 const users = snapshot.val();
                 const tbody = document.getElementById('adminUserTableBody');
                 tbody.innerHTML = '';
+
+                let total = 0;
+                let active = 0;
+                let banned = 0;
+
                 if (!users) {
-                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Henüz kullanıcı yok.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Henüz kullanıcı bulunmuyor.</td></tr>`;
+                    document.getElementById('totalUsersCount').textContent = 0;
+                    document.getElementById('activeUsersCount').textContent = 0;
+                    document.getElementById('bannedUsersCount').textContent = 0;
                     return;
                 }
+
                 for (let id in users) {
                     let u = users[id];
+                    total++;
+                    if(u.isBanned) banned++; else active++;
+
                     tbody.innerHTML += `
                         <tr>
                             <td><b>${u.username}</b></td>
-                            <td><code>${u.key}</code></td>
-                            <td style="color:${u.isBanned ? 'red' : 'green'}; font-weight:bold;">${u.isBanned ? 'BANNED' : 'Aktif'}</td>
+                            <td><code style="background:rgba(255,255,255,0.06); padding:4px 8px; border-radius:4px; font-family:'JetBrains Mono',monospace;">${u.key}</code></td>
                             <td>
-                                <button onclick="toggleBan('${id}', ${u.isBanned})" style="padding:4px 8px; cursor:pointer;">${u.isBanned ? 'Aktif Et' : 'Banla'}</button>
-                                <button onclick="deleteUser('${id}')" style="padding:4px 8px; background:red; color:#fff; border:none; cursor:pointer;">Sil</button>
+                                <span class="status-badge ${u.isBanned ? 'banned' : 'active'}">
+                                    ● ${u.isBanned ? 'BANNED' : 'Aktif'}
+                                </span>
+                            </td>
+                            <td style="text-align:right;">
+                                <button onclick="toggleBan('${id}', ${u.isBanned})" class="btn-action btn-action-ban">${u.isBanned ? 'Aktif Et' : 'Banla'}</button>
+                                <button onclick="deleteUser('${id}')" class="btn-action btn-action-del">Sil</button>
                             </td>
                         </tr>
                     `;
                 }
+
+                document.getElementById('totalUsersCount').textContent = total;
+                document.getElementById('activeUsersCount').textContent = active;
+                document.getElementById('bannedUsersCount').textContent = banned;
             });
         }
 
         function toggleBan(id, currentStatus) { db.ref('users/' + id).update({ isBanned: !currentStatus }); }
         function deleteUser(id) { if(confirm("Silmek istiyor musun?")) db.ref('users/' + id).remove(); }
 
+        function pushTerminalLog(text) {
+            const container = document.getElementById('terminalLog');
+            if (!container) return;
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            line.innerHTML = `<span>[${new Date().toLocaleTimeString()}]</span> ${text}`;
+            container.appendChild(line);
+            if (container.children.length > 5) container.removeChild(container.firstChild);
+        }
+
+        // MATRIX DIGIT RAIN ANIMATION
+        function initMatrixEffect() {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const chars = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+            const fontSize = 14;
+            const columns = Math.floor(canvas.width / fontSize);
+            const drops = Array(columns).fill(1);
+
+            function draw() {
+                ctx.fillStyle = 'rgba(3, 5, 8, 0.08)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#06b6d4';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            setInterval(draw, 33);
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
         window.onload = function() {
+            initMatrixEffect();
             document.getElementById('formFields').innerHTML = moduleConfigs['ad-soyad'].fields;
             if (localStorage.getItem("mami_current_user")) initSession();
         };
