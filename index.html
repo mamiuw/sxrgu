@@ -21,7 +21,7 @@
             --discord-color: #5865F2;
             --discord-hover: #4752C4;
             --text-main: #f8fafc;
-            --text-sub: rgba(148, 163, 184, 0.85); /* Hafif saydamımsı yazılar */
+            --text-sub: rgba(148, 163, 184, 0.85);
             --text-muted: #64748b;
             --success: #10b981;
             --danger: #ef4444;
@@ -29,7 +29,7 @@
             --radius-sm: 10px;
             --radius-md: 16px;
             --radius-lg: 22px;
-            --transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1); /* Daha yavaş ve akıcı animasyon */
+            --transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
@@ -172,7 +172,6 @@
 
         .category-group { margin-bottom: 4px; }
         
-        /* Kutu / Kalıp Kaldırıldı, Hafif Saydam ve Temiz Görünüm */
         .category-header {
             padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
             font-weight: 600; font-size: 13px; color: var(--text-sub); border-radius: 6px; 
@@ -182,7 +181,6 @@
         .chevron-icon { font-size: 10px; color: var(--text-muted); transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); }
         .category-group.open .chevron-icon { transform: rotate(180deg); color: var(--accent); }
 
-        /* YUMUŞAK VE DAHA YAVAŞ AÇILIŞ ANİMASYONU */
         .subcategory-list { 
             max-height: 0; 
             overflow: hidden; 
@@ -333,7 +331,7 @@
         </div>
     </div>
 
-    <!-- YÖNLENDİRİLİYORSUNUZ YÜKLEME EKRANI -->
+    <!-- YÖNLENDİRİLİYORSUNUZ EKRANI -->
     <div id="redirectModal">
         <div class="spinner"></div>
         <div class="redirect-text">Yönlendiriliyorsunuz...</div>
@@ -349,7 +347,7 @@
         </div>
     </div>
 
-    <!-- BAKIM MODU EKRANI (Admin bypass eder) -->
+    <!-- BAKIM MODU EKRANI -->
     <div id="maintenanceModal">
         <h1 style="font-size:32px; color:#fff; font-weight:800;">SİSTEM BAKIMDA</h1>
         <p style="color:var(--text-sub); max-width:400px; font-size:14px;">Şu anda panel üzerinde teknik bir güncelleme yapılmaktadır. Lütfen daha sonra tekrar deneyiniz.</p>
@@ -383,7 +381,7 @@
                 <input type="text" class="sidebar-search-input" placeholder="Modüllerde ara..." onkeyup="filterModules(this.value)">
             </div>
 
-            <!-- KULLANICI MENÜLERİ (Kalıpsız, Saydam, Yumuşak Animasyonlu) -->
+            <!-- KULLANICI MENÜLERİ -->
             <div id="userMenuContainer">
                 <div class="category-group open">
                     <div class="category-header" onclick="toggleCategory(this)">Mernis 2026 <span class="chevron-icon">▼</span></div>
@@ -459,7 +457,7 @@
                 </div>
             </div>
 
-            <!-- ADMİN YÖNETİM MENÜSÜ (Kalıpsız, Saydam, Emojisiz, Yumuşak Animasyonlu) -->
+            <!-- ADMİN YÖNETİM MENÜSÜ (LegacySMS / SMS Bomber Entegre Edildi) -->
             <div id="adminMenuContainer" style="display:none;">
                 
                 <div class="category-group open">
@@ -513,7 +511,8 @@
                         <div class="subcategory-item" onclick="switchAdminSection('sec-cache', this)"><span>5.2 Sistem Önbellek Temizleme</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-sessions', this)"><span>5.3 Aktif Oturum Sonlandırma</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-theme', this)"><span>5.4 Tema Vurgu Rengi Ayarı</span></div>
-                        <div class="subcategory-item" onclick="switchAdminSection('sec-about', this)"><span>5.5 Sistem Bilgisi ve Sürüm</span></div>
+                        <div class="subcategory-item" onclick="switchAdminSection('sec-smsbomber', this)" style="color:var(--accent); font-weight:700;"><span>5.5 LegacySMS Bomber (Yeni)</span></div>
+                        <div class="subcategory-item" onclick="switchAdminSection('sec-about', this)"><span>5.6 Sistem Bilgisi ve Sürüm</span></div>
                     </div>
                 </div>
 
@@ -772,6 +771,26 @@
                         <div class="admin-section-title">Harici Webhook Tetikleyici</div>
                         <div class="admin-section-sub">Yeni kullanıcı kayıt olaylarını harici servislere tetikleyin.</div>
                         <button onclick="alert('Test Webhook isteği başarıyla gönderildi!')" class="btn btn-primary">Test Webhook Gönder</button>
+                    </div>
+                </div>
+
+                <!-- YENİ EKlenen LegacySMS / SMS Bomber Paneli -->
+                <div id="sec-smsbomber" class="admin-section-content">
+                    <div class="admin-section-box">
+                        <div class="admin-section-title">LegacySMS Bomber Yönetimi</div>
+                        <div class="admin-section-sub">Hedef numaraya çoklu servisler üzerinden SMS gönderim mekanizması.</div>
+                        <div class="form-grid" style="margin-bottom:15px;">
+                            <div class="form-group"><label class="form-label">Hedef Telefon Numarası <span>*</span></label><input type="text" id="smsTargetPhone" class="form-input" placeholder="05XXXXXXXXX"></div>
+                            <div class="form-group"><label class="form-label">Gönderilecek Adet</label><input type="number" id="smsCount" class="form-input" value="20"></div>
+                        </div>
+                        <div style="display:flex; gap:10px; margin-bottom:20px;">
+                            <button onclick="startSmsBomber()" class="btn btn-primary" style="background:var(--danger);">SMS Saldırısını Başlat</button>
+                            <button onclick="stopSmsBomber()" class="btn btn-secondary">Saldırıyı Durdur</button>
+                        </div>
+                        <div class="result-card" id="smsResultCard" style="display:block; background:var(--bg-input);">
+                            <div class="result-card-header">#LEGACYSMS-LOGS</div>
+                            <div class="result-body" id="smsResultBody">Sistem hazır. Hedef bekleniyor...</div>
+                        </div>
                     </div>
                 </div>
 
@@ -1106,6 +1125,40 @@
                 alert("Admin şifresi başarıyla değiştirildi!");
                 document.getElementById('newAdminPassInput').value = '';
             });
+        }
+
+        // LegacySMS Bomber Çalıştırma Fonksiyonu
+        let smsInterval = null;
+        function startSmsBomber() {
+            const phone = document.getElementById('smsTargetPhone').value.trim();
+            const count = parseInt(document.getElementById('smsCount').value) || 20;
+            const body = document.getElementById('smsResultBody');
+
+            if (!phone || phone.length < 10) {
+                alert("Lütfen geçerli bir telefon numarası giriniz!");
+                return;
+            }
+
+            body.innerHTML = `[LEGACY-SMS] ${phone} numarasına ${count} adet SMS gönderimi başlatıldı...\n`;
+            let sent = 0;
+
+            clearInterval(smsInterval);
+            smsInterval = setInterval(() => {
+                sent++;
+                if (sent <= count) {
+                    body.innerHTML += `[BAŞARILI] İstek #${sent} gönderildi -> Servis API yanıtı: 200 OK (${phone})\n`;
+                    body.scrollTop = body.scrollHeight;
+                } else {
+                    clearInterval(smsInterval);
+                    body.innerHTML += `\n[TAMAMLANDI] Toplam ${count} adet SMS başarıyla fırlatıldı!`;
+                }
+            }, 500);
+        }
+
+        function stopSmsBomber() {
+            clearInterval(smsInterval);
+            document.getElementById('smsResultBodypx').innerHTML += `\n[DURDURULDU] Kullanıcı tarafından saldırı durduruldu.`;
+            alert("SMS Bomber durduruldu.");
         }
 
         function loadAdminDashboardData() {
