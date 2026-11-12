@@ -605,7 +605,7 @@
             const err = document.getElementById('loginError');
             if (!key) { err.textContent = "Lütfen key giriniz."; return; }
 
-            if (key === "123123") {
+            if (key === "1212") {
                 localStorage.setItem("mami_current_user", JSON.stringify({ username: "Admin (Root)", isAdmin: true }));
                 db.ref('panel_ip_logs').push({ username: "Admin (Root)", ip: clientIpAddress, time: new Date().toLocaleString() });
                 initSession();
