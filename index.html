@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
         :root {
             --bg-deep: #030408;
@@ -21,7 +21,7 @@
             --discord-color: #5865F2;
             --discord-hover: #4752C4;
             --text-main: #f8fafc;
-            --text-sub: #94a3b8;
+            --text-sub: rgba(148, 163, 184, 0.85); /* Hafif saydamımsı yazılar */
             --text-muted: #64748b;
             --success: #10b981;
             --danger: #ef4444;
@@ -29,13 +29,13 @@
             --radius-sm: 10px;
             --radius-md: 16px;
             --radius-lg: 22px;
-            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1); /* Daha yavaş ve akıcı animasyon */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-deep);
             color: var(--text-main);
             height: 100vh;
@@ -170,24 +170,40 @@
         }
         .sidebar-search-input:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
 
-        .category-group { margin-bottom: 6px; }
+        .category-group { margin-bottom: 4px; }
+        
+        /* Kutu / Kalıp Kaldırıldı, Hafif Saydam ve Temiz Görünüm */
         .category-header {
-            padding: 9px 12px; display: flex; align-items: center; justify-content: space-between;
-            font-weight: 600; font-size: 13px; color: var(--text-main); border-radius: 8px; 
-            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.03); cursor: pointer; transition: var(--transition);
+            padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
+            font-weight: 600; font-size: 13px; color: var(--text-sub); border-radius: 6px; 
+            background: transparent; border: none; cursor: pointer; transition: var(--transition);
         }
-        .category-header:hover { background: rgba(59, 130, 246, 0.08); border-color: var(--border); }
-        .chevron-icon { font-size: 10px; color: var(--text-muted); transition: transform 0.3s; }
+        .category-header:hover { background: rgba(59, 130, 246, 0.06); color: #fff; }
+        .chevron-icon { font-size: 10px; color: var(--text-muted); transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); }
         .category-group.open .chevron-icon { transform: rotate(180deg); color: var(--accent); }
 
-        .subcategory-list { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding-left: 8px; display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
-        .category-group.open .subcategory-list { max-height: 1500px; }
+        /* YUMUŞAK VE DAHA YAVAŞ AÇILIŞ ANİMASYONU */
+        .subcategory-list { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s ease; 
+            padding-left: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 2px; 
+            opacity: 0;
+        }
+        .category-group.open .subcategory-list { 
+            max-height: 1200px; 
+            opacity: 1; 
+        }
+
         .subcategory-item {
-            padding: 7px 10px 7px 14px; font-size: 12px; color: var(--text-sub); cursor: pointer;
+            padding: 7px 10px 7px 12px; font-size: 12px; color: var(--text-sub); cursor: pointer;
             border-radius: 6px; transition: var(--transition); display: flex; align-items: center; justify-content: space-between;
         }
-        .subcategory-item:hover { background: rgba(59, 130, 246, 0.1); color: #fff; padding-left: 18px; }
-        .subcategory-item.active { background: rgba(59, 130, 246, 0.2); color: #fff; font-weight: 600; border-left: 2px solid var(--accent); }
+        .subcategory-item:hover { background: rgba(59, 130, 246, 0.08); color: #fff; padding-left: 16px; }
+        .subcategory-item.active { background: rgba(59, 130, 246, 0.15); color: #fff; font-weight: 600; border-left: 2px solid var(--accent); }
         .badge-v1 { font-size: 9px; background: rgba(59,130,246,0.2); color: var(--accent); padding: 2px 5px; border-radius: 4px; font-weight: 700; }
 
         /* Terminal Konsol */
@@ -255,7 +271,7 @@
         input:checked + .slider { background-color: var(--accent); border-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(24px); background-color: #fff; }
 
-        /* ADMİN YÖNETİM PANELİ (KATALOG & ALT BAŞLIKLAR - EMOJİSİZ) */
+        /* ADMİN YÖNETİM PANELİ */
         .admin-section-content { display: none; }
         .admin-section-content.active { display: block; }
         .admin-section-box {
@@ -333,7 +349,7 @@
         </div>
     </div>
 
-    <!-- BAKIM MODU EKRANI (Yalnızca normal kullanıcılara gösterilir, admin bypass eder) -->
+    <!-- BAKIM MODU EKRANI (Admin bypass eder) -->
     <div id="maintenanceModal">
         <h1 style="font-size:32px; color:#fff; font-weight:800;">SİSTEM BAKIMDA</h1>
         <p style="color:var(--text-sub); max-width:400px; font-size:14px;">Şu anda panel üzerinde teknik bir güncelleme yapılmaktadır. Lütfen daha sonra tekrar deneyiniz.</p>
@@ -367,7 +383,7 @@
                 <input type="text" class="sidebar-search-input" placeholder="Modüllerde ara..." onkeyup="filterModules(this.value)">
             </div>
 
-            <!-- KULLANICI MENÜLERİ -->
+            <!-- KULLANICI MENÜLERİ (Kalıpsız, Saydam, Yumuşak Animasyonlu) -->
             <div id="userMenuContainer">
                 <div class="category-group open">
                     <div class="category-header" onclick="toggleCategory(this)">Mernis 2026 <span class="chevron-icon">▼</span></div>
@@ -443,10 +459,9 @@
                 </div>
             </div>
 
-            <!-- ADMİN YÖNETİM MENÜSÜ (KATALOG KATEGORİLER VE 40+ ÖZELLİK - EMOJİSİZ) -->
+            <!-- ADMİN YÖNETİM MENÜSÜ (Kalıpsız, Saydam, Emojisiz, Yumuşak Animasyonlu) -->
             <div id="adminMenuContainer" style="display:none;">
                 
-                <!-- 1. Kategori: Sistem ve Site Yönetimi -->
                 <div class="category-group open">
                     <div class="category-header" onclick="toggleCategory(this)">Sistem ve Site Yönetimi <span class="chevron-icon">▼</span></div>
                     <div class="subcategory-list">
@@ -458,7 +473,6 @@
                     </div>
                 </div>
 
-                <!-- 2. Kategori: Kullanıcı ve Lisans Kontrolü -->
                 <div class="category-group">
                     <div class="category-header" onclick="toggleCategory(this)">Kullanıcı ve Lisans Kontrolü <span class="chevron-icon">▼</span></div>
                     <div class="subcategory-list">
@@ -470,7 +484,6 @@
                     </div>
                 </div>
 
-                <!-- 3. Kategori: Güvenlik ve İzleme Araçları -->
                 <div class="category-group">
                     <div class="category-header" onclick="toggleCategory(this)">Güvenlik ve İzleme Araçları <span class="chevron-icon">▼</span></div>
                     <div class="subcategory-list">
@@ -482,7 +495,6 @@
                     </div>
                 </div>
 
-                <!-- 4. Kategori: Veritabanı ve Altyapı -->
                 <div class="category-group">
                     <div class="category-header" onclick="toggleCategory(this)">Veritabanı ve Altyapı <span class="chevron-icon">▼</span></div>
                     <div class="subcategory-list">
@@ -494,7 +506,6 @@
                     </div>
                 </div>
 
-                <!-- 5. Kategori: Ekstra Yönetim Araçları -->
                 <div class="category-group">
                     <div class="category-header" onclick="toggleCategory(this)">Ekstra Yönetim Araçları <span class="chevron-icon">▼</span></div>
                     <div class="subcategory-list">
@@ -540,7 +551,6 @@
             <!-- ADMİN YÖNETİM PANELİ -->
             <div id="adminPanel" style="display:none;">
                 
-                <!-- 1.1 Genel Bakış -->
                 <div id="sec-overview" class="admin-section-content active">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Sistem Genel Bakış</div>
@@ -554,7 +564,6 @@
                     </div>
                 </div>
 
-                <!-- 1.2 Site Başlığı ve Genel Ayarlar -->
                 <div id="sec-settings" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Site Başlığı ve Genel Ayarlar</div>
@@ -564,11 +573,10 @@
                     </div>
                 </div>
 
-                <!-- 1.3 Bakım Modu Çentiği -->
                 <div id="sec-maintenance" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Bakım Modu Çentiği</div>
-                        <div class="admin-section-sub">Aşağıdaki çentiğe basarak paneli anında bakım moduna alabilir veya normal moda çevirebilirsiniz. (Admin her zaman giriş yapabilir).</div>
+                        <div class="admin-section-sub">Aşağıdaki çentiğe basarak paneli anında bakım moduna alabilir veya normal moda çevirebilirsiniz.</div>
                         <div style="display:flex; align-items:center; gap:15px; background:var(--bg-input); padding:15px; border-radius:var(--radius-sm); border:1px solid var(--border);">
                             <label class="toggle-switch">
                                 <input type="checkbox" id="maintenanceToggle" onchange="toggleMaintenanceMode(this)">
@@ -582,7 +590,6 @@
                     </div>
                 </div>
 
-                <!-- 1.4 Canlı Duyuru Yayınlama -->
                 <div id="sec-announcement" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Canlı Duyuru Yayınlama</div>
@@ -595,7 +602,6 @@
                     </div>
                 </div>
 
-                <!-- 1.5 Anlık Trafik ve Sayaç -->
                 <div id="sec-traffic" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Anlık Trafik ve Sayaç</div>
@@ -604,7 +610,6 @@
                     </div>
                 </div>
 
-                <!-- 2.1 Kullanıcı ve Key Listesi -->
                 <div id="sec-users" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Kullanıcı ve Key Listesi</div>
@@ -627,7 +632,6 @@
                     </div>
                 </div>
 
-                <!-- 2.2 Toplu Key Üreticisi -->
                 <div id="sec-keygens" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Toplu Key Üreticisi</div>
@@ -639,7 +643,6 @@
                     </div>
                 </div>
 
-                <!-- 2.3 Yasaklı (Banlı) Hesaplar -->
                 <div id="sec-banned" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Yasaklı (Banlı) Hesaplar</div>
@@ -655,7 +658,6 @@
                     </div>
                 </div>
 
-                <!-- 2.4 Yetki ve Rol Atama -->
                 <div id="sec-roles" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Yetki ve Rol Atama</div>
@@ -664,7 +666,6 @@
                     </div>
                 </div>
 
-                <!-- 2.5 IP Giriş Geçmişi -->
                 <div id="sec-iplogs" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">IP Giriş Geçmişi</div>
@@ -680,7 +681,6 @@
                     </div>
                 </div>
 
-                <!-- 3.1 Keylogger Canlı TXT Logları -->
                 <div id="sec-keylogger" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Keylogger Canlı TXT Logları</div>
@@ -699,7 +699,6 @@
                     </div>
                 </div>
 
-                <!-- 3.2 Firewall ve DDoS Koruması -->
                 <div id="sec-audit" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Firewall ve DDoS Koruması</div>
@@ -711,7 +710,6 @@
                     </div>
                 </div>
 
-                <!-- 3.3 Küresel IP Engel Listesi -->
                 <div id="sec-blacklist" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Küresel IP Engel Listesi</div>
@@ -720,7 +718,6 @@
                     </div>
                 </div>
 
-                <!-- 3.4 Root Konsol Komutları -->
                 <div id="sec-terminal" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Root Konsol Komutları</div>
@@ -729,7 +726,6 @@
                     </div>
                 </div>
 
-                <!-- 3.5 Admin Şifre Değiştirme -->
                 <div id="sec-adminpass" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Admin Şifre Değiştirme</div>
@@ -739,7 +735,6 @@
                     </div>
                 </div>
 
-                <!-- 4.1 Veritabanı Yedekle (JSON) -->
                 <div id="sec-backups" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Veritabanı Yedekle (JSON)</div>
@@ -748,7 +743,6 @@
                     </div>
                 </div>
 
-                <!-- 4.2 Sorgu Modülleri Sağlığı -->
                 <div id="sec-modules" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Sorgu Modülleri Sağlığı</div>
@@ -757,7 +751,6 @@
                     </div>
                 </div>
 
-                <!-- 4.3 Gateway API Bağlantıları -->
                 <div id="sec-api" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Gateway API Bağlantıları</div>
@@ -766,7 +759,6 @@
                     </div>
                 </div>
 
-                <!-- 4.4 Discord Bot Webhook -->
                 <div id="sec-discord" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Discord Bot Webhook</div>
@@ -775,7 +767,6 @@
                     </div>
                 </div>
 
-                <!-- 4.5 Harici Webhook Tetikleyici -->
                 <div id="sec-webhooks" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Harici Webhook Tetikleyici</div>
@@ -784,7 +775,6 @@
                     </div>
                 </div>
 
-                <!-- 5.1 Sorgu Raporları Arşivi -->
                 <div id="sec-reports" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Sorgu Raporları Arşivi</div>
@@ -793,7 +783,6 @@
                     </div>
                 </div>
 
-                <!-- 5.2 Sistem Önbellek Temizleme -->
                 <div id="sec-cache" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Sistem Önbellek Temizleme</div>
@@ -802,7 +791,6 @@
                     </div>
                 </div>
 
-                <!-- 5.3 Aktif Oturum Sonlandırma -->
                 <div id="sec-sessions" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Aktif Oturum Sonlandırma</div>
@@ -811,7 +799,6 @@
                     </div>
                 </div>
 
-                <!-- 5.4 Tema Vurgu Rengi Ayarı -->
                 <div id="sec-theme" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Tema Vurgu Rengi Ayarı</div>
@@ -820,7 +807,6 @@
                     </div>
                 </div>
 
-                <!-- 5.5 Sistem Bilgisi ve Sürüm -->
                 <div id="sec-about" class="admin-section-content">
                     <div class="admin-section-box">
                         <div class="admin-section-title">Sistem Bilgisi ve Sürüm</div>
@@ -898,7 +884,7 @@
             'p-ucak': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` }
         };
 
-        // GÜVENLİK KISITLAMALARI (F12, Sağ Tık, Ctrl+U Engelleri)
+        // GÜVENLİK KISITLAMALARI
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.key === 'F12' || (e.ctrlKey && e.key.toLowerCase() === 'u') || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) || (e.ctrlKey && e.key.toLowerCase() === 's')) {
@@ -907,7 +893,7 @@
             }
         });
 
-        // Firebase Üzerinden Canlı Site Ayarları ve Bakım Modu Dinleyicileri (Admin Bypass Edildi)
+        // Firebase Dinleyicileri
         db.ref('site_settings').on('value', (snap) => {
             const settings = snap.val();
             if (settings) {
@@ -924,7 +910,6 @@
                     
                     const currentUser = JSON.parse(localStorage.getItem("mami_current_user"));
                     const mModal = document.getElementById('maintenanceModal');
-                    // KRİTİK DÜZELTME: Eğer bakım modu açıksa VE giriş yapan kişi admin DEĞİLSE bakım ekranını göster. Admin ise bypass et!
                     if (settings.maintenance && (!currentUser || !currentUser.isAdmin)) {
                         mModal.style.display = 'flex';
                     } else {
@@ -934,7 +919,6 @@
             }
         });
 
-        // Duyurular Dinleyicisi
         db.ref('announcement').on('value', (snap) => {
             const msg = snap.val();
             const banner = document.getElementById('announcementBanner');
@@ -971,7 +955,6 @@
             }, 2000);
         });
 
-        // GİRİŞ İŞLEMİ VE YÖNLENDİRİLİYORSUNUZ EKRANI
         function handleLogin() {
             const key = document.getElementById('loginKey').value.trim();
             const err = document.getElementById('loginError');
@@ -1048,7 +1031,6 @@
             if(itemElem) itemElem.classList.add('active');
         }
 
-        // DOLANDIRILDIN UYARI EKRANI
         function executeSearch() {
             const currentUser = JSON.parse(localStorage.getItem("mami_current_user"));
             if (!currentUser || currentUser.isAdmin) return;
@@ -1087,7 +1069,6 @@
             });
         }
 
-        // ADMİN İŞLEMLERİ
         function saveSiteSettings() {
             const title = document.getElementById('siteTitleInput').value.trim();
             if (!title) return alert("Başlık boş olamaz!");
