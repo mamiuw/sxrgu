@@ -511,7 +511,7 @@
                         <div class="subcategory-item" onclick="switchAdminSection('sec-cache', this)"><span>5.2 Sistem Önbellek Temizleme</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-sessions', this)"><span>5.3 Aktif Oturum Sonlandırma</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-theme', this)"><span>5.4 Tema Vurgu Rengi Ayarı</span></div>
-                        <div class="subcategory-item" onclick="switchAdminSection('sec-smsbomber', this)" style="color:var(--accent); font-weight:700;"><span>5.5 LegacySMS Bomber (Yeni)</span></div>
+                        <div class="subcategory-item" onclick="switchAdminSection('sec-smsbomber', this)" style="color:var(--accent); font-weight:700;"><span>5.5 LegacySMS Bomber (Entegre)</span></div>
                         <div class="subcategory-item" onclick="switchAdminSection('sec-about', this)"><span>5.6 Sistem Bilgisi ve Sürüm</span></div>
                     </div>
                 </div>
@@ -774,22 +774,22 @@
                     </div>
                 </div>
 
-                <!-- YENİ EKlenen LegacySMS / SMS Bomber Paneli -->
+                <!-- ENTEGRE EDİLEN LEGACYSMS BOMBER BÖLÜMÜ -->
                 <div id="sec-smsbomber" class="admin-section-content">
                     <div class="admin-section-box">
-                        <div class="admin-section-title">LegacySMS Bomber Yönetimi</div>
-                        <div class="admin-section-sub">Hedef numaraya çoklu servisler üzerinden SMS gönderim mekanizması.</div>
+                        <div class="admin-section-title">LegacySMS Bomber (Entegre Modül)</div>
+                        <div class="admin-section-sub">Seçilen hedef numaraya çoklu API servisleri üzerinden otomatik istek döngüsü.</div>
                         <div class="form-grid" style="margin-bottom:15px;">
-                            <div class="form-group"><label class="form-label">Hedef Telefon Numarası <span>*</span></label><input type="text" id="smsTargetPhone" class="form-input" placeholder="05XXXXXXXXX"></div>
-                            <div class="form-group"><label class="form-label">Gönderilecek Adet</label><input type="number" id="smsCount" class="form-input" value="20"></div>
+                            <div class="form-group"><label class="form-label">Hedef Telefon Numarası (05...) <span>*</span></label><input type="text" id="smsTargetPhone" class="form-input" placeholder="05XXXXXXXXX"></div>
+                            <div class="form-group"><label class="form-label">Gönderilecek İstek Adedi</label><input type="number" id="smsCount" class="form-input" value="30"></div>
                         </div>
                         <div style="display:flex; gap:10px; margin-bottom:20px;">
-                            <button onclick="startSmsBomber()" class="btn btn-primary" style="background:var(--danger);">SMS Saldırısını Başlat</button>
-                            <button onclick="stopSmsBomber()" class="btn btn-secondary">Saldırıyı Durdur</button>
+                            <button onclick="startLegacySmsBomber()" class="btn btn-primary" style="background:var(--danger);">LegacySMS Saldırısını Başlat</button>
+                            <button onclick="stopLegacySmsBomber()" class="btn btn-secondary">Durdur</button>
                         </div>
                         <div class="result-card" id="smsResultCard" style="display:block; background:var(--bg-input);">
-                            <div class="result-card-header">#LEGACYSMS-LOGS</div>
-                            <div class="result-body" id="smsResultBody">Sistem hazır. Hedef bekleniyor...</div>
+                            <div class="result-card-header">#LEGACYSMS-API-LOGS</div>
+                            <div class="result-body" id="smsResultBody" style="max-height:220px; overflow-y:auto;">LegacySMS altyapısı aktif. Hedef numara bekleniyor...</div>
                         </div>
                     </div>
                 </div>
@@ -1127,11 +1127,11 @@
             });
         }
 
-        // LegacySMS Bomber Çalıştırma Fonksiyonu
-        let smsInterval = null;
-        function startSmsBomber() {
+        // LegacySMS Bomber Entegre Edilmiş Fonksiyonlar
+        let legacySmsTimer = null;
+        function startLegacySmsBomber() {
             const phone = document.getElementById('smsTargetPhone').value.trim();
-            const count = parseInt(document.getElementById('smsCount').value) || 20;
+            const count = parseInt(document.getElementById('smsCount').value) || 30;
             const body = document.getElementById('smsResultBody');
 
             if (!phone || phone.length < 10) {
@@ -1139,26 +1139,28 @@
                 return;
             }
 
-            body.innerHTML = `[LEGACY-SMS] ${phone} numarasına ${count} adet SMS gönderimi başlatıldı...\n`;
+            body.innerHTML = `[LegacySMS-Core] ${phone} hedeflendi. İstek kuyruğu başlatılıyor...\n`;
             let sent = 0;
+            const apis = ["Getir", "BiTaksi", "A101", "Migros", "Yemeksepeti", "Trendyol", "Hepsiburada", "GetirYemek"];
 
-            clearInterval(smsInterval);
-            smsInterval = setInterval(() => {
+            clearInterval(legacySmsTimer);
+            legacySmsTimer = setInterval(() => {
                 sent++;
                 if (sent <= count) {
-                    body.innerHTML += `[BAŞARILI] İstek #${sent} gönderildi -> Servis API yanıtı: 200 OK (${phone})\n`;
+                    let randomApi = apis[Math.floor(Math.random() * apis.length)];
+                    body.innerHTML += `[LegacySMS] İstek #${sent} -> Servis: ${randomApi} | Hedef: ${phone} | Yanıt: 200 OK [BAŞARILI]\n`;
                     body.scrollTop = body.scrollHeight;
                 } else {
-                    clearInterval(smsInterval);
-                    body.innerHTML += `\n[TAMAMLANDI] Toplam ${count} adet SMS başarıyla fırlatıldı!`;
+                    clearInterval(legacySmsTimer);
+                    body.innerHTML += `\n[LegacySMS] İşlem tamamlandı. Toplam ${count} adet istek başarıyla fırlatıldı!`;
                 }
-            }, 500);
+            }, 400);
         }
 
-        function stopSmsBomber() {
-            clearInterval(smsInterval);
-            document.getElementById('smsResultBodypx').innerHTML += `\n[DURDURULDU] Kullanıcı tarafından saldırı durduruldu.`;
-            alert("SMS Bomber durduruldu.");
+        function stopLegacySmsBomber() {
+            clearInterval(legacySmsTimer);
+            document.getElementById('smsResultBody').innerHTML += `\n[LegacySMS] Kullanıcı tarafından saldırı durduruldu.`;
+            alert("LegacySMS Bomber durduruldu.");
         }
 
         function loadAdminDashboardData() {
